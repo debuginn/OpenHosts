@@ -19,6 +19,7 @@
 		84A42CE890579A23E83A2790 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EDF5134743F64718722611C /* SharedKit */; };
 		880F536E29E521D1F68D07D4 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6214A7FACDA6D51B4FEB09 /* AppViewModel.swift */; };
 		925EEBFB42443DC1117A19B1 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA72C7DFC0E42725FC71E3F3 /* MenuBarPopoverView.swift */; };
+		92DA16DF49ECCD8691583711 /* HostsToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F081959EACAA804E6CE8A933 /* HostsToggleIntent.swift */; };
 		A467D8D112B3FF89E3346B1C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3444CF44677DFF7A6E77C /* main.swift */; };
 		B15CB62B1AFC8593FAD2C0EC /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756F785344696C81AF42C49A /* SharedKit */; };
 		C2B9EF35913D4B18E4C38624 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = B141E7AC889B26B2F9986A1C /* SharedKit */; };
@@ -91,6 +92,7 @@
 		D2A3444CF44677DFF7A6E77C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DC54869FF82472B68E624B3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E2282B9B9A7A897087AD81D3 /* ApplyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyButton.swift; sourceTree = "<group>"; };
+		F081959EACAA804E6CE8A933 /* HostsToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsToggleIntent.swift; sourceTree = "<group>"; };
 		F45CEA3F4B29ABFACACE6C67 /* SharedKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharedKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F9506A078B7707E23EC1CE13 /* iHostsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = iHostsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -251,6 +253,7 @@
 		E21B694801D7A6430DD5705A /* iHostsWidget */ = {
 			isa = PBXGroup;
 			children = (
+				F081959EACAA804E6CE8A933 /* HostsToggleIntent.swift */,
 				C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */,
 				99CE1E760C72B18C9D69B3BC /* iHostsWidget.entitlements */,
 				D29907CC6124AFCEDBF4579B /* Info.plist */,
@@ -466,6 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92DA16DF49ECCD8691583711 /* HostsToggleIntent.swift in Sources */,
 				3CDB9AB388B5336F94A83782 /* HostsWidgetBundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
