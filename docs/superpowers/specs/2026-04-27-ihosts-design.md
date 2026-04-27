@@ -284,11 +284,38 @@ iHosts/
 | Architecture | MVVM, strict layer separation |
 | Root access | SMJobBless PrivilegedHelper, one-time authorization |
 | Data sharing | App Group JSON, shared by App + Widget |
-| Minimum macOS | macOS 13 (Ventura) — required for `MenuBarExtra` and `AppIntent` |
+| Minimum macOS | macOS 26 (Tahoe) — Liquid Glass design language, latest `MenuBarExtra` and `AppIntent` APIs |
 
 ---
 
-## 9. Out of Scope
+## 9. macOS 26 (Tahoe) UI Guidelines
+
+Target: **macOS 26 minimum deployment**. All UI must follow the Liquid Glass design language.
+
+**Materials:**
+- Popover 面板：使用 `.glassBackground()` / `GlassEffectContainer`，背景模糊透明
+- 侧边栏：`NavigationSplitView` + `.sidebar` list style，自动获得 Liquid Glass sidebar 材质
+- 工具栏：`ToolbarItem` 使用系统默认渲染，macOS 26 自动应用 glass chrome
+- Widget：使用 `WidgetBackground` glass 材质，与系统桌面深度融合
+
+**Controls:**
+- Toggle：系统原生 `Toggle`，macOS 26 风格自动适配
+- Button：优先 `.bordered` + `.borderedProminent`，避免自定义样式
+- 列表选中：使用 `List` selection binding，系统自动处理高亮态
+
+**色彩与层次:**
+- 不硬编码颜色，全部使用语义色（`.primary`、`.secondary`、`.accent`）
+- 深色/浅色模式自动适配，不额外判断 `colorScheme`
+- 状态图标（菜单栏）：使用 SF Symbols，`symbolRenderingMode(.hierarchical)` 增加层次感
+
+**排版:**
+- 标题：`.title3` + `.bold`
+- 列表项：`.body`
+- 辅助信息：`.caption` + `.secondary`
+
+---
+
+## 10. Out of Scope
 
 - Remote/URL hosts sources
 - App Store distribution
