@@ -51,6 +51,8 @@ targets:
         SKIP_INSTALL: NO
         ENABLE_HARDENED_RUNTIME: YES
         CODE_SIGN_ENTITLEMENTS: iHostsHelper/iHostsHelper.entitlements
+    dependencies:
+      - package: SharedKit
 
   iHostsWidget:
     type: app-extension

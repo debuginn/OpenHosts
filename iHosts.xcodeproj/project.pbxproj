@@ -11,6 +11,7 @@
 		606EBE42D99BE8EF983B24BB /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 21116E01E86E6B8479491DDA /* SharedKit */; };
 		84A42CE890579A23E83A2790 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EDF5134743F64718722611C /* SharedKit */; };
 		A467D8D112B3FF89E3346B1C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3444CF44677DFF7A6E77C /* main.swift */; };
+		B15CB62B1AFC8593FAD2C0EC /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756F785344696C81AF42C49A /* SharedKit */; };
 		C2B9EF35913D4B18E4C38624 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = B141E7AC889B26B2F9986A1C /* SharedKit */; };
 		C6B97D6CC9CBA24D741914B5 /* iHostsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F9506A078B7707E23EC1CE13 /* iHostsWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		EB350DAE46A606D116673D23 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120F9A50ADCF4041836BA746 /* PlaceholderTests.swift */; };
@@ -67,6 +68,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		82083742A83DDC21ED778FAA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B15CB62B1AFC8593FAD2C0EC /* SharedKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E26F8B655957B1C86F71F785 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,6 +237,7 @@
 			buildConfigurationList = 8A11D9B457E2A550A659F375 /* Build configuration list for PBXNativeTarget "iHostsHelper" */;
 			buildPhases = (
 				4539FAEDAE15A7D11F084878 /* Sources */,
+				82083742A83DDC21ED778FAA /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -235,6 +245,7 @@
 			);
 			name = iHostsHelper;
 			packageProductDependencies = (
+				756F785344696C81AF42C49A /* SharedKit */,
 			);
 			productName = iHostsHelper;
 			productReference = 31FCFF1376EACDFD40EF94C1 /* iHostsHelper */;
@@ -690,6 +701,10 @@
 			productName = SharedKit;
 		};
 		2EDF5134743F64718722611C /* SharedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedKit;
+		};
+		756F785344696C81AF42C49A /* SharedKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedKit;
 		};
