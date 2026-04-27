@@ -35,7 +35,7 @@ final class HelperDelegate: NSObject, NSXPCListenerDelegate {
 
     private func isCallerAuthorized(pid: pid_t) -> Bool {
         guard let callerPath = executablePath(for: pid) else { return false }
-        return callerPath.contains("iHosts.app")
+        return callerPath.contains("iHostsTool.app")
     }
 
     private func executablePath(for pid: pid_t) -> String? {
@@ -46,7 +46,7 @@ final class HelperDelegate: NSObject, NSXPCListenerDelegate {
 }
 
 let delegate = HelperDelegate()
-let listener = NSXPCListener(machServiceName: "com.debuginn.iHosts.Helper")
+let listener = NSXPCListener(machServiceName: "com.debuginn.iHostsTool.Helper")
 listener.delegate = delegate
 listener.resume()
 RunLoop.main.run()

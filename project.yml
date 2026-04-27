@@ -1,4 +1,4 @@
-name: iHosts
+name: iHostsTool
 options:
   bundleIdPrefix: com.debuginn
   deploymentTarget:
@@ -14,21 +14,21 @@ settings:
     CODE_SIGN_STYLE: Automatic
 
 targets:
-  iHosts:
+  iHostsTool:
     type: application
     platform: macOS
     deploymentTarget: "26.0"
     sources:
-      - path: iHosts
+      - path: iHostsTool
         createIntermediateGroups: true
-      - path: iHosts/Resources
+      - path: iHostsTool/Resources
         createIntermediateGroups: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts
-        PRODUCT_NAME: iHosts
-        INFOPLIST_FILE: iHosts/Info.plist
-        CODE_SIGN_ENTITLEMENTS: iHosts/iHosts.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHostsTool
+        PRODUCT_NAME: iHostsTool
+        INFOPLIST_FILE: iHostsTool/Info.plist
+        CODE_SIGN_ENTITLEMENTS: iHostsTool/iHostsTool.entitlements
         ENABLE_HARDENED_RUNTIME: YES
     dependencies:
       - package: SharedKit
@@ -47,7 +47,7 @@ targets:
         createIntermediateGroups: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts.Helper
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHostsTool.Helper
         PRODUCT_NAME: iHostsHelper
         INFOPLIST_FILE: iHostsHelper/Info.plist
         SKIP_INSTALL: NO
@@ -65,7 +65,7 @@ targets:
         createIntermediateGroups: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts.Widget
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHostsTool.Widget
         PRODUCT_NAME: iHostsWidget
         INFOPLIST_FILE: iHostsWidget/Info.plist
         CODE_SIGN_ENTITLEMENTS: iHostsWidget/iHostsWidget.entitlements
@@ -81,7 +81,7 @@ targets:
         createIntermediateGroups: true
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHostsTests
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHostsToolTests
     dependencies:
       - package: SharedKit
 

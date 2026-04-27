@@ -1,7 +1,7 @@
 import Foundation
 
 public enum AppGroup {
-    public static let identifier = "group.com.debuginn.iHosts"
+    public static let identifier = "group.com.debuginn.iHostsTool"
 
     public static var containerURL: URL {
         FileManager.default
@@ -13,5 +13,5 @@ public enum AppGroup {
         containerURL.appending(path: "state.json")
     }
 
-    public static let darwinNotificationName = "com.debuginn.iHosts.stateChanged"
+    public static let darwinNotificationName = "com.debuginn.iHostsTool.stateChanged"
 }

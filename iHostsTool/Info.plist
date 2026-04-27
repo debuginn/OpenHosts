@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key>
-    <string>iHosts</string>
+    <string>iHostsTool</string>
     <key>CFBundleDisplayName</key>
-    <string>iHosts</string>
+    <string>iHostsTool</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>LSUIElement</key>

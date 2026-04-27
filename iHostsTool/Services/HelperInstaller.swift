@@ -2,7 +2,7 @@ import Foundation
 import ServiceManagement
 
 enum HelperInstaller {
-    private static let plistName = "com.debuginn.iHosts.Helper.plist"
+    private static let plistName = "com.debuginn.iHostsTool.Helper.plist"
 
     static var isInstalled: Bool {
         SMAppService.daemon(plistName: plistName).status == .enabled

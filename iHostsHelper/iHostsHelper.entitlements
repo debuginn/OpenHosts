@@ -4,6 +4,6 @@
 <plist version="1.0">
 <dict>
     <key>com.apple.application-identifier</key>
-    <string>$(AppIdentifierPrefix)com.debuginn.iHosts.Helper</string>
+    <string>$(AppIdentifierPrefix)com.debuginn.iHostsTool.Helper</string>
 </dict>
 </plist>

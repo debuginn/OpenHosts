@@ -2,7 +2,7 @@ import SwiftUI
 import SharedKit
 
 @main
-struct iHostsApp: App {
+struct iHostsToolApp: App {
     @StateObject private var vm = AppViewModel()
 
     var body: some Scene {
@@ -10,7 +10,7 @@ struct iHostsApp: App {
             MenuBarPopoverView()
                 .environmentObject(vm)
         } label: {
-            Label("iHosts", systemImage: "network.badge.shield.half.filled")
+            Label("iHostsTool", systemImage: "network.badge.shield.half.filled")
                 .symbolRenderingMode(.hierarchical)
         }
         .menuBarExtraStyle(.window)

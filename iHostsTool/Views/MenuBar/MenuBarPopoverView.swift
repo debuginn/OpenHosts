@@ -10,7 +10,7 @@ struct MenuBarPopoverView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
             HStack {
-                Text("iHosts")
+                Text("iHostsTool")
                     .font(.title3.bold())
                 Spacer()
                 Button {

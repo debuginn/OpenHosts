@@ -4,7 +4,7 @@
 <dict>
     <key>com.apple.security.application-groups</key>
     <array>
-        <string>group.com.debuginn.iHosts</string>
+        <string>group.com.debuginn.iHostsTool</string>
     </array>
 </dict>
 </plist>

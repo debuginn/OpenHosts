@@ -5,7 +5,7 @@ final class HelperXPCClient: @unchecked Sendable {
     private var connection: NSXPCConnection?
 
     private func makeConnection() -> NSXPCConnection {
-        let c = NSXPCConnection(machServiceName: "com.debuginn.iHosts.Helper",
+        let c = NSXPCConnection(machServiceName: "com.debuginn.iHostsTool.Helper",
                                 options: .privileged)
         c.remoteObjectInterface = NSXPCInterface(with: HostsHelperProtocol.self)
         c.invalidationHandler = { [weak self] in self?.connection = nil }
