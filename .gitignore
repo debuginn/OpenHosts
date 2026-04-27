@@ -11,5 +11,9 @@ build/
 *.o
 *.d
 
+# Swift Package Manager
+.build/
+*.resolved
+
 # macOS
 .DS_Store
