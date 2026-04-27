@@ -24,10 +24,24 @@ final class HostsHelperImpl: NSObject, HostsHelperProtocol {
 final class HelperDelegate: NSObject, NSXPCListenerDelegate {
     func listener(_ listener: NSXPCListener,
                   shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
+        guard isCallerAuthorized(pid: connection.processIdentifier) else {
+            return false
+        }
         connection.exportedInterface = NSXPCInterface(with: HostsHelperProtocol.self)
         connection.exportedObject = HostsHelperImpl()
         connection.resume()
         return true
+    }
+
+    private func isCallerAuthorized(pid: pid_t) -> Bool {
+        guard let callerPath = executablePath(for: pid) else { return false }
+        return callerPath.contains("iHosts.app")
+    }
+
+    private func executablePath(for pid: pid_t) -> String? {
+        var buffer = [CChar](repeating: 0, count: Int(MAXPATHLEN))
+        return proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0
+            ? String(cString: buffer) : nil
     }
 }
 
