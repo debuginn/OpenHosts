@@ -25,7 +25,6 @@
 		A8BC05BF8402BCCE2B43BB5F /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEDA54E20CF8CE47F77FBB2 /* EditorViewModel.swift */; };
 		AABF4655770AFFF0D1B6A524 /* HelperInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */; };
 		AD41929BC17EFCB0792DCA69 /* ApplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD28229DEF7CC86AAF3C9D64 /* ApplyButton.swift */; };
-		C5963E2C1707119E26640535 /* com.debuginn.OpenHosts.Helper.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45F41BE032270B449442D7BE /* com.debuginn.OpenHosts.Helper.plist */; };
 		D337BA540999AF6EF7095FDB /* EditorRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A57F8E0AB320875F3B4CB5F /* EditorRootView.swift */; };
 		D35F7328F0203EB3F441A114 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6B3D0509BC616B803005DF /* MenuBarPopoverView.swift */; };
 		D9F4F85F87D14BD5695ADDDC /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA258BF0D5E4CD1AE188227 /* SidebarView.swift */; };
@@ -72,7 +71,6 @@
 		3147F3874C4B9CD607A98E38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperXPCClient.swift; sourceTree = "<group>"; };
 		3FEDA54E20CF8CE47F77FBB2 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
-		45F41BE032270B449442D7BE /* com.debuginn.OpenHosts.Helper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = com.debuginn.OpenHosts.Helper.plist; sourceTree = "<group>"; };
 		5509DC5D03730E46F3A2C08C /* EditorToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorToolbarView.swift; sourceTree = "<group>"; };
 		58632940EC1D450105825094 /* HostsEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsEditorView.swift; sourceTree = "<group>"; };
 		698E8647873A190C96415757 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
@@ -205,7 +203,6 @@
 		B93DE154AA0300D02D17733B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E4F1CAE03E69602148E960AC /* LaunchDaemons */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -259,14 +256,6 @@
 				0AE182A2BFFDD12A738280C4 /* OpenHostsHelper.entitlements */,
 			);
 			path = OpenHostsHelper;
-			sourceTree = "<group>";
-		};
-		E4F1CAE03E69602148E960AC /* LaunchDaemons */ = {
-			isa = PBXGroup;
-			children = (
-				45F41BE032270B449442D7BE /* com.debuginn.OpenHosts.Helper.plist */,
-			);
-			path = LaunchDaemons;
 			sourceTree = "<group>";
 		};
 		E91C0E56130BF47A613E8FE2 /* MenuBar */ = {
@@ -327,7 +316,6 @@
 			buildConfigurationList = 23AAF8E7618637764F214A6F /* Build configuration list for PBXNativeTarget "OpenHosts" */;
 			buildPhases = (
 				EDEE372863D675C8DFD0EC92 /* Sources */,
-				1EFA1C5FA1799A724B1A9647 /* Resources */,
 				58348AA790C5C7E92EA4A51E /* Frameworks */,
 				827811FABFF64B0530F760BB /* Embed Foundation Extensions */,
 			);
@@ -415,17 +403,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		1EFA1C5FA1799A724B1A9647 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C5963E2C1707119E26640535 /* com.debuginn.OpenHosts.Helper.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		647D901A93F013CBD6504E5A /* Sources */ = {
@@ -525,6 +502,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -544,6 +522,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -647,6 +626,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -660,6 +640,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

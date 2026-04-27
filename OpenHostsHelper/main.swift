@@ -39,9 +39,10 @@ final class HelperDelegate: NSObject, NSXPCListenerDelegate {
     }
 
     private func executablePath(for pid: pid_t) -> String? {
-        var buffer = [CChar](repeating: 0, count: Int(MAXPATHLEN))
-        return proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0
-            ? String(cString: buffer) : nil
+        var buffer = [UInt8](repeating: 0, count: Int(MAXPATHLEN))
+        guard proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0 else { return nil }
+        let end = buffer.firstIndex(of: 0) ?? buffer.endIndex
+        return String(decoding: buffer[..<end], as: UTF8.self)
     }
 }
 

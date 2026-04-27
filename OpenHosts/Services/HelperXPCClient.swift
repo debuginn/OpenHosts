@@ -13,16 +13,14 @@ final class HelperXPCClient: @unchecked Sendable {
         return c
     }
 
-    private func proxy() -> any HostsHelperProtocol {
-        if connection == nil { connection = makeConnection() }
-        return connection!.remoteObjectProxyWithErrorHandler { [weak self] _ in
-            self?.connection = nil
-        } as! any HostsHelperProtocol
-    }
-
     func writeHosts(_ content: String) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            proxy().writeHosts(content) { error in
+            if connection == nil { connection = makeConnection() }
+            let proxy = connection!.remoteObjectProxyWithErrorHandler { [weak self] error in
+                self?.connection = nil
+                continuation.resume(throwing: error)
+            } as! any HostsHelperProtocol
+            proxy.writeHosts(content) { error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {
@@ -34,7 +32,12 @@ final class HelperXPCClient: @unchecked Sendable {
 
     func readHosts() async throws -> String {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
-            proxy().readHosts { content, error in
+            if connection == nil { connection = makeConnection() }
+            let proxy = connection!.remoteObjectProxyWithErrorHandler { [weak self] error in
+                self?.connection = nil
+                continuation.resume(throwing: error)
+            } as! any HostsHelperProtocol
+            proxy.readHosts { content, error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {

@@ -35,7 +35,7 @@ struct ModuleRowView: View {
         let name = module.name
         Toggle(isOn: Binding(
             get: { module.isEnabled },
-            set: { _ in vm.toggleModule(module.id) }
+            set: { _ in Task { @MainActor in vm.toggleModule(module.id) } }
         )) {
             Text(name).font(.body)
         }

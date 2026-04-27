@@ -12,6 +12,8 @@ settings:
     MACOSX_DEPLOYMENT_TARGET: "26.0"
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: "1.0"
 
 targets:
   OpenHosts:
@@ -20,8 +22,8 @@ targets:
     deploymentTarget: "26.0"
     sources:
       - path: OpenHosts
-        createIntermediateGroups: true
-      - path: OpenHosts/Resources
+        excludes:
+          - "Resources/LaunchDaemons/**"
         createIntermediateGroups: true
     settings:
       base:
@@ -37,6 +39,18 @@ targets:
       - target: OpenHostsWidget
         embed: true
         codeSign: true
+    buildPhases:
+      - type: shell
+        name: Copy LaunchDaemon files
+        basedOnDependencyAnalysis: false
+        script: |
+          set -e
+          LAUNCHER_DIR="${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Library/LaunchDaemons"
+          mkdir -p "$LAUNCHER_DIR"
+          cp -f "${SRCROOT}/OpenHosts/Resources/LaunchDaemons/com.debuginn.OpenHosts.Helper.plist" "$LAUNCHER_DIR/"
+          if [ -f "${BUILT_PRODUCTS_DIR}/OpenHostsHelper" ]; then
+            cp -f "${BUILT_PRODUCTS_DIR}/OpenHostsHelper" "$LAUNCHER_DIR/"
+          fi
 
   OpenHostsHelper:
     type: tool
