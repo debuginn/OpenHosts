@@ -56,6 +56,7 @@
 		9099E4AB3354A00B3071B594 /* iHosts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHosts.entitlements; sourceTree = "<group>"; };
 		99CE1E760C72B18C9D69B3BC /* iHostsWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHostsWidget.entitlements; sourceTree = "<group>"; };
 		A332874C2E5EAC117A32FEB3 /* iHosts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iHosts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAFCF191F812FD3BE14CB1E4 /* iHostsHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHostsHelper.entitlements; sourceTree = "<group>"; };
 		C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsWidgetBundle.swift; sourceTree = "<group>"; };
 		C81012360D7F08CCCC642BDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D29907CC6124AFCEDBF4579B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -107,6 +108,7 @@
 		3267434217C432580586F8BD /* iHostsHelper */ = {
 			isa = PBXGroup;
 			children = (
+				BAFCF191F812FD3BE14CB1E4 /* iHostsHelper.entitlements */,
 				C81012360D7F08CCCC642BDB /* Info.plist */,
 				D2A3444CF44677DFF7A6E77C /* main.swift */,
 			);
@@ -361,7 +363,9 @@
 		406A6B6092D2B4E1A33B24E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = iHostsHelper/iHostsHelper.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = iHostsHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -465,7 +469,9 @@
 		CA62090CD4C3AA394EE8189F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = iHostsHelper/iHostsHelper.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = iHostsHelper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
