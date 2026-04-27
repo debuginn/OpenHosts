@@ -1,5 +1,3 @@
-import Foundation
-
 public enum HostsComposer {
     public static func compose(from state: AppState) -> String {
         var lines: [String] = []
@@ -26,6 +24,6 @@ public enum HostsComposer {
             }
         }
 
-        return lines.joined(separator: "\n")
+        return lines.isEmpty ? "" : lines.joined(separator: "\n") + "\n"
     }
 }

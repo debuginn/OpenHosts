@@ -1,4 +1,5 @@
 import XCTest
+import Foundation
 @testable import SharedKit
 
 final class HostsComposerTests: XCTestCase {
@@ -78,5 +79,34 @@ final class HostsComposerTests: XCTestCase {
         let result = HostsComposer.compose(from: state)
 
         XCTAssertTrue(result.contains("dev.local"))
+    }
+
+    func test_emptyState_returnsEmptyString() {
+        let result = HostsComposer.compose(from: .empty)
+        XCTAssertEqual(result, "")
+    }
+
+    func test_profileMode_fallsBackToModulesWhenProfileIdUnmatched() {
+        let entry = HostsEntry(ip: "127.0.0.1", hostname: "dev.local")
+        let mod = HostsGroup(name: "Dev", isEnabled: true, entries: [entry])
+        let state = AppState(modules: [mod], activeProfileId: UUID())
+
+        let result = HostsComposer.compose(from: state)
+
+        XCTAssertTrue(result.contains("dev.local"))
+    }
+
+    func test_moduleMode_preservesOrderOfModules() {
+        let entry1 = HostsEntry(ip: "127.0.0.1", hostname: "first.local")
+        let entry2 = HostsEntry(ip: "127.0.0.2", hostname: "second.local")
+        let mod1 = HostsGroup(name: "First", isEnabled: true, entries: [entry1])
+        let mod2 = HostsGroup(name: "Second", isEnabled: true, entries: [entry2])
+        let state = AppState(modules: [mod1, mod2])
+
+        let result = HostsComposer.compose(from: state)
+
+        let idx1 = result.range(of: "first.local")!.lowerBound
+        let idx2 = result.range(of: "second.local")!.lowerBound
+        XCTAssertLessThan(idx1, idx2)
     }
 }
