@@ -16,6 +16,10 @@
 		84A42CE890579A23E83A2790 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EDF5134743F64718722611C /* SharedKit */; };
 		880F536E29E521D1F68D07D4 /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6214A7FACDA6D51B4FEB09 /* AppViewModel.swift */; };
 		925EEBFB42443DC1117A19B1 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA72C7DFC0E42725FC71E3F3 /* MenuBarPopoverView.swift */; };
+		A20AB0933E80427E96F9E56B /* ModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DB3C2CFAD12429E9E6EDF03 /* ModeToggleView.swift */; };
+		7633DED86A8B4CE581EDAD60 /* ModuleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FBDF784C424F0B89BF78C9 /* ModuleListView.swift */; };
+		A27C141DC3AF4E0783BD3FD5 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540805394C12442B8948E894 /* ProfileListView.swift */; };
+		293E3C772C964DFC9B7D5755 /* ApplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734F599341F54821A13AFF37 /* ApplyButton.swift */; };
 		A467D8D112B3FF89E3346B1C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3444CF44677DFF7A6E77C /* main.swift */; };
 		B15CB62B1AFC8593FAD2C0EC /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756F785344696C81AF42C49A /* SharedKit */; };
 		C2B9EF35913D4B18E4C38624 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = B141E7AC889B26B2F9986A1C /* SharedKit */; };
@@ -70,6 +74,10 @@
 		99CE1E760C72B18C9D69B3BC /* iHostsWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHostsWidget.entitlements; sourceTree = "<group>"; };
 		A332874C2E5EAC117A32FEB3 /* iHosts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iHosts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA72C7DFC0E42725FC71E3F3 /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
+		0DB3C2CFAD12429E9E6EDF03 /* ModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeToggleView.swift; sourceTree = "<group>"; };
+		B1FBDF784C424F0B89BF78C9 /* ModuleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleListView.swift; sourceTree = "<group>"; };
+		540805394C12442B8948E894 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
+		734F599341F54821A13AFF37 /* ApplyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyButton.swift; sourceTree = "<group>"; };
 		BAFCF191F812FD3BE14CB1E4 /* iHostsHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHostsHelper.entitlements; sourceTree = "<group>"; };
 		C116041364090F259769E4AC /* EditorRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorRootView.swift; sourceTree = "<group>"; };
 		C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsWidgetBundle.swift; sourceTree = "<group>"; };
@@ -161,6 +169,10 @@
 			isa = PBXGroup;
 			children = (
 				BA72C7DFC0E42725FC71E3F3 /* MenuBarPopoverView.swift */,
+				0DB3C2CFAD12429E9E6EDF03 /* ModeToggleView.swift */,
+				B1FBDF784C424F0B89BF78C9 /* ModuleListView.swift */,
+				540805394C12442B8948E894 /* ProfileListView.swift */,
+				734F599341F54821A13AFF37 /* ApplyButton.swift */,
 			);
 			path = MenuBar;
 			sourceTree = "<group>";
@@ -430,6 +442,10 @@
 				6AD44FDACDDEF53C6B6EF4AB /* HelperInstaller.swift in Sources */,
 				765330207E2A19F0E35EA71D /* HelperXPCClient.swift in Sources */,
 				925EEBFB42443DC1117A19B1 /* MenuBarPopoverView.swift in Sources */,
+				A20AB0933E80427E96F9E56B /* ModeToggleView.swift in Sources */,
+				7633DED86A8B4CE581EDAD60 /* ModuleListView.swift in Sources */,
+				A27C141DC3AF4E0783BD3FD5 /* ProfileListView.swift in Sources */,
+				293E3C772C964DFC9B7D5755 /* ApplyButton.swift in Sources */,
 				F97DE71C0D7507623ED3E41B /* iHostsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
