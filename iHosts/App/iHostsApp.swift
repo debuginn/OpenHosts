@@ -1,8 +1,27 @@
 import SwiftUI
+import SharedKit
 
 @main
 struct iHostsApp: App {
+    @StateObject private var vm = AppViewModel()
+
     var body: some Scene {
-        Settings { EmptyView() }
+        MenuBarExtra {
+            MenuBarPopoverView()
+                .environmentObject(vm)
+        } label: {
+            Label("iHosts", systemImage: "network.badge.shield.half.filled")
+                .symbolRenderingMode(.hierarchical)
+        }
+        .menuBarExtraStyle(.window)
+
+        Window("Hosts Editor", id: "editor") {
+            EditorRootView()
+                .environmentObject(vm)
+        }
+        .defaultSize(width: 900, height: 600)
+        .commands {
+            CommandGroup(replacing: .newItem) {}
+        }
     }
 }
