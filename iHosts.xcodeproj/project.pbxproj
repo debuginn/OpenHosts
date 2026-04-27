@@ -1,0 +1,697 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3CDB9AB388B5336F94A83782 /* HostsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */; };
+		606EBE42D99BE8EF983B24BB /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 21116E01E86E6B8479491DDA /* SharedKit */; };
+		84A42CE890579A23E83A2790 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EDF5134743F64718722611C /* SharedKit */; };
+		A467D8D112B3FF89E3346B1C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3444CF44677DFF7A6E77C /* main.swift */; };
+		C2B9EF35913D4B18E4C38624 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = B141E7AC889B26B2F9986A1C /* SharedKit */; };
+		C6B97D6CC9CBA24D741914B5 /* iHostsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = F9506A078B7707E23EC1CE13 /* iHostsWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EB350DAE46A606D116673D23 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120F9A50ADCF4041836BA746 /* PlaceholderTests.swift */; };
+		F97DE71C0D7507623ED3E41B /* iHostsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F3975BF7BB89E9378C7930 /* iHostsApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6F9EEAB021CEC307CB0F9CAA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E977914AAE51158B275C0B2E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9304D1E2A30D97A36FDB4854;
+			remoteInfo = iHostsHelper;
+		};
+		8421857266D4468B71D332A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E977914AAE51158B275C0B2E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAE5404537C382955818C885;
+			remoteInfo = iHostsWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C2DCE8BFEECE2688C88ACBBF /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C6B97D6CC9CBA24D741914B5 /* iHostsWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		04F3975BF7BB89E9378C7930 /* iHostsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iHostsApp.swift; sourceTree = "<group>"; };
+		120F9A50ADCF4041836BA746 /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
+		31FCFF1376EACDFD40EF94C1 /* iHostsHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = iHostsHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		5253EE8DF0475458D26E4475 /* SharedKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SharedKit; path = SharedKit; sourceTree = SOURCE_ROOT; };
+		9099E4AB3354A00B3071B594 /* iHosts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHosts.entitlements; sourceTree = "<group>"; };
+		99CE1E760C72B18C9D69B3BC /* iHostsWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHostsWidget.entitlements; sourceTree = "<group>"; };
+		A332874C2E5EAC117A32FEB3 /* iHosts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iHosts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsWidgetBundle.swift; sourceTree = "<group>"; };
+		C81012360D7F08CCCC642BDB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D29907CC6124AFCEDBF4579B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D2A3444CF44677DFF7A6E77C /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		DC54869FF82472B68E624B3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F45CEA3F4B29ABFACACE6C67 /* SharedKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharedKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9506A078B7707E23EC1CE13 /* iHostsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = iHostsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E26F8B655957B1C86F71F785 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				606EBE42D99BE8EF983B24BB /* SharedKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FBACB0B9DAA20CDD05EC6929 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84A42CE890579A23E83A2790 /* SharedKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE9A0D927E044413F7AEFAE2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2B9EF35913D4B18E4C38624 /* SharedKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		28C4561D1C7BE1FD3F74D69D /* iHosts */ = {
+			isa = PBXGroup;
+			children = (
+				9099E4AB3354A00B3071B594 /* iHosts.entitlements */,
+				DC54869FF82472B68E624B3C /* Info.plist */,
+				BAD6188825D9789B4A023A76 /* App */,
+				8F596037CE33AB2F1AFE0B22 /* Views */,
+			);
+			path = iHosts;
+			sourceTree = "<group>";
+		};
+		3267434217C432580586F8BD /* iHostsHelper */ = {
+			isa = PBXGroup;
+			children = (
+				C81012360D7F08CCCC642BDB /* Info.plist */,
+				D2A3444CF44677DFF7A6E77C /* main.swift */,
+			);
+			path = iHostsHelper;
+			sourceTree = "<group>";
+		};
+		4FF18032A2BEFC7B873241B9 /* SharedKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				120F9A50ADCF4041836BA746 /* PlaceholderTests.swift */,
+			);
+			path = SharedKitTests;
+			sourceTree = "<group>";
+		};
+		741CD4A38DC400CE02A3F796 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				5253EE8DF0475458D26E4475 /* SharedKit */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		8F596037CE33AB2F1AFE0B22 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BAD6188825D9789B4A023A76 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				04F3975BF7BB89E9378C7930 /* iHostsApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		BD9BB0F00745164E4BD92E12 = {
+			isa = PBXGroup;
+			children = (
+				28C4561D1C7BE1FD3F74D69D /* iHosts */,
+				3267434217C432580586F8BD /* iHostsHelper */,
+				E21B694801D7A6430DD5705A /* iHostsWidget */,
+				741CD4A38DC400CE02A3F796 /* Packages */,
+				4FF18032A2BEFC7B873241B9 /* SharedKitTests */,
+				F57226FCFADAB0167F68B580 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E21B694801D7A6430DD5705A /* iHostsWidget */ = {
+			isa = PBXGroup;
+			children = (
+				C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */,
+				99CE1E760C72B18C9D69B3BC /* iHostsWidget.entitlements */,
+				D29907CC6124AFCEDBF4579B /* Info.plist */,
+			);
+			path = iHostsWidget;
+			sourceTree = "<group>";
+		};
+		F57226FCFADAB0167F68B580 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A332874C2E5EAC117A32FEB3 /* iHosts.app */,
+				31FCFF1376EACDFD40EF94C1 /* iHostsHelper */,
+				F9506A078B7707E23EC1CE13 /* iHostsWidget.appex */,
+				F45CEA3F4B29ABFACACE6C67 /* SharedKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7249207513A00C83B56C2B81 /* iHosts */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 47A426F6386AA6B3CD67E39B /* Build configuration list for PBXNativeTarget "iHosts" */;
+			buildPhases = (
+				6409236F409E21427D2C6EAF /* Sources */,
+				E26F8B655957B1C86F71F785 /* Frameworks */,
+				C2DCE8BFEECE2688C88ACBBF /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6DF6A0ED817A8A98D4D58AA3 /* PBXTargetDependency */,
+				AEED61EF3A60971E8C3C272D /* PBXTargetDependency */,
+			);
+			name = iHosts;
+			packageProductDependencies = (
+				21116E01E86E6B8479491DDA /* SharedKit */,
+			);
+			productName = iHosts;
+			productReference = A332874C2E5EAC117A32FEB3 /* iHosts.app */;
+			productType = "com.apple.product-type.application";
+		};
+		74D8F225AC02534335510948 /* SharedKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F66C538B32B4FC48AB8CF542 /* Build configuration list for PBXNativeTarget "SharedKitTests" */;
+			buildPhases = (
+				574A8FF48BFA6A400995636C /* Sources */,
+				FBACB0B9DAA20CDD05EC6929 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SharedKitTests;
+			packageProductDependencies = (
+				2EDF5134743F64718722611C /* SharedKit */,
+			);
+			productName = SharedKitTests;
+			productReference = F45CEA3F4B29ABFACACE6C67 /* SharedKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		9304D1E2A30D97A36FDB4854 /* iHostsHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A11D9B457E2A550A659F375 /* Build configuration list for PBXNativeTarget "iHostsHelper" */;
+			buildPhases = (
+				4539FAEDAE15A7D11F084878 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iHostsHelper;
+			packageProductDependencies = (
+			);
+			productName = iHostsHelper;
+			productReference = 31FCFF1376EACDFD40EF94C1 /* iHostsHelper */;
+			productType = "com.apple.product-type.tool";
+		};
+		FAE5404537C382955818C885 /* iHostsWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 44A4BDB9E0D55CB92058CBD5 /* Build configuration list for PBXNativeTarget "iHostsWidget" */;
+			buildPhases = (
+				8D755F26A53E47F7069F45EF /* Sources */,
+				FE9A0D927E044413F7AEFAE2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iHostsWidget;
+			packageProductDependencies = (
+				B141E7AC889B26B2F9986A1C /* SharedKit */,
+			);
+			productName = iHostsWidget;
+			productReference = F9506A078B7707E23EC1CE13 /* iHostsWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E977914AAE51158B275C0B2E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					7249207513A00C83B56C2B81 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					74D8F225AC02534335510948 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					9304D1E2A30D97A36FDB4854 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					FAE5404537C382955818C885 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 7B8920E57F29C17326C14474 /* Build configuration list for PBXProject "iHosts" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BD9BB0F00745164E4BD92E12;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				81A0E6D8083D3FB7B7A1C443 /* XCLocalSwiftPackageReference "SharedKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F57226FCFADAB0167F68B580 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				74D8F225AC02534335510948 /* SharedKitTests */,
+				7249207513A00C83B56C2B81 /* iHosts */,
+				9304D1E2A30D97A36FDB4854 /* iHostsHelper */,
+				FAE5404537C382955818C885 /* iHostsWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4539FAEDAE15A7D11F084878 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A467D8D112B3FF89E3346B1C /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		574A8FF48BFA6A400995636C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB350DAE46A606D116673D23 /* PlaceholderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6409236F409E21427D2C6EAF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F97DE71C0D7507623ED3E41B /* iHostsApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D755F26A53E47F7069F45EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CDB9AB388B5336F94A83782 /* HostsWidgetBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6DF6A0ED817A8A98D4D58AA3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9304D1E2A30D97A36FDB4854 /* iHostsHelper */;
+			targetProxy = 6F9EEAB021CEC307CB0F9CAA /* PBXContainerItemProxy */;
+		};
+		AEED61EF3A60971E8C3C272D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAE5404537C382955818C885 /* iHostsWidget */;
+			targetProxy = 8421857266D4468B71D332A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		406A6B6092D2B4E1A33B24E7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = iHostsHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHosts.Helper;
+				PRODUCT_NAME = iHostsHelper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+			};
+			name = Debug;
+		};
+		425E2605A4746565A8C0CFCE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = iHostsWidget/iHostsWidget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = iHostsWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHosts.Widget;
+				PRODUCT_NAME = iHostsWidget;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		519ED607F617924BEFFB0B72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = iHosts/iHosts.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = iHosts/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHosts;
+				PRODUCT_NAME = iHosts;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D7F91D74CE9BCA7C5BA23E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHostsTests;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A1B106BEA271031D7542A818 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = iHostsWidget/iHostsWidget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = iHostsWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHosts.Widget;
+				PRODUCT_NAME = iHostsWidget;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B0F53F64B2FAA596BEA1DA66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHostsTests;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		CA62090CD4C3AA394EE8189F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = iHostsHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHosts.Helper;
+				PRODUCT_NAME = iHostsHelper;
+				SDKROOT = macosx;
+				SKIP_INSTALL = NO;
+			};
+			name = Release;
+		};
+		D74F43D346D0955F90D31B34 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = iHosts/iHosts.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = iHosts/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.debuginn.iHosts;
+				PRODUCT_NAME = iHosts;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		DA6269D0B8F5901AF8450AB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		FA63B7ED0A953181EB023E60 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		44A4BDB9E0D55CB92058CBD5 /* Build configuration list for PBXNativeTarget "iHostsWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				425E2605A4746565A8C0CFCE /* Debug */,
+				A1B106BEA271031D7542A818 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		47A426F6386AA6B3CD67E39B /* Build configuration list for PBXNativeTarget "iHosts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				519ED607F617924BEFFB0B72 /* Debug */,
+				D74F43D346D0955F90D31B34 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7B8920E57F29C17326C14474 /* Build configuration list for PBXProject "iHosts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA63B7ED0A953181EB023E60 /* Debug */,
+				DA6269D0B8F5901AF8450AB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8A11D9B457E2A550A659F375 /* Build configuration list for PBXNativeTarget "iHostsHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				406A6B6092D2B4E1A33B24E7 /* Debug */,
+				CA62090CD4C3AA394EE8189F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F66C538B32B4FC48AB8CF542 /* Build configuration list for PBXNativeTarget "SharedKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7F91D74CE9BCA7C5BA23E3 /* Debug */,
+				B0F53F64B2FAA596BEA1DA66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		81A0E6D8083D3FB7B7A1C443 /* XCLocalSwiftPackageReference "SharedKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = SharedKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		21116E01E86E6B8479491DDA /* SharedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedKit;
+		};
+		2EDF5134743F64718722611C /* SharedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedKit;
+		};
+		B141E7AC889B26B2F9986A1C /* SharedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = E977914AAE51158B275C0B2E /* Project object */;
+}

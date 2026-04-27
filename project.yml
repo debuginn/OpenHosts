@@ -1,0 +1,84 @@
+name: iHosts
+options:
+  bundleIdPrefix: com.debuginn
+  deploymentTarget:
+    macOS: "26.0"
+  xcodeVersion: "26.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  iHosts:
+    type: application
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: iHosts
+        createIntermediateGroups: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts
+        PRODUCT_NAME: iHosts
+        INFOPLIST_FILE: iHosts/Info.plist
+        CODE_SIGN_ENTITLEMENTS: iHosts/iHosts.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+    dependencies:
+      - package: SharedKit
+      - target: iHostsHelper
+        embed: false
+      - target: iHostsWidget
+        embed: true
+        codeSign: true
+
+  iHostsHelper:
+    type: tool
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: iHostsHelper
+        createIntermediateGroups: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts.Helper
+        PRODUCT_NAME: iHostsHelper
+        INFOPLIST_FILE: iHostsHelper/Info.plist
+        SKIP_INSTALL: NO
+
+  iHostsWidget:
+    type: app-extension
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: iHostsWidget
+        createIntermediateGroups: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts.Widget
+        PRODUCT_NAME: iHostsWidget
+        INFOPLIST_FILE: iHostsWidget/Info.plist
+        CODE_SIGN_ENTITLEMENTS: iHostsWidget/iHostsWidget.entitlements
+    dependencies:
+      - package: SharedKit
+
+  SharedKitTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: SharedKitTests
+        createIntermediateGroups: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHostsTests
+    dependencies:
+      - package: SharedKit
+
+packages:
+  SharedKit:
+    path: SharedKit
