@@ -44,4 +44,10 @@ final class HostsStoreTests: XCTestCase {
 
         XCTAssertEqual(loaded.modules.first?.name, "B")
     }
+
+    func test_load_returnsEmptyStateWhenFileCorrupt() throws {
+        try "not valid json".write(to: tempURL, atomically: true, encoding: .utf8)
+        let state = store.load()
+        XCTAssertEqual(state, AppState.empty)
+    }
 }
