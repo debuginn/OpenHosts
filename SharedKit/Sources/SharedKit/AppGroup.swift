@@ -5,7 +5,8 @@ public enum AppGroup {
 
     public static var containerURL: URL {
         FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: identifier)!
+            .containerURL(forSecurityApplicationGroupIdentifier: identifier)
+            ?? FileManager.default.temporaryDirectory.appendingPathComponent(identifier)
     }
 
     public static var stateFileURL: URL {
