@@ -2,16 +2,19 @@ import Foundation
 import ServiceManagement
 
 enum HelperInstaller {
+    private static let plistName = "com.debuginn.iHosts.Helper.plist"
+
     static var isInstalled: Bool {
-        SMAppService.mainApp.status == .enabled
+        SMAppService.daemon(plistName: plistName).status == .enabled
     }
 
     static func installIfNeeded() throws {
-        guard !isInstalled else { return }
-        try SMAppService.mainApp.register()
+        let service = SMAppService.daemon(plistName: plistName)
+        guard service.status != .enabled else { return }
+        try service.register()
     }
 
     static func uninstall() throws {
-        try SMAppService.mainApp.unregister()
+        try SMAppService.daemon(plistName: plistName).unregister()
     }
 }

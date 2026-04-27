@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		3CDB9AB388B5336F94A83782 /* HostsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D2A64789AE63C42D493E97 /* HostsWidgetBundle.swift */; };
+		43A8FC317B5550E96972C039 /* com.debuginn.iHosts.Helper.plist in Resources */ = {isa = PBXBuildFile; fileRef = 25879016597601BD8DBC6C4C /* com.debuginn.iHosts.Helper.plist */; };
 		606EBE42D99BE8EF983B24BB /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 21116E01E86E6B8479491DDA /* SharedKit */; };
+		6AD44FDACDDEF53C6B6EF4AB /* HelperInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCEEE708510F91751C91AD4 /* HelperInstaller.swift */; };
+		765330207E2A19F0E35EA71D /* HelperXPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5C680F27E70E9E77FAF963 /* HelperXPCClient.swift */; };
 		84A42CE890579A23E83A2790 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EDF5134743F64718722611C /* SharedKit */; };
 		A467D8D112B3FF89E3346B1C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2A3444CF44677DFF7A6E77C /* main.swift */; };
 		B15CB62B1AFC8593FAD2C0EC /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 756F785344696C81AF42C49A /* SharedKit */; };
@@ -52,7 +55,10 @@
 /* Begin PBXFileReference section */
 		04F3975BF7BB89E9378C7930 /* iHostsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iHostsApp.swift; sourceTree = "<group>"; };
 		120F9A50ADCF4041836BA746 /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
+		25879016597601BD8DBC6C4C /* com.debuginn.iHosts.Helper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = com.debuginn.iHosts.Helper.plist; sourceTree = "<group>"; };
 		31FCFF1376EACDFD40EF94C1 /* iHostsHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = iHostsHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BCEEE708510F91751C91AD4 /* HelperInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperInstaller.swift; sourceTree = "<group>"; };
+		3E5C680F27E70E9E77FAF963 /* HelperXPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperXPCClient.swift; sourceTree = "<group>"; };
 		5253EE8DF0475458D26E4475 /* SharedKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SharedKit; path = SharedKit; sourceTree = SOURCE_ROOT; };
 		9099E4AB3354A00B3071B594 /* iHosts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHosts.entitlements; sourceTree = "<group>"; };
 		99CE1E760C72B18C9D69B3BC /* iHostsWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iHostsWidget.entitlements; sourceTree = "<group>"; };
@@ -109,6 +115,8 @@
 				9099E4AB3354A00B3071B594 /* iHosts.entitlements */,
 				DC54869FF82472B68E624B3C /* Info.plist */,
 				BAD6188825D9789B4A023A76 /* App */,
+				37142E85B50123E413CB9651 /* Resources */,
+				807EF81A85653AFFA352C30F /* Services */,
 				8F596037CE33AB2F1AFE0B22 /* Views */,
 			);
 			path = iHosts;
@@ -122,6 +130,14 @@
 				D2A3444CF44677DFF7A6E77C /* main.swift */,
 			);
 			path = iHostsHelper;
+			sourceTree = "<group>";
+		};
+		37142E85B50123E413CB9651 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				78B44B38907CC33858B5CD8C /* LaunchDaemons */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		4FF18032A2BEFC7B873241B9 /* SharedKitTests */ = {
@@ -138,6 +154,23 @@
 				5253EE8DF0475458D26E4475 /* SharedKit */,
 			);
 			name = Packages;
+			sourceTree = "<group>";
+		};
+		78B44B38907CC33858B5CD8C /* LaunchDaemons */ = {
+			isa = PBXGroup;
+			children = (
+				25879016597601BD8DBC6C4C /* com.debuginn.iHosts.Helper.plist */,
+			);
+			path = LaunchDaemons;
+			sourceTree = "<group>";
+		};
+		807EF81A85653AFFA352C30F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3BCEEE708510F91751C91AD4 /* HelperInstaller.swift */,
+				3E5C680F27E70E9E77FAF963 /* HelperXPCClient.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		8F596037CE33AB2F1AFE0B22 /* Views */ = {
@@ -196,6 +229,7 @@
 			buildConfigurationList = 47A426F6386AA6B3CD67E39B /* Build configuration list for PBXNativeTarget "iHosts" */;
 			buildPhases = (
 				6409236F409E21427D2C6EAF /* Sources */,
+				01AE9842F86DB29B790413EB /* Resources */,
 				E26F8B655957B1C86F71F785 /* Frameworks */,
 				C2DCE8BFEECE2688C88ACBBF /* Embed Foundation Extensions */,
 			);
@@ -322,6 +356,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		01AE9842F86DB29B790413EB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43A8FC317B5550E96972C039 /* com.debuginn.iHosts.Helper.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4539FAEDAE15A7D11F084878 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -343,6 +388,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AD44FDACDDEF53C6B6EF4AB /* HelperInstaller.swift in Sources */,
+				765330207E2A19F0E35EA71D /* HelperXPCClient.swift in Sources */,
 				F97DE71C0D7507623ED3E41B /* iHostsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

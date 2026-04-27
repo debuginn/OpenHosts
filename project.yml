@@ -21,6 +21,8 @@ targets:
     sources:
       - path: iHosts
         createIntermediateGroups: true
+      - path: iHosts/Resources
+        createIntermediateGroups: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.iHosts

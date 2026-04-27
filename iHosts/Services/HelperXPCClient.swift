@@ -21,7 +21,7 @@ final class HelperXPCClient: @unchecked Sendable {
     }
 
     func writeHosts(_ content: String) async throws {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             proxy().writeHosts(content) { error in
                 if let error {
                     continuation.resume(throwing: error)
@@ -33,7 +33,7 @@ final class HelperXPCClient: @unchecked Sendable {
     }
 
     func readHosts() async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<String, Error>) in
             proxy().readHosts { content, error in
                 if let error {
                     continuation.resume(throwing: error)
