@@ -6,7 +6,5 @@
     <array>
         <string>group.com.debuginn.iHosts</string>
     </array>
-    <key>com.apple.developer.smjobbless</key>
-    <true/>
 </dict>
 </plist>
