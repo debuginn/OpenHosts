@@ -3,16 +3,16 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleIdentifier</key>
-    <string>com.debuginn.iHostsTool.Helper</string>
+    <string>com.debuginn.OpenHosts.Helper</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>iHostsHelper</string>
+    <string>OpenHostsHelper</string>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>SMAuthorizedClients</key>
     <array>
-        <string>identifier "com.debuginn.iHostsTool" and anchor apple generic and certificate leaf[subject.CN] = "Mac Developer: *"</string>
+        <string>identifier "com.debuginn.OpenHosts" and anchor apple generic and certificate leaf[subject.CN] = "Mac Developer: *"</string>
     </array>
 </dict>
 </plist>

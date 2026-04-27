@@ -63,7 +63,7 @@ struct SmallWidgetView: View {
                 .symbolRenderingMode(.hierarchical)
                 .font(.title2)
             Spacer()
-            Text("iHosts").font(.caption.bold())
+            Text("OpenHosts").font(.caption.bold())
             Text(subtitle).font(.caption2).foregroundStyle(.secondary)
         }
         .padding()
@@ -77,7 +77,7 @@ struct MediumWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("iHosts").font(.caption.bold())
+            Text("OpenHosts").font(.caption.bold())
             ForEach(state.modules.prefix(4)) { module in
                 Button(intent: ToggleModuleIntent(moduleID: module.id.uuidString)) {
                     HStack {
@@ -103,13 +103,13 @@ struct MediumWidgetView: View {
 // MARK: - Widget + Bundle
 
 struct HostsWidget: Widget {
-    let kind = "com.debuginn.iHosts.Widget"
+    let kind = "com.debuginn.OpenHosts.Widget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: HostsWidgetProvider()) { entry in
             HostsWidgetView(entry: entry)
         }
-        .configurationDisplayName("iHosts")
+        .configurationDisplayName("OpenHosts")
         .description("Quickly toggle your hosts modules.")
         .supportedFamilies([.systemSmall, .systemMedium])
     }

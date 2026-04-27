@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.debuginn.iHostsTool.Helper</string>
+    <string>com.debuginn.OpenHosts.Helper</string>
     <key>MachServices</key>
     <dict>
-        <key>com.debuginn.iHostsTool.Helper</key>
+        <key>com.debuginn.OpenHosts.Helper</key>
         <true/>
     </dict>
     <key>BundleProgram</key>
