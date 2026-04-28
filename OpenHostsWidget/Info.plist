@@ -5,9 +5,9 @@
     <key>CFBundleDisplayName</key>
     <string>OpenHostsWidget</string>
     <key>CFBundleVersion</key>
-    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <string>1</string>
     <key>CFBundleShortVersionString</key>
-    <string>$(MARKETING_VERSION)</string>
+    <string>1.0</string>
     <key>NSExtension</key>
     <dict>
         <key>NSExtensionPointIdentifier</key>

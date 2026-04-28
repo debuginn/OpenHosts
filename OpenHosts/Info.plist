@@ -9,9 +9,9 @@
     <key>CFBundleDisplayName</key>
     <string>OpenHosts</string>
     <key>CFBundleVersion</key>
-    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <string>1</string>
     <key>CFBundleShortVersionString</key>
-    <string>$(MARKETING_VERSION)</string>
+    <string>1.0</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>LSUIElement</key>
