@@ -10,6 +10,6 @@
         <true/>
     </dict>
     <key>BundleProgram</key>
-    <string>Contents/Library/LaunchDaemons/iHostsHelper</string>
+    <string>Contents/Library/LaunchDaemons/OpenHostsHelper</string>
 </dict>
 </plist>

@@ -1,4 +1,5 @@
 import SwiftUI
+import ServiceManagement
 
 struct ApplyButton: View {
     @EnvironmentObject var vm: AppViewModel
@@ -12,20 +13,40 @@ struct ApplyButton: View {
                     if vm.isApplyingHosts {
                         ProgressView().controlSize(.small)
                     }
-                    Text(vm.isApplyingHosts ? "Applying…" : "Apply to System")
+                    Text(buttonLabel)
                 }
                 .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(vm.isApplyingHosts)
+            .disabled(vm.isApplyingHosts || vm.helperStatus != .enabled)
+
+            if vm.helperStatus == .requiresApproval {
+                Text("Waiting for approval in System Settings → Login Items")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                    .multilineTextAlignment(.center)
+            } else if vm.helperStatus != .enabled {
+                Text("Helper not authorized — restart app to retry")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
 
             if let err = vm.lastError {
                 Text(err)
                     .font(.caption)
                     .foregroundStyle(.red)
-                    .lineLimit(2)
+                    .lineLimit(3)
+                    .multilineTextAlignment(.center)
             }
         }
         .padding(.horizontal)
+    }
+
+    private var buttonLabel: String {
+        if vm.isApplyingHosts { return "Applying…" }
+        if vm.helperStatus == .requiresApproval { return "Awaiting Approval…" }
+        if vm.helperStatus != .enabled { return "Helper Not Ready" }
+        return "Apply to System"
     }
 }

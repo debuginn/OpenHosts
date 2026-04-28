@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import ServiceManagement
 import SharedKit
 
 @MainActor
@@ -7,6 +8,7 @@ final class AppViewModel: ObservableObject {
     @Published var state: AppState
     @Published var isApplyingHosts = false
     @Published var lastError: String?
+    @Published var helperStatus: SMAppService.Status = .notRegistered
 
     private let store: HostsStore
     private let helperClient: HelperXPCClient
@@ -17,7 +19,16 @@ final class AppViewModel: ObservableObject {
         self.helperClient = helperClient
         self.state = store.load()
         observeAppGroupChanges()
-        Task { try? HelperInstaller.installIfNeeded() }
+        helperStatus = HelperInstaller.status
+        Task {
+            do {
+                try HelperInstaller.installIfNeeded()
+                helperStatus = HelperInstaller.status
+            } catch {
+                helperStatus = HelperInstaller.status
+                lastError = "Helper registration failed: \(error.localizedDescription)"
+            }
+        }
     }
 
     // MARK: - Module mode
@@ -71,6 +82,12 @@ final class AppViewModel: ObservableObject {
     // MARK: - Apply
 
     func applyHosts() async {
+        guard helperStatus == .enabled else {
+            lastError = helperStatus == .requiresApproval
+                ? "Please approve OpenHosts in System Settings → General → Login Items & Extensions."
+                : "Helper not installed. Restart the app to retry."
+            return
+        }
         isApplyingHosts = true
         lastError = nil
         defer { isApplyingHosts = false }

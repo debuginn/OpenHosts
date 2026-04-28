@@ -4,14 +4,34 @@ import ServiceManagement
 enum HelperInstaller {
     private static let plistName = "com.debuginn.OpenHosts.Helper.plist"
 
-    static var isInstalled: Bool {
-        SMAppService.daemon(plistName: plistName).status == .enabled
+    static var status: SMAppService.Status {
+        SMAppService.daemon(plistName: plistName).status
     }
 
-    static func installIfNeeded() throws {
+    static var isInstalled: Bool {
+        status == .enabled
+    }
+
+    // Registers the daemon. Throws if registration fails outright.
+    // Returns true if enabled immediately, false if pending user approval.
+    @discardableResult
+    static func installIfNeeded() throws -> Bool {
         let service = SMAppService.daemon(plistName: plistName)
-        guard service.status != .enabled else { return }
-        try service.register()
+        switch service.status {
+        case .enabled:
+            return true
+        case .requiresApproval:
+            // Already registered but user hasn't approved yet in System Settings.
+            // Re-calling register() opens System Settings → Login Items.
+            try service.register()
+            return false
+        case .notRegistered, .notFound:
+            try service.register()
+            return service.status == .enabled
+        @unknown default:
+            try service.register()
+            return service.status == .enabled
+        }
     }
 
     static func uninstall() throws {
