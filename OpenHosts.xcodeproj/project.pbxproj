@@ -66,7 +66,7 @@
 /* Begin PBXFileReference section */
 		0AE182A2BFFDD12A738280C4 /* OpenHostsHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHostsHelper.entitlements; sourceTree = "<group>"; };
 		161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperInstaller.swift; sourceTree = "<group>"; };
-		21466C2EAFF8C92FC05F6D48 /* SharedKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SharedKit; path = SharedKit; sourceTree = SOURCE_ROOT; };
+		21466C2EAFF8C92FC05F6D48 /* SharedKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SharedKit; sourceTree = SOURCE_ROOT; };
 		2579E2CB37A1D9EF5BC92CA6 /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
 		3147F3874C4B9CD607A98E38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperXPCClient.swift; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 		E43C69A986E83F4701949083 /* OpenHostsWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHostsWidget.entitlements; sourceTree = "<group>"; };
 		EA681E8E53AB89050FD7E615 /* iHostsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iHostsApp.swift; sourceTree = "<group>"; };
 		EF919C2E12F97601AA529D24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		FBE3FFE1CA94E367BA9756B5 /* OpenHostsHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = OpenHostsHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBE3FFE1CA94E367BA9756B5 /* OpenHostsHelper */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text; path = OpenHostsHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		FDA258BF0D5E4CD1AE188227 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -366,11 +366,9 @@
 						ProvisioningStyle = Automatic;
 					};
 					A1ACB652875E2C499FEF3D4A = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					EE264EC81D7E54BBB3459E0C = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					FE3457F2521AA9D209F39987 = {
@@ -540,6 +538,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenHosts/OpenHosts.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TXVGDTDY84;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = OpenHosts/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -559,6 +558,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenHosts/OpenHosts.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TXVGDTDY84;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = OpenHosts/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -656,6 +656,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = OpenHostsWidget/OpenHostsWidget.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TXVGDTDY84;
 				INFOPLIST_FILE = OpenHostsWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -690,6 +691,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = OpenHostsWidget/OpenHostsWidget.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = TXVGDTDY84;
 				INFOPLIST_FILE = OpenHostsWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
