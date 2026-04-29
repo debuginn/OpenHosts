@@ -1,29 +1,32 @@
+import Foundation
+
 public enum HostsComposer {
-    public static func compose(from state: AppState) -> String {
-        var lines: [String] = []
+    public static let startMarker = "# --- OPENHOSTS_START ---"
+    public static let endMarker   = "# --- OPENHOSTS_END ---"
 
-        if !state.systemHostsHeader.isEmpty {
-            lines.append(state.systemHostsHeader)
-        }
+    public static func compose(prefix: String, groups: [HostsGroup], suffix: String) -> String {
+        var lines = prefix.components(separatedBy: "\n")
 
-        let groups: [HostsGroup]
-        if let profileId = state.activeProfileId,
-           let profile = state.profiles.first(where: { $0.id == profileId }) {
-            groups = profile.groups
-        } else {
-            groups = state.modules
-        }
-
-        for group in groups where group.isEnabled {
-            for entry in group.entries where entry.isEnabled {
-                if entry.isComment {
-                    lines.append("# \(entry.hostname)")
-                } else {
-                    lines.append("\(entry.ip)\t\(entry.hostname)")
-                }
+        for group in groups {
+            lines.append("")
+            if group.isEnabled {
+                lines.append("# [Group: \(group.name)]")
+                lines.append(contentsOf: group.entries)
+            } else {
+                lines.append("# [Group: \(group.name)] disabled")
+                lines.append(contentsOf: group.entries.map { "# \($0)" })
             }
         }
 
-        return lines.isEmpty ? "" : lines.joined(separator: "\n") + "\n"
+        lines.append("")
+        lines.append(contentsOf: suffix.components(separatedBy: "\n"))
+        return lines.joined(separator: "\n")
+    }
+
+    public static func appendManagedSection(to content: String) -> String {
+        var s = content
+        if !s.hasSuffix("\n") { s += "\n" }
+        s += "\n\(startMarker)\n\(endMarker)\n"
+        return s
     }
 }

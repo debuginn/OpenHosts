@@ -1,45 +1,116 @@
 import SwiftUI
 
-struct MenuBarPopoverView: View {
+struct MenuBarMenuView: View {
     @EnvironmentObject var vm: AppViewModel
     @Environment(\.openWindow) private var openWindow
 
-    private var isProfileMode: Bool { vm.state.activeProfileId != nil }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header
-            HStack {
-                Text("OpenHosts")
-                    .font(.title3.bold())
-                Spacer()
-                Button {
-                    openWindow(id: "editor")
-                } label: {
-                    Image(systemName: "pencil")
+        VStack(spacing: 0) {
+            menuRow(label: "OpenHosts", icon: "macwindow") {
+                openWindow(id: "editor")
+                NSApplication.shared.activate(ignoringOtherApps: true)
+            }
+
+            Divider().padding(.horizontal, 8)
+
+            VStack(spacing: 0) {
+                ForEach(vm.configs) { config in
+                    toggleRow(
+                        icon: "doc.text",
+                        name: config.name,
+                        iconColor: .blue,
+                        isOn: config.isEnabled,
+                        action: { vm.toggleConfig(config.id) }
+                    )
                 }
-                .buttonStyle(.borderless)
-                .help("Open Editor")
-            }
-            .padding(.horizontal)
-            .padding(.top, 12)
-
-            Divider()
-
-            ModeToggleView()
-
-            if isProfileMode {
-                ProfileListView()
-            } else {
-                ModuleListView()
+                ForEach(vm.groups) { group in
+                    toggleRow(
+                        icon: "folder",
+                        name: group.name,
+                        iconColor: .orange,
+                        isOn: group.isEnabled,
+                        action: { vm.toggleGroup(group.id) }
+                    )
+                }
             }
 
-            Divider()
+            if vm.configs.isEmpty && vm.groups.isEmpty {
+                Text("No items")
+                    .font(.subheadline)
+                    .foregroundStyle(.tertiary)
+                    .padding(.vertical, 12)
+            }
 
-            ApplyButton()
-                .padding(.bottom, 12)
+            Divider().padding(.horizontal, 8)
+
+            menuRow(label: "Settings...", icon: "gearshape") {
+                openWindow(id: "settings")
+                NSApplication.shared.activate(ignoringOtherApps: true)
+            }
+
+            HStack {
+                Text("Quit")
+                Spacer()
+                Text("⌘Q")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture { NSApplication.shared.terminate(nil) }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
         }
-        .frame(width: 280)
-        .glassEffect(.regular, in: .rect(cornerRadius: 12))
+        .padding(.vertical, 4)
+        .frame(width: 200)
+    }
+
+    private func menuRow(label: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button {
+            dismissPopover()
+            action()
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: icon)
+                    .frame(width: 16)
+                Text(label)
+                Spacer()
+            }
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+    }
+
+    private func dismissPopover() {
+        for window in NSApplication.shared.windows where window.isVisible {
+            let name = String(describing: type(of: window))
+            if name.contains("Panel") || name.contains("StatusItem") || name.contains("NSStatusBar") {
+                window.orderOut(nil)
+                return
+            }
+        }
+        if let panel = NSApplication.shared.windows.first(where: {
+            $0.isVisible && $0.level.rawValue > NSWindow.Level.normal.rawValue && $0.identifier?.rawValue != "editor"
+        }) {
+            panel.orderOut(nil)
+        }
+    }
+
+    private func toggleRow(icon: String, name: String, iconColor: Color, isOn: Bool, action: @escaping () -> Void) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: icon)
+                .foregroundStyle(isOn ? iconColor : .gray)
+                .frame(width: 16)
+            Text(name)
+                .lineLimit(1)
+                .foregroundStyle(isOn ? .primary : .secondary)
+            Spacer()
+            Toggle("", isOn: Binding(get: { isOn }, set: { _ in action() }))
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.mini)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 5)
     }
 }

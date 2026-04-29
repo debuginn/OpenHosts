@@ -1,16 +1,15 @@
 import Foundation
 
-public struct HostsGroup: Identifiable, Codable, Sendable, Equatable {
+public struct HostsGroup: Identifiable, Codable, Sendable {
     public var id: UUID
     public var name: String
+    public var entries: [String]
     public var isEnabled: Bool
-    public var entries: [HostsEntry]
 
-    public init(id: UUID = UUID(), name: String,
-                isEnabled: Bool = true, entries: [HostsEntry] = []) {
+    public init(id: UUID = UUID(), name: String, entries: [String] = [], isEnabled: Bool = true) {
         self.id = id
         self.name = name
-        self.isEnabled = isEnabled
         self.entries = entries
+        self.isEnabled = isEnabled
     }
 }

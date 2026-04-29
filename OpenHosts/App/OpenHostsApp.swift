@@ -1,13 +1,11 @@
 import SwiftUI
-import SharedKit
 
 @main
 struct OpenHostsApp: App {
     @StateObject private var vm = AppViewModel()
-
     var body: some Scene {
         MenuBarExtra {
-            MenuBarPopoverView()
+            MenuBarMenuView()
                 .environmentObject(vm)
         } label: {
             Label("OpenHosts", systemImage: "network.badge.shield.half.filled")
@@ -23,5 +21,11 @@ struct OpenHostsApp: App {
         .commands {
             CommandGroup(replacing: .newItem) {}
         }
+
+        Window("Settings", id: "settings") {
+            SettingsView()
+                .environmentObject(vm)
+        }
+        .windowResizability(.contentSize)
     }
 }

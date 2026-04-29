@@ -1,1 +1,1 @@
-# iHosts
+# OpenHosts

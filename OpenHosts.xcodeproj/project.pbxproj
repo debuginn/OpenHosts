@@ -7,27 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0678F417DF90E3CFA3D93BBE /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 82150B5CA1E377C9B1EDDAF9 /* SharedKit */; };
-		189A1B1CB4F8599BAB3A6FB9 /* ModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A89F8EC2FF3DB4A9E14837 /* ModeToggleView.swift */; };
+		04885C2ACA67C803D0D767FE /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1161B764860787AC3935FE5F /* GroupDetailView.swift */; };
+		111F3E10A3F6CA559D38EBDE /* HistoryInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924A3D15059C2CA167103BE1 /* HistoryInspectorView.swift */; };
 		1E577866A6CB86546721FE83 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A3B580A5A1E6728E1C54A /* main.swift */; };
-		2C75BACC08F9E441DC6BDAC1 /* iHostsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA681E8E53AB89050FD7E615 /* iHostsApp.swift */; };
 		315F0F41B0B52FA5CDDD5EED /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698E8647873A190C96415757 /* AppViewModel.swift */; };
 		3A4B470D0D4AC8DC1916C316 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579E2CB37A1D9EF5BC92CA6 /* PlaceholderTests.swift */; };
+		4424A41B55F0C0BE018D2887 /* HostsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */; };
 		46349763A5EDCB9C7F579597 /* HostsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31DED04FF82C41F18982C1C /* HostsWidgetBundle.swift */; };
-		4F5D689B33CC0161EC042615 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 76F877DEC65AC86B50B343A7 /* SharedKit */; };
-		56A889802E0A6696A474DE76 /* EditorToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5509DC5D03730E46F3A2C08C /* EditorToolbarView.swift */; };
+		5122F6E7AA7515C3900EC7E4 /* HostsGroupConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE2F06B763EDF7AC13DD815 /* HostsGroupConfig.swift */; };
 		61FD2485BD7F5B2B1912039B /* HostsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58632940EC1D450105825094 /* HostsEditorView.swift */; };
-		6674601E98F67BA0E15B190C /* HostsToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E36B72F5BCC3A443C89444 /* HostsToggleIntent.swift */; };
 		6F2045ED85A25DCDD15ABF5E /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 74A6BEE1F11D8DAA282F8B33 /* SharedKit */; };
-		72753A457E731D280F18C715 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 91D2C736233D439F5F90E07C /* SharedKit */; };
-		86093ABAEA33FAD9E9049044 /* ProfileListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0FA53A3BBE58ADFD501D49 /* ProfileListView.swift */; };
-		882EDC3456A4D579AD6FE049 /* ModuleListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978EF0A0B47B25964896E4E0 /* ModuleListView.swift */; };
-		A8BC05BF8402BCCE2B43BB5F /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FEDA54E20CF8CE47F77FBB2 /* EditorViewModel.swift */; };
+		78A9DDAF15CCCB356F545CC7 /* ConfigSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D2F36AAA53254091D4082 /* ConfigSnapshot.swift */; };
+		7C1893D0AF46BE757CE7B182 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7436EA1C7EB5E04D6D6D1F85 /* SettingsView.swift */; };
+		967CA757FC390BD6DF3A1CB4 /* HostsComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAFD3CEC77F37508D0FB289 /* HostsComposer.swift */; };
+		A00B196B8F7F22517431D1DE /* GroupSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */; };
 		AABF4655770AFFF0D1B6A524 /* HelperInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */; };
-		AD41929BC17EFCB0792DCA69 /* ApplyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD28229DEF7CC86AAF3C9D64 /* ApplyButton.swift */; };
+		AFFDA52296F658B22A7D58AB /* OpenHostsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBEF3BB0ACA3A05C1A83ED0 /* OpenHostsApp.swift */; };
+		BE74F328DFD1998C7D897261 /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984BB17E5478DE0A232CC8B6 /* ConfigStore.swift */; };
+		CB753E5043A6727E41FCD8EF /* AddGroupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */; };
 		D337BA540999AF6EF7095FDB /* EditorRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A57F8E0AB320875F3B4CB5F /* EditorRootView.swift */; };
 		D35F7328F0203EB3F441A114 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6B3D0509BC616B803005DF /* MenuBarPopoverView.swift */; };
-		D9F4F85F87D14BD5695ADDDC /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA258BF0D5E4CD1AE188227 /* SidebarView.swift */; };
+		E0068FDF6C324DD50C6699E6 /* HostsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11D0A84769ECC6676A01F50 /* HostsParser.swift */; };
+		E46092D145E5F1746261E1D7 /* HostsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377982CD34830C4C53F667DE /* HostsGroup.swift */; };
 		ED9FE1672087E25BD0CD8F6E /* HelperXPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */; };
 		FFB571912F79FF54AF37B9B2 /* OpenHostsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D2662598239CFD436C796AFA /* OpenHostsWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -65,66 +66,46 @@
 
 /* Begin PBXFileReference section */
 		0AE182A2BFFDD12A738280C4 /* OpenHostsHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHostsHelper.entitlements; sourceTree = "<group>"; };
+		1161B764860787AC3935FE5F /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
 		161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperInstaller.swift; sourceTree = "<group>"; };
-		21466C2EAFF8C92FC05F6D48 /* SharedKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SharedKit; sourceTree = SOURCE_ROOT; };
+		21466C2EAFF8C92FC05F6D48 /* SharedKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SharedKit; path = SharedKit; sourceTree = SOURCE_ROOT; };
 		2579E2CB37A1D9EF5BC92CA6 /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
 		3147F3874C4B9CD607A98E38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		377982CD34830C4C53F667DE /* HostsGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsGroup.swift; sourceTree = "<group>"; };
+		3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGroupSheet.swift; sourceTree = "<group>"; };
 		3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperXPCClient.swift; sourceTree = "<group>"; };
-		3FEDA54E20CF8CE47F77FBB2 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
-		5509DC5D03730E46F3A2C08C /* EditorToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorToolbarView.swift; sourceTree = "<group>"; };
 		58632940EC1D450105825094 /* HostsEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsEditorView.swift; sourceTree = "<group>"; };
+		5BAFD3CEC77F37508D0FB289 /* HostsComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsComposer.swift; sourceTree = "<group>"; };
 		698E8647873A190C96415757 /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
 		6B9E750FD26CA4A470F244B2 /* SharedKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharedKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D1E718FCDE08E8DB191832B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		76A89F8EC2FF3DB4A9E14837 /* ModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeToggleView.swift; sourceTree = "<group>"; };
+		6EBEF3BB0ACA3A05C1A83ED0 /* OpenHostsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenHostsApp.swift; sourceTree = "<group>"; };
+		7436EA1C7EB5E04D6D6D1F85 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		887D2F36AAA53254091D4082 /* ConfigSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigSnapshot.swift; sourceTree = "<group>"; };
 		8A57F8E0AB320875F3B4CB5F /* EditorRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorRootView.swift; sourceTree = "<group>"; };
-		978EF0A0B47B25964896E4E0 /* ModuleListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleListView.swift; sourceTree = "<group>"; };
-		9A0FA53A3BBE58ADFD501D49 /* ProfileListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileListView.swift; sourceTree = "<group>"; };
+		924A3D15059C2CA167103BE1 /* HistoryInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryInspectorView.swift; sourceTree = "<group>"; };
+		984BB17E5478DE0A232CC8B6 /* ConfigStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStore.swift; sourceTree = "<group>"; };
 		A8ED32A9927F1694682BF2B1 /* OpenHosts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenHosts.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9E36B72F5BCC3A443C89444 /* HostsToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsToggleIntent.swift; sourceTree = "<group>"; };
+		A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsValidator.swift; sourceTree = "<group>"; };
 		AA48709FA5308EB806F1723D /* OpenHosts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHosts.entitlements; sourceTree = "<group>"; };
-		AD28229DEF7CC86AAF3C9D64 /* ApplyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplyButton.swift; sourceTree = "<group>"; };
+		BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSidebarView.swift; sourceTree = "<group>"; };
+		BFE2F06B763EDF7AC13DD815 /* HostsGroupConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsGroupConfig.swift; sourceTree = "<group>"; };
+		C11D0A84769ECC6676A01F50 /* HostsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsParser.swift; sourceTree = "<group>"; };
 		D2662598239CFD436C796AFA /* OpenHostsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OpenHostsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC6B3D0509BC616B803005DF /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
 		E17A3B580A5A1E6728E1C54A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		E31DED04FF82C41F18982C1C /* HostsWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsWidgetBundle.swift; sourceTree = "<group>"; };
 		E43C69A986E83F4701949083 /* OpenHostsWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHostsWidget.entitlements; sourceTree = "<group>"; };
-		EA681E8E53AB89050FD7E615 /* iHostsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iHostsApp.swift; sourceTree = "<group>"; };
 		EF919C2E12F97601AA529D24 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		FBE3FFE1CA94E367BA9756B5 /* OpenHostsHelper */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = text; path = OpenHostsHelper; sourceTree = BUILT_PRODUCTS_DIR; };
-		FDA258BF0D5E4CD1AE188227 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		FBE3FFE1CA94E367BA9756B5 /* OpenHostsHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = OpenHostsHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		262B741B07EBEAFC0BC79E13 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0678F417DF90E3CFA3D93BBE /* SharedKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3600C875FF4B5822E8AEAEC8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				6F2045ED85A25DCDD15ABF5E /* SharedKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		58348AA790C5C7E92EA4A51E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4F5D689B33CC0161EC042615 /* SharedKit in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C95C11B576433B99FCE703BF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				72753A457E731D280F18C715 /* SharedKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +133,8 @@
 			children = (
 				AF3232FEBBC5D1E5FD818C6A /* Editor */,
 				E91C0E56130BF47A613E8FE2 /* MenuBar */,
+				DD8F47945512DC8791A0660B /* Settings */,
+				5863B5A2A54584E83E4DAF4B /* Sidebar */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -159,12 +142,20 @@
 		564DD341B8F09AA15C6477CB /* OpenHostsWidget */ = {
 			isa = PBXGroup;
 			children = (
-				A9E36B72F5BCC3A443C89444 /* HostsToggleIntent.swift */,
 				E31DED04FF82C41F18982C1C /* HostsWidgetBundle.swift */,
 				EF919C2E12F97601AA529D24 /* Info.plist */,
 				E43C69A986E83F4701949083 /* OpenHostsWidget.entitlements */,
 			);
 			path = OpenHostsWidget;
+			sourceTree = "<group>";
+		};
+		5863B5A2A54584E83E4DAF4B /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */,
+				BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */,
+			);
+			path = Sidebar;
 			sourceTree = "<group>";
 		};
 		A2B69E05E6D365F660CD38A9 /* OpenHosts */ = {
@@ -173,6 +164,7 @@
 				3147F3874C4B9CD607A98E38 /* Info.plist */,
 				AA48709FA5308EB806F1723D /* OpenHosts.entitlements */,
 				A4B78C8F13D7DFAC6D9BF38B /* App */,
+				B64C2D528A99C0CCCA7FC887 /* Models */,
 				B93DE154AA0300D02D17733B /* Resources */,
 				C9386B35CE4F93561BA0FA7C /* Services */,
 				C81C9917DE555A1E46482813 /* ViewModels */,
@@ -184,7 +176,7 @@
 		A4B78C8F13D7DFAC6D9BF38B /* App */ = {
 			isa = PBXGroup;
 			children = (
-				EA681E8E53AB89050FD7E615 /* iHostsApp.swift */,
+				6EBEF3BB0ACA3A05C1A83ED0 /* OpenHostsApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -193,11 +185,23 @@
 			isa = PBXGroup;
 			children = (
 				8A57F8E0AB320875F3B4CB5F /* EditorRootView.swift */,
-				5509DC5D03730E46F3A2C08C /* EditorToolbarView.swift */,
+				1161B764860787AC3935FE5F /* GroupDetailView.swift */,
+				924A3D15059C2CA167103BE1 /* HistoryInspectorView.swift */,
 				58632940EC1D450105825094 /* HostsEditorView.swift */,
-				FDA258BF0D5E4CD1AE188227 /* SidebarView.swift */,
 			);
 			path = Editor;
+			sourceTree = "<group>";
+		};
+		B64C2D528A99C0CCCA7FC887 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				887D2F36AAA53254091D4082 /* ConfigSnapshot.swift */,
+				5BAFD3CEC77F37508D0FB289 /* HostsComposer.swift */,
+				377982CD34830C4C53F667DE /* HostsGroup.swift */,
+				BFE2F06B763EDF7AC13DD815 /* HostsGroupConfig.swift */,
+				C11D0A84769ECC6676A01F50 /* HostsParser.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		B93DE154AA0300D02D17733B /* Resources */ = {
@@ -234,7 +238,6 @@
 			isa = PBXGroup;
 			children = (
 				698E8647873A190C96415757 /* AppViewModel.swift */,
-				3FEDA54E20CF8CE47F77FBB2 /* EditorViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -242,8 +245,10 @@
 		C9386B35CE4F93561BA0FA7C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				984BB17E5478DE0A232CC8B6 /* ConfigStore.swift */,
 				161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */,
 				3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */,
+				A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -258,14 +263,18 @@
 			path = OpenHostsHelper;
 			sourceTree = "<group>";
 		};
+		DD8F47945512DC8791A0660B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				7436EA1C7EB5E04D6D6D1F85 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		E91C0E56130BF47A613E8FE2 /* MenuBar */ = {
 			isa = PBXGroup;
 			children = (
-				AD28229DEF7CC86AAF3C9D64 /* ApplyButton.swift */,
 				DC6B3D0509BC616B803005DF /* MenuBarPopoverView.swift */,
-				76A89F8EC2FF3DB4A9E14837 /* ModeToggleView.swift */,
-				978EF0A0B47B25964896E4E0 /* ModuleListView.swift */,
-				9A0FA53A3BBE58ADFD501D49 /* ProfileListView.swift */,
 			);
 			path = MenuBar;
 			sourceTree = "<group>";
@@ -297,7 +306,6 @@
 			buildConfigurationList = A9CE749B9B40646B27423226 /* Build configuration list for PBXNativeTarget "OpenHostsWidget" */;
 			buildPhases = (
 				99005247ADFB9891A9E7EDFD /* Sources */,
-				C95C11B576433B99FCE703BF /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -305,7 +313,6 @@
 			);
 			name = OpenHostsWidget;
 			packageProductDependencies = (
-				91D2C736233D439F5F90E07C /* SharedKit */,
 			);
 			productName = OpenHostsWidget;
 			productReference = D2662598239CFD436C796AFA /* OpenHostsWidget.appex */;
@@ -316,8 +323,8 @@
 			buildConfigurationList = 23AAF8E7618637764F214A6F /* Build configuration list for PBXNativeTarget "OpenHosts" */;
 			buildPhases = (
 				EDEE372863D675C8DFD0EC92 /* Sources */,
-				58348AA790C5C7E92EA4A51E /* Frameworks */,
 				827811FABFF64B0530F760BB /* Embed Foundation Extensions */,
+				6577342C5FB7DA20BDD4CCD8 /* Copy LaunchDaemon files */,
 			);
 			buildRules = (
 			);
@@ -327,7 +334,6 @@
 			);
 			name = OpenHosts;
 			packageProductDependencies = (
-				76F877DEC65AC86B50B343A7 /* SharedKit */,
 			);
 			productName = OpenHosts;
 			productReference = A8ED32A9927F1694682BF2B1 /* OpenHosts.app */;
@@ -338,7 +344,6 @@
 			buildConfigurationList = 719971205ACDEDB36FD8772A /* Build configuration list for PBXNativeTarget "OpenHostsHelper" */;
 			buildPhases = (
 				647D901A93F013CBD6504E5A /* Sources */,
-				262B741B07EBEAFC0BC79E13 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -346,7 +351,6 @@
 			);
 			name = OpenHostsHelper;
 			packageProductDependencies = (
-				82150B5CA1E377C9B1EDDAF9 /* SharedKit */,
 			);
 			productName = OpenHostsHelper;
 			productReference = FBE3FFE1CA94E367BA9756B5 /* OpenHostsHelper */;
@@ -362,17 +366,19 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					85A5969FD75108CCA6E7110F = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = TXVGDTDY84;
 						ProvisioningStyle = Automatic;
 					};
 					A1ACB652875E2C499FEF3D4A = {
+						DevelopmentTeam = TXVGDTDY84;
 						ProvisioningStyle = Automatic;
 					};
 					EE264EC81D7E54BBB3459E0C = {
+						DevelopmentTeam = TXVGDTDY84;
 						ProvisioningStyle = Automatic;
 					};
 					FE3457F2521AA9D209F39987 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = TXVGDTDY84;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -402,6 +408,28 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6577342C5FB7DA20BDD4CCD8 /* Copy LaunchDaemon files */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy LaunchDaemon files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nLAUNCHER_DIR=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Contents/Library/LaunchDaemons\"\nmkdir -p \"$LAUNCHER_DIR\"\ncp -f \"${SRCROOT}/OpenHosts/Resources/LaunchDaemons/com.debuginn.OpenHosts.Helper.plist\" \"$LAUNCHER_DIR/\"\nif [ -f \"${BUILT_PRODUCTS_DIR}/OpenHostsHelper\" ]; then\n  cp -f \"${BUILT_PRODUCTS_DIR}/OpenHostsHelper\" \"$LAUNCHER_DIR/\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		647D901A93F013CBD6504E5A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -415,7 +443,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6674601E98F67BA0E15B190C /* HostsToggleIntent.swift in Sources */,
 				46349763A5EDCB9C7F579597 /* HostsWidgetBundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -432,20 +459,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB753E5043A6727E41FCD8EF /* AddGroupSheet.swift in Sources */,
 				315F0F41B0B52FA5CDDD5EED /* AppViewModel.swift in Sources */,
-				AD41929BC17EFCB0792DCA69 /* ApplyButton.swift in Sources */,
+				78A9DDAF15CCCB356F545CC7 /* ConfigSnapshot.swift in Sources */,
+				BE74F328DFD1998C7D897261 /* ConfigStore.swift in Sources */,
 				D337BA540999AF6EF7095FDB /* EditorRootView.swift in Sources */,
-				56A889802E0A6696A474DE76 /* EditorToolbarView.swift in Sources */,
-				A8BC05BF8402BCCE2B43BB5F /* EditorViewModel.swift in Sources */,
+				04885C2ACA67C803D0D767FE /* GroupDetailView.swift in Sources */,
+				A00B196B8F7F22517431D1DE /* GroupSidebarView.swift in Sources */,
 				AABF4655770AFFF0D1B6A524 /* HelperInstaller.swift in Sources */,
 				ED9FE1672087E25BD0CD8F6E /* HelperXPCClient.swift in Sources */,
+				111F3E10A3F6CA559D38EBDE /* HistoryInspectorView.swift in Sources */,
+				967CA757FC390BD6DF3A1CB4 /* HostsComposer.swift in Sources */,
 				61FD2485BD7F5B2B1912039B /* HostsEditorView.swift in Sources */,
+				E46092D145E5F1746261E1D7 /* HostsGroup.swift in Sources */,
+				5122F6E7AA7515C3900EC7E4 /* HostsGroupConfig.swift in Sources */,
+				E0068FDF6C324DD50C6699E6 /* HostsParser.swift in Sources */,
+				4424A41B55F0C0BE018D2887 /* HostsValidator.swift in Sources */,
 				D35F7328F0203EB3F441A114 /* MenuBarPopoverView.swift in Sources */,
-				189A1B1CB4F8599BAB3A6FB9 /* ModeToggleView.swift in Sources */,
-				882EDC3456A4D579AD6FE049 /* ModuleListView.swift in Sources */,
-				86093ABAEA33FAD9E9049044 /* ProfileListView.swift in Sources */,
-				D9F4F85F87D14BD5695ADDDC /* SidebarView.swift in Sources */,
-				2C75BACC08F9E441DC6BDAC1 /* iHostsApp.swift in Sources */,
+				AFFDA52296F658B22A7D58AB /* OpenHostsApp.swift in Sources */,
+				7C1893D0AF46BE757CE7B182 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +534,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = TXVGDTDY84;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -538,7 +570,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenHosts/OpenHosts.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = TXVGDTDY84;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = OpenHosts/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -558,7 +589,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = OpenHosts/OpenHosts.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = TXVGDTDY84;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = OpenHosts/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -628,7 +658,7 @@
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = TXVGDTDY84;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -656,7 +686,6 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = OpenHostsWidget/OpenHostsWidget.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = TXVGDTDY84;
 				INFOPLIST_FILE = OpenHostsWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -691,7 +720,6 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = OpenHostsWidget/OpenHostsWidget.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = TXVGDTDY84;
 				INFOPLIST_FILE = OpenHostsWidget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -799,18 +827,6 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		74A6BEE1F11D8DAA282F8B33 /* SharedKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SharedKit;
-		};
-		76F877DEC65AC86B50B343A7 /* SharedKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SharedKit;
-		};
-		82150B5CA1E377C9B1EDDAF9 /* SharedKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SharedKit;
-		};
-		91D2C736233D439F5F90E07C /* SharedKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedKit;
 		};

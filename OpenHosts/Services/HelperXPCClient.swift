@@ -1,5 +1,9 @@
 import Foundation
-import SharedKit
+
+@objc protocol HostsHelperProtocol {
+    func writeHosts(_ content: String, reply: @escaping (Error?) -> Void)
+    func readHosts(reply: @escaping (String?, Error?) -> Void)
+}
 
 final class HelperXPCClient: @unchecked Sendable {
     private var connection: NSXPCConnection?
