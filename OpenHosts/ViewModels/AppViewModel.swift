@@ -3,6 +3,8 @@ import SwiftUI
 import ServiceManagement
 import OSLog
 import Combine
+import WidgetKit
+import SharedKit
 
 private let log = Logger(subsystem: "com.debuginn.OpenHosts", category: "AppViewModel")
 
@@ -64,6 +66,8 @@ final class AppViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+        syncWidgetState()
+        registerDarwinNotification()
     }
 
     // MARK: - Load
@@ -87,6 +91,7 @@ final class AppViewModel: ObservableObject {
         let config = HostsConfig(name: name)
         configs.append(config)
         store.save(configs)
+        syncWidgetState()
         selectedItem = .config(config.id)
     }
 
@@ -102,6 +107,7 @@ final class AppViewModel: ObservableObject {
             groups[i].memberIDs.removeAll { $0 == id }
         }
         store.saveGroups(groups)
+        syncWidgetState()
         if wasReferenced { Task { await reapply() } }
     }
 
@@ -115,6 +121,7 @@ final class AppViewModel: ObservableObject {
         guard let idx = configs.firstIndex(where: { $0.id == id }) else { return }
         configs[idx].name = name
         store.save(configs)
+        syncWidgetState()
         if configs[idx].isEnabled { Task { await reapply() } }
     }
 
@@ -131,6 +138,7 @@ final class AppViewModel: ObservableObject {
         validationFailedConfigID = nil
         configs[idx].isEnabled.toggle()
         store.save(configs)
+        syncWidgetState()
         Task { await reapply() }
     }
 
@@ -140,6 +148,7 @@ final class AppViewModel: ObservableObject {
         let group = HostsGroupConfig(name: name, memberIDs: memberIDs)
         groups.append(group)
         store.saveGroups(groups)
+        syncWidgetState()
         selectedItem = .group(group.id)
     }
 
@@ -147,6 +156,7 @@ final class AppViewModel: ObservableObject {
         guard let idx = groups.firstIndex(where: { $0.id == id }) else { return }
         groups[idx].name = name
         store.saveGroups(groups)
+        syncWidgetState()
     }
 
     func deleteGroup(_ id: UUID) {
@@ -154,6 +164,7 @@ final class AppViewModel: ObservableObject {
         if case .group(let sel) = selectedItem, sel == id { selectedItem = .systemHosts }
         groups.removeAll { $0.id == id }
         store.saveGroups(groups)
+        syncWidgetState()
         if wasEnabled { Task { await reapply() } }
     }
 
@@ -173,6 +184,7 @@ final class AppViewModel: ObservableObject {
         validationFailedConfigID = nil
         groups[idx].isEnabled.toggle()
         store.saveGroups(groups)
+        syncWidgetState()
         Task { await reapply() }
     }
 
@@ -241,6 +253,53 @@ final class AppViewModel: ObservableObject {
         } catch {
             applyState = .failure(error.localizedDescription)
             log.error("reapply failed: \(error)")
+        }
+    }
+
+    // MARK: - Widget Sync
+
+    func syncWidgetState() {
+        var items: [WidgetConfigItem] = configs.map {
+            WidgetConfigItem(id: $0.id, name: $0.name, isEnabled: $0.isEnabled, isGroup: false)
+        }
+        items += groups.map {
+            WidgetConfigItem(id: $0.id, name: $0.name, isEnabled: $0.isEnabled, isGroup: true)
+        }
+        WidgetState.write(WidgetState(items: items))
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private func registerDarwinNotification() {
+        let name = AppGroup.darwinNotificationName as CFString
+        let center = CFNotificationCenterGetDarwinNotifyCenter()
+        let observer = Unmanaged.passUnretained(self).toOpaque()
+        CFNotificationCenterAddObserver(center, observer, { _, observer, _, _, _ in
+            guard let observer else { return }
+            let vm = Unmanaged<AppViewModel>.fromOpaque(observer).takeUnretainedValue()
+            Task { @MainActor in vm.handleWidgetToggle() }
+        }, name, nil, .deliverImmediately)
+    }
+
+    private func handleWidgetToggle() {
+        guard let widgetState = WidgetState.read() else { return }
+        var changed = false
+        for item in widgetState.items {
+            if item.isGroup {
+                if let idx = groups.firstIndex(where: { $0.id == item.id }), groups[idx].isEnabled != item.isEnabled {
+                    groups[idx].isEnabled = item.isEnabled
+                    changed = true
+                }
+            } else {
+                if let idx = configs.firstIndex(where: { $0.id == item.id }), configs[idx].isEnabled != item.isEnabled {
+                    configs[idx].isEnabled = item.isEnabled
+                    changed = true
+                }
+            }
+        }
+        if changed {
+            store.save(configs)
+            store.saveGroups(groups)
+            Task { await reapply() }
         }
     }
 

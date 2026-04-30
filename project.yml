@@ -39,6 +39,7 @@ targets:
       - target: OpenHostsWidget
         embed: true
         codeSign: true
+      - package: SharedKit
     postBuildScripts:
       - name: Copy LaunchDaemon files
         basedOnDependencyAnalysis: false
@@ -80,6 +81,8 @@ targets:
         PRODUCT_NAME: OpenHostsWidget
         INFOPLIST_FILE: OpenHostsWidget/Info.plist
         CODE_SIGN_ENTITLEMENTS: OpenHostsWidget/OpenHostsWidget.entitlements
+    dependencies:
+      - package: SharedKit
 
   SharedKitTests:
     type: bundle.unit-test
@@ -103,6 +106,14 @@ schemes:
       config: Debug
     archive:
       config: Release
+
+  OpenHostsWidget:
+    build:
+      targets:
+        OpenHostsWidget: all
+    run:
+      config: Debug
+      askForAppToLaunch: true
 
 packages:
   SharedKit:

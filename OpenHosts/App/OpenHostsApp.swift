@@ -24,6 +24,12 @@ struct OpenHostsApp: App {
                     openWindow(id: "editor")
                     NSApp.activate(ignoringOtherApps: true)
                 }
+                .onOpenURL { url in
+                    guard url.scheme == "openhosts" else { return }
+                    DockManager.showDock()
+                    openWindow(id: "editor")
+                    NSApp.activate(ignoringOtherApps: true)
+                }
         }
         .defaultSize(width: 900, height: 600)
         .commands {

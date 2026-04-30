@@ -14,15 +14,18 @@
 		3A4B470D0D4AC8DC1916C316 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579E2CB37A1D9EF5BC92CA6 /* PlaceholderTests.swift */; };
 		4424A41B55F0C0BE018D2887 /* HostsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */; };
 		46349763A5EDCB9C7F579597 /* HostsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31DED04FF82C41F18982C1C /* HostsWidgetBundle.swift */; };
+		4F5D689B33CC0161EC042615 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 76F877DEC65AC86B50B343A7 /* SharedKit */; };
 		5122F6E7AA7515C3900EC7E4 /* HostsGroupConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE2F06B763EDF7AC13DD815 /* HostsGroupConfig.swift */; };
 		61FD2485BD7F5B2B1912039B /* HostsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58632940EC1D450105825094 /* HostsEditorView.swift */; };
 		6F2045ED85A25DCDD15ABF5E /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 74A6BEE1F11D8DAA282F8B33 /* SharedKit */; };
+		72753A457E731D280F18C715 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 91D2C736233D439F5F90E07C /* SharedKit */; };
 		78A9DDAF15CCCB356F545CC7 /* ConfigSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D2F36AAA53254091D4082 /* ConfigSnapshot.swift */; };
 		7C1893D0AF46BE757CE7B182 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7436EA1C7EB5E04D6D6D1F85 /* SettingsView.swift */; };
 		967CA757FC390BD6DF3A1CB4 /* HostsComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAFD3CEC77F37508D0FB289 /* HostsComposer.swift */; };
 		A00B196B8F7F22517431D1DE /* GroupSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */; };
 		AABF4655770AFFF0D1B6A524 /* HelperInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */; };
 		AFFDA52296F658B22A7D58AB /* OpenHostsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBEF3BB0ACA3A05C1A83ED0 /* OpenHostsApp.swift */; };
+		BA5A311598923FA4990336D9 /* ToggleConfigIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D2F6BCBE106BEA3D661C92 /* ToggleConfigIntent.swift */; };
 		BE74F328DFD1998C7D897261 /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984BB17E5478DE0A232CC8B6 /* ConfigStore.swift */; };
 		CB753E5043A6727E41FCD8EF /* AddGroupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */; };
 		D0BB16FE41F32B45FF38611C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98D6C140C6F667E39A134859 /* Assets.xcassets */; };
@@ -93,6 +96,7 @@
 		BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSidebarView.swift; sourceTree = "<group>"; };
 		BFE2F06B763EDF7AC13DD815 /* HostsGroupConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsGroupConfig.swift; sourceTree = "<group>"; };
 		C11D0A84769ECC6676A01F50 /* HostsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsParser.swift; sourceTree = "<group>"; };
+		C2D2F6BCBE106BEA3D661C92 /* ToggleConfigIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleConfigIntent.swift; sourceTree = "<group>"; };
 		D2662598239CFD436C796AFA /* OpenHostsWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OpenHostsWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC6B3D0509BC616B803005DF /* MenuBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverView.swift; sourceTree = "<group>"; };
 		E17A3B580A5A1E6728E1C54A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -108,6 +112,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F2045ED85A25DCDD15ABF5E /* SharedKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58348AA790C5C7E92EA4A51E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4F5D689B33CC0161EC042615 /* SharedKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C95C11B576433B99FCE703BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72753A457E731D280F18C715 /* SharedKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +167,7 @@
 				E31DED04FF82C41F18982C1C /* HostsWidgetBundle.swift */,
 				EF919C2E12F97601AA529D24 /* Info.plist */,
 				E43C69A986E83F4701949083 /* OpenHostsWidget.entitlements */,
+				C2D2F6BCBE106BEA3D661C92 /* ToggleConfigIntent.swift */,
 			);
 			path = OpenHostsWidget;
 			sourceTree = "<group>";
@@ -309,6 +330,7 @@
 			buildConfigurationList = A9CE749B9B40646B27423226 /* Build configuration list for PBXNativeTarget "OpenHostsWidget" */;
 			buildPhases = (
 				99005247ADFB9891A9E7EDFD /* Sources */,
+				C95C11B576433B99FCE703BF /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -316,6 +338,7 @@
 			);
 			name = OpenHostsWidget;
 			packageProductDependencies = (
+				91D2C736233D439F5F90E07C /* SharedKit */,
 			);
 			productName = OpenHostsWidget;
 			productReference = D2662598239CFD436C796AFA /* OpenHostsWidget.appex */;
@@ -327,6 +350,7 @@
 			buildPhases = (
 				EDEE372863D675C8DFD0EC92 /* Sources */,
 				1EFA1C5FA1799A724B1A9647 /* Resources */,
+				58348AA790C5C7E92EA4A51E /* Frameworks */,
 				827811FABFF64B0530F760BB /* Embed Foundation Extensions */,
 				6577342C5FB7DA20BDD4CCD8 /* Copy LaunchDaemon files */,
 			);
@@ -338,6 +362,7 @@
 			);
 			name = OpenHosts;
 			packageProductDependencies = (
+				76F877DEC65AC86B50B343A7 /* SharedKit */,
 			);
 			productName = OpenHosts;
 			productReference = A8ED32A9927F1694682BF2B1 /* OpenHosts.app */;
@@ -459,6 +484,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46349763A5EDCB9C7F579597 /* HostsWidgetBundle.swift in Sources */,
+				BA5A311598923FA4990336D9 /* ToggleConfigIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,6 +868,14 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		74A6BEE1F11D8DAA282F8B33 /* SharedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedKit;
+		};
+		76F877DEC65AC86B50B343A7 /* SharedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SharedKit;
+		};
+		91D2C736233D439F5F90E07C /* SharedKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedKit;
 		};

@@ -68,9 +68,10 @@ struct MenuBarMenuView: View {
                 HStack {
                     Text("Settings")
                     Spacer()
-                    Text("⌘,")
-                        .font(.subheadline)
+                    Text("⌘\u{2009},")
+                        .font(.subheadline.monospaced())
                         .foregroundStyle(.secondary)
+                        .frame(width: 32, alignment: .trailing)
                 }
             }
             .buttonStyle(.plain)
@@ -80,9 +81,10 @@ struct MenuBarMenuView: View {
             HStack {
                 Text("Quit")
                 Spacer()
-                Text("⌘Q")
-                    .font(.subheadline)
+                Text("⌘\u{2009}Q")
+                    .font(.subheadline.monospaced())
                     .foregroundStyle(.secondary)
+                    .frame(width: 32, alignment: .trailing)
             }
             .contentShape(Rectangle())
             .onTapGesture { NSApplication.shared.terminate(nil) }
