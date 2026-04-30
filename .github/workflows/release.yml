@@ -77,8 +77,13 @@ jobs:
       - name: Sign app bundle
         env:
           IDENTITY: "Developer ID Application"
+          TEAM_ID: ${{ secrets.TEAM_ID }}
         run: |
           APP="$RUNNER_TEMP/OpenHosts.xcarchive/Products/Applications/OpenHosts.app"
+
+          # Resolve $(AppIdentifierPrefix) in helper entitlements
+          sed "s/\$(AppIdentifierPrefix)/${TEAM_ID}./" \
+            OpenHostsHelper/OpenHostsHelper.entitlements > "$RUNNER_TEMP/helper.entitlements"
 
           # Sign embedded frameworks (if any)
           if [ -d "$APP/Contents/Frameworks" ]; then
@@ -88,7 +93,7 @@ jobs:
 
           # Sign the helper
           codesign --force --options runtime --sign "$IDENTITY" --timestamp \
-            --entitlements OpenHostsHelper/OpenHostsHelper.entitlements \
+            --entitlements "$RUNNER_TEMP/helper.entitlements" \
             "$APP/Contents/Library/LaunchDaemons/OpenHostsHelper"
 
           # Sign the widget extension
@@ -118,7 +123,7 @@ jobs:
             --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
             --key-id "$ASC_KEY_ID" \
             --issuer "$ASC_ISSUER_ID" \
-            --wait
+            --wait --timeout 20m
           xcrun stapler staple "$RUNNER_TEMP/export/OpenHosts.app"
 
       - name: Create DMG
@@ -148,7 +153,7 @@ jobs:
             --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
             --key-id "$ASC_KEY_ID" \
             --issuer "$ASC_ISSUER_ID" \
-            --wait
+            --wait --timeout 20m
           xcrun stapler staple "OpenHosts-${VERSION}.dmg"
 
       - name: Generate checksum
