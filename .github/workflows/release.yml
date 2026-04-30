@@ -63,8 +63,10 @@ jobs:
             -configuration Release \
             MARKETING_VERSION="${{ steps.version.outputs.version }}" \
             CURRENT_PROJECT_VERSION="${{ steps.version.outputs.build_number }}" \
-            CODE_SIGN_STYLE=Automatic \
-            DEVELOPMENT_TEAM="${{ secrets.TEAM_ID }}"
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Developer ID Application" \
+            DEVELOPMENT_TEAM="${{ secrets.TEAM_ID }}" \
+            PROVISIONING_PROFILE_SPECIFIER=""
 
       - name: Export archive
         run: |
