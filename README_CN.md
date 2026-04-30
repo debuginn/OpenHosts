@@ -7,8 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![macOS](https://img.shields.io/badge/macOS-26.0%2B-000000.svg)](https://developer.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-6-FA7343.svg)](https://swift.org/)
-
-[English](README.md)
+[![English](https://img.shields.io/badge/Docs-English-blue.svg)](README.md)
 
 ## 功能特性
 

@@ -7,8 +7,7 @@ A native macOS menu bar app for managing `/etc/hosts`.
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![macOS](https://img.shields.io/badge/macOS-26.0%2B-000000.svg)](https://developer.apple.com/macos/)
 [![Swift](https://img.shields.io/badge/Swift-6-FA7343.svg)](https://swift.org/)
-
-[中文](README_CN.md)
+[![中文](https://img.shields.io/badge/文档-中文-red.svg)](README_CN.md)
 
 ## Features
 
