@@ -6,10 +6,24 @@ struct MenuBarMenuView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            menuRow(label: "OpenHosts", icon: "macwindow") {
-                openWindow(id: "editor")
-                NSApplication.shared.activate(ignoringOtherApps: true)
+            Button {
+                dismissPopover()
+                DockManager.showDock()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [openWindow] in
+                    openWindow(id: "editor")
+                    NSApp.activate(ignoringOtherApps: true)
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "macwindow")
+                        .frame(width: 16)
+                    Text("OpenHosts")
+                    Spacer()
+                }
             }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
 
             Divider().padding(.horizontal, 8)
 
@@ -43,10 +57,25 @@ struct MenuBarMenuView: View {
 
             Divider().padding(.horizontal, 8)
 
-            menuRow(label: "Settings...", icon: "gearshape") {
-                openWindow(id: "settings")
-                NSApplication.shared.activate(ignoringOtherApps: true)
+            Button {
+                dismissPopover()
+                DockManager.showDock()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [openWindow] in
+                    openWindow(id: "settings")
+                    NSApp.activate(ignoringOtherApps: true)
+                }
+            } label: {
+                HStack {
+                    Text("Settings")
+                    Spacer()
+                    Text("⌘,")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
             }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
 
             HStack {
                 Text("Quit")

@@ -244,6 +244,10 @@ final class AppViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Dock Visibility
+
+    @AppStorage("showInDock") var showInDock: Bool = true
+
     // MARK: - Launch at Login
 
     var launchAtLogin: Bool {

@@ -86,8 +86,9 @@ struct SidebarView: View {
         .safeAreaInset(edge: .bottom) {
             HStack {
                 Button {
+                    DockManager.showDock()
                     openWindow(id: "settings")
-                    NSApplication.shared.activate(ignoringOtherApps: true)
+                    NSApp.activate(ignoringOtherApps: true)
                 } label: {
                     Image(systemName: "gearshape")
                         .foregroundStyle(.secondary)

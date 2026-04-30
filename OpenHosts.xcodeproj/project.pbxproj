@@ -25,6 +25,7 @@
 		AFFDA52296F658B22A7D58AB /* OpenHostsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EBEF3BB0ACA3A05C1A83ED0 /* OpenHostsApp.swift */; };
 		BE74F328DFD1998C7D897261 /* ConfigStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 984BB17E5478DE0A232CC8B6 /* ConfigStore.swift */; };
 		CB753E5043A6727E41FCD8EF /* AddGroupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */; };
+		D0BB16FE41F32B45FF38611C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98D6C140C6F667E39A134859 /* Assets.xcassets */; };
 		D337BA540999AF6EF7095FDB /* EditorRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A57F8E0AB320875F3B4CB5F /* EditorRootView.swift */; };
 		D35F7328F0203EB3F441A114 /* MenuBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6B3D0509BC616B803005DF /* MenuBarPopoverView.swift */; };
 		E0068FDF6C324DD50C6699E6 /* HostsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11D0A84769ECC6676A01F50 /* HostsParser.swift */; };
@@ -85,6 +86,7 @@
 		8A57F8E0AB320875F3B4CB5F /* EditorRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorRootView.swift; sourceTree = "<group>"; };
 		924A3D15059C2CA167103BE1 /* HistoryInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryInspectorView.swift; sourceTree = "<group>"; };
 		984BB17E5478DE0A232CC8B6 /* ConfigStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStore.swift; sourceTree = "<group>"; };
+		98D6C140C6F667E39A134859 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8ED32A9927F1694682BF2B1 /* OpenHosts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenHosts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsValidator.swift; sourceTree = "<group>"; };
 		AA48709FA5308EB806F1723D /* OpenHosts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHosts.entitlements; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 		B93DE154AA0300D02D17733B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				98D6C140C6F667E39A134859 /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 			buildConfigurationList = 23AAF8E7618637764F214A6F /* Build configuration list for PBXNativeTarget "OpenHosts" */;
 			buildPhases = (
 				EDEE372863D675C8DFD0EC92 /* Sources */,
+				1EFA1C5FA1799A724B1A9647 /* Resources */,
 				827811FABFF64B0530F760BB /* Embed Foundation Extensions */,
 				6577342C5FB7DA20BDD4CCD8 /* Copy LaunchDaemon files */,
 			);
@@ -407,6 +411,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1EFA1C5FA1799A724B1A9647 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0BB16FE41F32B45FF38611C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		6577342C5FB7DA20BDD4CCD8 /* Copy LaunchDaemon files */ = {
