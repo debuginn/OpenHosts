@@ -1,3 +1,5 @@
+![OpenHosts](https://webp.debuginn.com/20260430HADx6Z.jpeg)
+
 # OpenHosts
 
 一款原生 macOS 菜单栏应用，用于管理 `/etc/hosts`。
@@ -19,6 +21,8 @@
 - **特权助手** — 通过 XPC 安全写入 `/etc/hosts`，验证调用方身份
 - **桌面小组件** — WidgetKit 扩展，在桌面快速切换
 - **格式校验** — 实时验证 hosts 格式，阻止无效配置生效
+
+![Widget](https://webp.debuginn.com/202604309qf4Vs.jpeg)
 
 ## 系统要求
 

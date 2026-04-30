@@ -1,3 +1,5 @@
+![OpenHosts](https://webp.debuginn.com/20260430HADx6Z.jpeg)
+
 # OpenHosts
 
 A native macOS menu bar app for managing `/etc/hosts`.
@@ -19,6 +21,8 @@ A native macOS menu bar app for managing `/etc/hosts`.
 - **Privileged Helper** — Secure write to `/etc/hosts` via XPC with caller verification
 - **Widget** — WidgetKit extension for quick toggles from the desktop
 - **Validation** — Real-time hosts format validation before applying changes
+
+![Widget](https://webp.debuginn.com/202604309qf4Vs.jpeg)
 
 ## Requirements
 
