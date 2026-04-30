@@ -74,16 +74,39 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: Export archive
+      - name: Sign app bundle
+        env:
+          IDENTITY: "Developer ID Application"
         run: |
-          xcodebuild -exportArchive \
-            -archivePath "$RUNNER_TEMP/OpenHosts.xcarchive" \
-            -exportPath "$RUNNER_TEMP/export" \
-            -exportOptionsPlist ExportOptions.plist \
-            -allowProvisioningUpdates \
-            -authenticationKeyPath "$RUNNER_TEMP/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8" \
-            -authenticationKeyID "${{ secrets.ASC_KEY_ID }}" \
-            -authenticationKeyIssuerID "${{ secrets.ASC_ISSUER_ID }}"
+          APP="$RUNNER_TEMP/OpenHosts.xcarchive/Products/Applications/OpenHosts.app"
+
+          # Sign embedded frameworks (if any)
+          if [ -d "$APP/Contents/Frameworks" ]; then
+            find "$APP/Contents/Frameworks" \( -name "*.framework" -o -name "*.dylib" \) -exec \
+              codesign --force --options runtime --sign "$IDENTITY" --timestamp {} \;
+          fi
+
+          # Sign the helper
+          codesign --force --options runtime --sign "$IDENTITY" --timestamp \
+            --entitlements OpenHostsHelper/OpenHostsHelper.entitlements \
+            "$APP/Contents/Library/LaunchDaemons/OpenHostsHelper"
+
+          # Sign the widget extension
+          codesign --force --options runtime --sign "$IDENTITY" --timestamp \
+            --entitlements OpenHostsWidget/OpenHostsWidget.entitlements \
+            "$APP/Contents/PlugIns/OpenHostsWidget.appex"
+
+          # Sign the main app
+          codesign --force --options runtime --sign "$IDENTITY" --timestamp \
+            --entitlements OpenHosts/OpenHosts.entitlements \
+            "$APP"
+
+          # Verify
+          codesign --verify --deep --strict "$APP"
+
+          # Copy to export location
+          mkdir -p "$RUNNER_TEMP/export"
+          cp -R "$APP" "$RUNNER_TEMP/export/"
 
       - name: Notarize app
         env:
