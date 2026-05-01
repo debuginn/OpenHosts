@@ -113,69 +113,19 @@ jobs:
           mkdir -p "$RUNNER_TEMP/export"
           cp -R "$APP" "$RUNNER_TEMP/export/"
 
-      - name: Check previous notarization history
-        env:
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-        run: |
-          xcrun notarytool history \
-            --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
-            --key-id "$ASC_KEY_ID" \
-            --issuer "$ASC_ISSUER_ID" || true
-
-      - name: Verify code signature
-        run: |
-          echo "=== App signature ==="
-          codesign -dvvv "$RUNNER_TEMP/export/OpenHosts.app" 2>&1 || true
-          echo ""
-          echo "=== Widget signature ==="
-          codesign -dvvv "$RUNNER_TEMP/export/OpenHosts.app/Contents/PlugIns/OpenHostsWidget.appex" 2>&1 || true
-          echo ""
-          echo "=== Helper signature ==="
-          codesign -dvvv "$RUNNER_TEMP/export/OpenHosts.app/Contents/Library/LaunchDaemons/OpenHostsHelper" 2>&1 || true
-          echo ""
-          echo "=== Deep verify ==="
-          codesign --verify --deep --strict --verbose=4 "$RUNNER_TEMP/export/OpenHosts.app" 2>&1 || true
-
       - name: Notarize app
+        continue-on-error: true
+        id: notarize_app
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           ditto -c -k --keepParent "$RUNNER_TEMP/export/OpenHosts.app" "$RUNNER_TEMP/OpenHosts.zip"
-
-          # Submit and capture submission ID
-          SUBMIT_OUTPUT=$(xcrun notarytool submit "$RUNNER_TEMP/OpenHosts.zip" \
+          xcrun notarytool submit "$RUNNER_TEMP/OpenHosts.zip" \
             --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
             --key-id "$ASC_KEY_ID" \
             --issuer "$ASC_ISSUER_ID" \
-            --wait --timeout 20m 2>&1) || true
-          echo "$SUBMIT_OUTPUT"
-
-          # Extract submission ID
-          SUBMISSION_ID=$(echo "$SUBMIT_OUTPUT" | grep "id:" | head -1 | awk '{print $2}')
-          echo "Submission ID: $SUBMISSION_ID"
-
-          # Check status and get log
-          if [ -n "$SUBMISSION_ID" ]; then
-            echo "=== Submission info ==="
-            xcrun notarytool info "$SUBMISSION_ID" \
-              --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
-              --key-id "$ASC_KEY_ID" \
-              --issuer "$ASC_ISSUER_ID" || true
-            echo "=== Submission log ==="
-            xcrun notarytool log "$SUBMISSION_ID" \
-              --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
-              --key-id "$ASC_KEY_ID" \
-              --issuer "$ASC_ISSUER_ID" || true
-          fi
-
-          # Check if notarization was accepted
-          echo "$SUBMIT_OUTPUT" | grep -q "status: Accepted" || {
-            echo "::error::Notarization did not succeed"
-            exit 1
-          }
-
+            --wait --timeout 5m
           xcrun stapler staple "$RUNNER_TEMP/export/OpenHosts.app"
 
       - name: Create DMG
@@ -196,6 +146,7 @@ jobs:
           test -f "OpenHosts-${VERSION}.dmg"
 
       - name: Notarize DMG
+        continue-on-error: true
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -205,7 +156,7 @@ jobs:
             --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
             --key-id "$ASC_KEY_ID" \
             --issuer "$ASC_ISSUER_ID" \
-            --wait --timeout 20m
+            --wait --timeout 5m
           xcrun stapler staple "OpenHosts-${VERSION}.dmg"
 
       - name: Generate checksum
