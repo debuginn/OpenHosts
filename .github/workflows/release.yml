@@ -177,7 +177,13 @@ jobs:
           fi
           echo "Using sign_update at: $SIGN_UPDATE"
 
-          SIGNATURE=$("$SIGN_UPDATE" -s "$SPARKLE_ED_PRIVATE_KEY" "OpenHosts-${VERSION}.dmg")
+          KEY_FILE="$RUNNER_TEMP/sparkle_ed_private_key"
+          printf "%s" "$SPARKLE_ED_PRIVATE_KEY" > "$KEY_FILE"
+          chmod 600 "$KEY_FILE"
+
+          SIGNATURE=$("$SIGN_UPDATE" -f "$KEY_FILE" "OpenHosts-${VERSION}.dmg")
+          rm -f "$KEY_FILE"
+
           echo "signature=$SIGNATURE" >> "$GITHUB_OUTPUT"
           echo "Signature generated (length: ${#SIGNATURE})"
 
