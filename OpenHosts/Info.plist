@@ -14,6 +14,10 @@
     <string>1.0</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>LSMultipleInstancesProhibited</key>
+    <true/>
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
@@ -25,5 +29,13 @@
             </array>
         </dict>
     </array>
+    <key>SUFeedURL</key>
+    <string>https://raw.githubusercontent.com/debuginn/OpenHosts/main/appcast.xml</string>
+    <key>SUEnableAutomaticChecks</key>
+    <true/>
+    <key>SUAutomaticallyUpdate</key>
+    <false/>
+    <key>SUPublicEDKey</key>
+    <string>ZoBu41JZ1cctFDrdo3Z+tqZJ1VAC2i4oFVlLpweed8U=</string>
 </dict>
 </plist>

@@ -68,6 +68,7 @@ jobs:
           xcodebuild archive \
             -scheme "$SCHEME" \
             -archivePath "$RUNNER_TEMP/OpenHosts.xcarchive" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
             -configuration Release \
             MARKETING_VERSION="${{ steps.version.outputs.version }}" \
             CURRENT_PROJECT_VERSION="${{ steps.version.outputs.build_number }}" \
@@ -164,6 +165,22 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: shasum -a 256 "OpenHosts-${VERSION}.dmg" > "OpenHosts-${VERSION}.dmg.sha256"
 
+      - name: Sign update with Sparkle EdDSA key
+        id: sparkle_sign
+        env:
+          SPARKLE_ED_PRIVATE_KEY: ${{ secrets.SPARKLE_ED_PRIVATE_KEY }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          SIGN_UPDATE="$RUNNER_TEMP/DerivedData/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update"
+          if [ ! -x "$SIGN_UPDATE" ]; then
+            SIGN_UPDATE=$(find "$RUNNER_TEMP/DerivedData" -name "sign_update" -type f 2>/dev/null | head -1)
+          fi
+          echo "Using sign_update at: $SIGN_UPDATE"
+
+          SIGNATURE=$("$SIGN_UPDATE" -s "$SPARKLE_ED_PRIVATE_KEY" "OpenHosts-${VERSION}.dmg")
+          echo "signature=$SIGNATURE" >> "$GITHUB_OUTPUT"
+          echo "Signature generated (length: ${#SIGNATURE})"
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -175,6 +192,65 @@ jobs:
             "OpenHosts-${VERSION}.dmg.sha256" \
             --title "OpenHosts ${VERSION}" \
             --generate-notes
+
+      - name: Update appcast.xml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD: ${{ steps.version.outputs.build_number }}
+          SIGNATURE: ${{ steps.sparkle_sign.outputs.signature }}
+        run: |
+          DMG_SIZE=$(stat -f%z "OpenHosts-${VERSION}.dmg")
+          PUB_DATE=$(LC_TIME=en_US.UTF-8 date -u "+%a, %d %b %Y %H:%M:%S +0000")
+          RELEASE_URL="https://github.com/debuginn/OpenHosts/releases/download/${TAG}/OpenHosts-${VERSION}.dmg"
+          RELEASE_NOTES_URL="https://github.com/debuginn/OpenHosts/releases/tag/${TAG}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout main
+
+          export DMG_SIZE PUB_DATE RELEASE_URL RELEASE_NOTES_URL
+          python3 - <<'PY'
+          import os, re, sys
+          version = os.environ["VERSION"]
+          build = os.environ["BUILD"]
+          signature = os.environ["SIGNATURE"]
+          dmg_size = os.environ["DMG_SIZE"]
+          pub_date = os.environ["PUB_DATE"]
+          release_url = os.environ["RELEASE_URL"]
+          release_notes_url = os.environ["RELEASE_NOTES_URL"]
+
+          new_item = (
+              f'        <item>\n'
+              f'            <title>Version {version}</title>\n'
+              f'            <link>{release_notes_url}</link>\n'
+              f'            <sparkle:version>{build}</sparkle:version>\n'
+              f'            <sparkle:shortVersionString>{version}</sparkle:shortVersionString>\n'
+              f'            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>\n'
+              f'            <pubDate>{pub_date}</pubDate>\n'
+              f'            <enclosure url="{release_url}" length="{dmg_size}" type="application/octet-stream" {signature}/>\n'
+              f'        </item>'
+          )
+
+          with open("appcast.xml", "r") as f:
+              content = f.read()
+
+          marker = "<!-- Release entries will be prepended here by CI -->"
+          if marker in content:
+              replacement = new_item + "\n        " + marker
+              content = content.replace(marker, replacement, 1)
+          else:
+              content = content.replace("</channel>", new_item + "\n    </channel>", 1)
+
+          with open("appcast.xml", "w") as f:
+              f.write(content)
+          PY
+
+          git add appcast.xml
+          git commit -m "chore(release): update appcast for ${TAG}"
+          git push origin main
 
       - name: Cleanup keychain
         if: always()

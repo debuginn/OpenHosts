@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>OpenHosts</title>
+        <link>https://raw.githubusercontent.com/debuginn/OpenHosts/main/appcast.xml</link>
+        <description>OpenHosts updates</description>
+        <language>en</language>
+        <!-- Release entries will be prepended here by CI -->
+    </channel>
+</rss>

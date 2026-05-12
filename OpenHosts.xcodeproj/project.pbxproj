@@ -10,6 +10,7 @@
 		04885C2ACA67C803D0D767FE /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1161B764860787AC3935FE5F /* GroupDetailView.swift */; };
 		111F3E10A3F6CA559D38EBDE /* HistoryInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924A3D15059C2CA167103BE1 /* HistoryInspectorView.swift */; };
 		1E577866A6CB86546721FE83 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E17A3B580A5A1E6728E1C54A /* main.swift */; };
+		2BDC566CDE13559557A6D9E5 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 0DAC619B09FD4E08F644A639 /* Sparkle */; };
 		315F0F41B0B52FA5CDDD5EED /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 698E8647873A190C96415757 /* AppViewModel.swift */; };
 		3A4B470D0D4AC8DC1916C316 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579E2CB37A1D9EF5BC92CA6 /* PlaceholderTests.swift */; };
 		4424A41B55F0C0BE018D2887 /* HostsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */; };
@@ -20,6 +21,7 @@
 		6F2045ED85A25DCDD15ABF5E /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 74A6BEE1F11D8DAA282F8B33 /* SharedKit */; };
 		72753A457E731D280F18C715 /* SharedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 91D2C736233D439F5F90E07C /* SharedKit */; };
 		78A9DDAF15CCCB356F545CC7 /* ConfigSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 887D2F36AAA53254091D4082 /* ConfigSnapshot.swift */; };
+		7BBA90D344E505D75AB1D2F3 /* UpdaterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2508A192313516EA24959B5 /* UpdaterManager.swift */; };
 		7C1893D0AF46BE757CE7B182 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7436EA1C7EB5E04D6D6D1F85 /* SettingsView.swift */; };
 		967CA757FC390BD6DF3A1CB4 /* HostsComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAFD3CEC77F37508D0FB289 /* HostsComposer.swift */; };
 		A00B196B8F7F22517431D1DE /* GroupSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */; };
@@ -93,6 +95,7 @@
 		A8ED32A9927F1694682BF2B1 /* OpenHosts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenHosts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsValidator.swift; sourceTree = "<group>"; };
 		AA48709FA5308EB806F1723D /* OpenHosts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHosts.entitlements; sourceTree = "<group>"; };
+		B2508A192313516EA24959B5 /* UpdaterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterManager.swift; sourceTree = "<group>"; };
 		BAD47AB40A17A2B1B7019AE8 /* GroupSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSidebarView.swift; sourceTree = "<group>"; };
 		BFE2F06B763EDF7AC13DD815 /* HostsGroupConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsGroupConfig.swift; sourceTree = "<group>"; };
 		C11D0A84769ECC6676A01F50 /* HostsParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsParser.swift; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F5D689B33CC0161EC042615 /* SharedKit in Frameworks */,
+				2BDC566CDE13559557A6D9E5 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +277,7 @@
 				161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */,
 				3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */,
 				A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */,
+				B2508A192313516EA24959B5 /* UpdaterManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -363,6 +368,7 @@
 			name = OpenHosts;
 			packageProductDependencies = (
 				76F877DEC65AC86B50B343A7 /* SharedKit */,
+				0DAC619B09FD4E08F644A639 /* Sparkle */,
 			);
 			productName = OpenHosts;
 			productReference = A8ED32A9927F1694682BF2B1 /* OpenHosts.app */;
@@ -422,6 +428,7 @@
 			mainGroup = C616CA499F120E075A5E86CC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				BD04E7B255FDD2E01C14EBAA /* XCRemoteSwiftPackageReference "Sparkle" */,
 				76C52280AB0DD40172FEF407 /* XCLocalSwiftPackageReference "SharedKit" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -519,6 +526,7 @@
 				D35F7328F0203EB3F441A114 /* MenuBarPopoverView.swift in Sources */,
 				AFFDA52296F658B22A7D58AB /* OpenHostsApp.swift in Sources */,
 				7C1893D0AF46BE757CE7B182 /* SettingsView.swift in Sources */,
+				7BBA90D344E505D75AB1D2F3 /* UpdaterManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,7 +874,23 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		BD04E7B255FDD2E01C14EBAA /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		0DAC619B09FD4E08F644A639 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BD04E7B255FDD2E01C14EBAA /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
 		74A6BEE1F11D8DAA282F8B33 /* SharedKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SharedKit;

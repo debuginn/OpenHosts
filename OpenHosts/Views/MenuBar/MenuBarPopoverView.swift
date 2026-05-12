@@ -3,6 +3,7 @@ import SwiftUI
 struct MenuBarMenuView: View {
     @EnvironmentObject var vm: AppViewModel
     @Environment(\.openWindow) private var openWindow
+    @StateObject private var updater = UpdaterManager.shared
 
     var body: some View {
         VStack(spacing: 0) {
@@ -56,6 +57,20 @@ struct MenuBarMenuView: View {
             }
 
             Divider().padding(.horizontal, 8)
+
+            Button {
+                dismissPopover()
+                updater.checkForUpdates()
+            } label: {
+                HStack(spacing: 8) {
+                    Text("Check for Updates…")
+                    Spacer()
+                }
+            }
+            .buttonStyle(.plain)
+            .disabled(!updater.canCheckForUpdates)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
 
             Button {
                 dismissPopover()

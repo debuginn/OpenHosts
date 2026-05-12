@@ -3,6 +3,7 @@ import ServiceManagement
 
 struct SettingsView: View {
     @EnvironmentObject var vm: AppViewModel
+    @StateObject private var updater = UpdaterManager.shared
 
     var body: some View {
         TabView {
@@ -12,7 +13,7 @@ struct SettingsView: View {
             aboutTab
                 .tabItem { Label("About", systemImage: "info.circle") }
         }
-        .frame(width: 420, height: 300)
+        .frame(width: 420, height: 340)
         .onAppear { vm.refreshHelperStatus() }
     }
 
@@ -40,6 +41,20 @@ struct SettingsView: View {
                         }
                     }
                 ))
+            }
+
+            Section("Updates") {
+                Toggle("Automatically check for updates", isOn: Binding(
+                    get: { updater.automaticallyChecks },
+                    set: { updater.automaticallyChecks = $0 }
+                ))
+                HStack {
+                    Text("Current version")
+                    Spacer()
+                    Text(appVersion).foregroundStyle(.secondary)
+                }
+                Button("Check for Updates…") { updater.checkForUpdates() }
+                    .disabled(!updater.canCheckForUpdates)
             }
 
             Section("Privileged Helper") {

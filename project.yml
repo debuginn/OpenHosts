@@ -40,6 +40,7 @@ targets:
         embed: true
         codeSign: true
       - package: SharedKit
+      - package: Sparkle
     postBuildScripts:
       - name: Copy LaunchDaemon files
         basedOnDependencyAnalysis: false
@@ -118,3 +119,6 @@ schemes:
 packages:
   SharedKit:
     path: SharedKit
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: "2.6.0"

@@ -86,7 +86,10 @@ struct SmallWidgetView: View {
                 Spacer()
             } else {
                 ForEach(entry.items.prefix(4)) { item in
-                    ItemCardView(item: item, compact: true)
+                    Button(intent: ToggleConfigIntent(itemID: item.id)) {
+                        ItemCardView(item: item, compact: true)
+                    }
+                    .buttonStyle(.plain)
                 }
                 if entry.items.count > 4 {
                     Text("+\(entry.items.count - 4) more")
