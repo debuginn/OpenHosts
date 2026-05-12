@@ -207,7 +207,6 @@ jobs:
           BUILD: ${{ steps.version.outputs.build_number }}
           SIGNATURE: ${{ steps.sparkle_sign.outputs.signature }}
         run: |
-          DMG_SIZE=$(stat -f%z "OpenHosts-${VERSION}.dmg")
           PUB_DATE=$(LC_TIME=en_US.UTF-8 date -u "+%a, %d %b %Y %H:%M:%S +0000")
           RELEASE_URL="https://github.com/debuginn/OpenHosts/releases/download/${TAG}/OpenHosts-${VERSION}.dmg"
           RELEASE_NOTES_URL="https://github.com/debuginn/OpenHosts/releases/tag/${TAG}"
@@ -217,13 +216,12 @@ jobs:
           git fetch origin main
           git checkout main
 
-          export DMG_SIZE PUB_DATE RELEASE_URL RELEASE_NOTES_URL
+          export PUB_DATE RELEASE_URL RELEASE_NOTES_URL
           python3 - <<'PY'
           import os, re, sys
           version = os.environ["VERSION"]
           build = os.environ["BUILD"]
           signature = os.environ["SIGNATURE"]
-          dmg_size = os.environ["DMG_SIZE"]
           pub_date = os.environ["PUB_DATE"]
           release_url = os.environ["RELEASE_URL"]
           release_notes_url = os.environ["RELEASE_NOTES_URL"]
@@ -236,7 +234,7 @@ jobs:
               f'            <sparkle:shortVersionString>{version}</sparkle:shortVersionString>\n'
               f'            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>\n'
               f'            <pubDate>{pub_date}</pubDate>\n'
-              f'            <enclosure url="{release_url}" length="{dmg_size}" type="application/octet-stream" {signature}/>\n'
+              f'            <enclosure url="{release_url}" type="application/octet-stream" {signature}/>\n'
               f'        </item>'
           )
 
