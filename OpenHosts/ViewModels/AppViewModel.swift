@@ -26,20 +26,27 @@ final class AppViewModel: ObservableObject {
     @Published var selectedItem: SidebarItem? = .systemHosts
     @Published var systemHostsContent: String = ""
     @Published var applyState: ApplyState = .idle
+    #if !APPSTORE
     @Published var helperStatus: SMAppService.Status = .notRegistered
     @Published var helperRegistrationError: String?
+    #endif
     @Published var validationFailedConfigID: UUID?
 
     private let store = ConfigStore.shared
+    #if !APPSTORE
     private let helperClient = HelperXPCClient()
+    #endif
     private var cancellables = Set<AnyCancellable>()
     private let contentSubject = PassthroughSubject<UUID, Never>()
     private var lastSavedContent: [UUID: String] = [:]
 
     init() {
+        #if !APPSTORE
         helperStatus = HelperInstaller.status
         log.info("init: helperStatus=\(self.helperStatus.debugDescription)")
+        #endif
         loadAll()
+        #if !APPSTORE
         if helperStatus == .notRegistered {
             Task { await registerHelper() }
         }
@@ -49,6 +56,7 @@ final class AppViewModel: ObservableObject {
         ) { [weak self] _ in
             Task { @MainActor [weak self] in self?.refreshHelperStatus() }
         }
+        #endif
         contentSubject
             .debounce(for: .milliseconds(600), scheduler: RunLoop.main)
             .sink { [weak self] id in
@@ -82,7 +90,11 @@ final class AppViewModel: ObservableObject {
     }
 
     func loadSystemHosts() {
+        #if APPSTORE
+        systemHostsContent = (try? HostsFileAccess.read()) ?? ""
+        #else
         systemHostsContent = (try? String(contentsOfFile: "/etc/hosts", encoding: .utf8)) ?? ""
+        #endif
     }
 
     // MARK: - Config management
@@ -237,11 +249,25 @@ final class AppViewModel: ObservableObject {
     // MARK: - Apply
 
     private func reapply() async {
+        #if APPSTORE
+        applyState = .applying
+        do {
+            let current = try HostsFileAccess.read()
+            let composed = composedHosts(from: current)
+            try HostsFileAccess.write(composed)
+            applyState = .success
+            loadSystemHosts()
+            log.info("reapply succeeded")
+            try? await Task.sleep(for: .seconds(2))
+            if applyState == .success { applyState = .idle }
+        } catch {
+            applyState = .failure(error.localizedDescription)
+            log.error("reapply failed: \(error)")
+        }
+        #else
         guard helperStatus == .enabled else { return }
         let current = (try? String(contentsOfFile: "/etc/hosts", encoding: .utf8)) ?? ""
-        let withSection = HostsComposer.ensureSection(in: current)
-        let (prefix, suffix, _) = HostsComposer.extractBoundaries(from: withSection)
-        let composed = HostsComposer.compose(prefix: prefix, configs: effectiveConfigs, suffix: suffix)
+        let composed = composedHosts(from: current)
         applyState = .applying
         do {
             try await helperClient.writeHosts(composed)
@@ -254,7 +280,30 @@ final class AppViewModel: ObservableObject {
             applyState = .failure(error.localizedDescription)
             log.error("reapply failed: \(error)")
         }
+        #endif
     }
+
+    private func composedHosts(from current: String) -> String {
+        let withSection = HostsComposer.ensureSection(in: current)
+        let (prefix, suffix, _) = HostsComposer.extractBoundaries(from: withSection)
+        return HostsComposer.compose(prefix: prefix, configs: effectiveConfigs, suffix: suffix)
+    }
+
+    #if APPSTORE
+    /// TODO(UI): Call from the App Store onboarding screen with the `NSOpenPanel` URL
+    /// for `/etc/hosts`. No onboarding UI is included in this change.
+    func grantHostsFileAccess(to userSelectedURL: URL) {
+        do {
+            try HostsFileAccess.storeBookmark(for: userSelectedURL)
+            loadSystemHosts()
+            applyState = .idle
+            log.info("stored hosts file bookmark")
+        } catch {
+            applyState = .failure(error.localizedDescription)
+            log.error("grantHostsFileAccess failed: \(error)")
+        }
+    }
+    #endif
 
     // MARK: - Widget Sync
 
@@ -328,6 +377,7 @@ final class AppViewModel: ObservableObject {
 
     // MARK: - Helper
 
+    #if !APPSTORE
     func refreshHelperStatus() {
         let s = HelperInstaller.status
         log.info("refreshHelperStatus: \(s.debugDescription)")
@@ -374,8 +424,10 @@ final class AppViewModel: ObservableObject {
         }
         return "[\(ns.domain) \(ns.code)] \(ns.localizedDescription)"
     }
+    #endif
 }
 
+#if !APPSTORE
 private extension SMAppService.Status {
     var debugDescription: String {
         switch self {
@@ -387,3 +439,4 @@ private extension SMAppService.Status {
         }
     }
 }
+#endif

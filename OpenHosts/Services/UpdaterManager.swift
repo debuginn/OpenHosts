@@ -1,3 +1,4 @@
+#if !APPSTORE
 import Foundation
 import Sparkle
 
@@ -30,3 +31,4 @@ final class UpdaterManager: ObservableObject {
         controller.checkForUpdates(nil)
     }
 }
+#endif

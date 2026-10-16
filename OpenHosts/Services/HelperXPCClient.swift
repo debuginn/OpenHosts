@@ -1,3 +1,4 @@
+#if !APPSTORE
 import Foundation
 
 @objc protocol HostsHelperProtocol {
@@ -51,3 +52,4 @@ final class HelperXPCClient: @unchecked Sendable {
         }
     }
 }
+#endif

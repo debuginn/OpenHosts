@@ -1,9 +1,13 @@
 import SwiftUI
+#if !APPSTORE
 import ServiceManagement
+#endif
 
 struct SettingsView: View {
     @EnvironmentObject var vm: AppViewModel
+    #if !APPSTORE
     @StateObject private var updater = UpdaterManager.shared
+    #endif
 
     var body: some View {
         TabView {
@@ -14,7 +18,11 @@ struct SettingsView: View {
                 .tabItem { Label("About", systemImage: "info.circle") }
         }
         .frame(width: 420, height: 340)
-        .onAppear { vm.refreshHelperStatus() }
+        .onAppear {
+            #if !APPSTORE
+            vm.refreshHelperStatus()
+            #endif
+        }
     }
 
     // MARK: - General Tab
@@ -43,6 +51,7 @@ struct SettingsView: View {
                 ))
             }
 
+            #if !APPSTORE
             Section("Updates") {
                 Toggle("Automatically check for updates", isOn: Binding(
                     get: { updater.automaticallyChecks },
@@ -73,6 +82,7 @@ struct SettingsView: View {
                     Button("Install Helper") { vm.retryInstall() }
                 }
             }
+            #endif
         }
         .formStyle(.grouped)
     }
@@ -123,6 +133,7 @@ struct SettingsView: View {
 
     // MARK: - Helpers
 
+    #if !APPSTORE
     @ViewBuilder
     private var helperStatusLabel: some View {
         switch vm.helperStatus {
@@ -137,6 +148,7 @@ struct SettingsView: View {
                 .foregroundStyle(.red)
         }
     }
+    #endif
 
     private var appVersion: String {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
