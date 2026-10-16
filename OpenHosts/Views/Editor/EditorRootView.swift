@@ -9,7 +9,12 @@ struct EditorRootView: View {
         } detail: {
             detailContent
         }
-        .onAppear { vm.loadAll() }
+        .onAppear {
+            vm.loadAll()
+            #if APPSTORE
+            AppStoreOnboarding.shared.startIfNeeded()
+            #endif
+        }
     }
 
     @ViewBuilder

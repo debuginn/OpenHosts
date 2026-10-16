@@ -23,6 +23,7 @@
 		3A4B470D0D4AC8DC1916C316 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579E2CB37A1D9EF5BC92CA6 /* PlaceholderTests.swift */; };
 		3EAF927997A7BA32443460E8 /* AddGroupSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */; };
 		3F143CE7D03BD4F5F8FB9593 /* UpdaterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2508A192313516EA24959B5 /* UpdaterManager.swift */; };
+		420C2D7285FF5883C81D30D9 /* AppStoreOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B495B09DC9C8099A97BC799 /* AppStoreOnboarding.swift */; };
 		4424A41B55F0C0BE018D2887 /* HostsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9787AAB23B9DC2B46DE5646 /* HostsValidator.swift */; };
 		46349763A5EDCB9C7F579597 /* HostsWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31DED04FF82C41F18982C1C /* HostsWidgetBundle.swift */; };
 		47A3EB8D5A9ED2595E770D46 /* HelperInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E465F3DABDF84B73F1D89 /* HelperInstaller.swift */; };
@@ -63,6 +64,7 @@
 		E0068FDF6C324DD50C6699E6 /* HostsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11D0A84769ECC6676A01F50 /* HostsParser.swift */; };
 		E46092D145E5F1746261E1D7 /* HostsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 377982CD34830C4C53F667DE /* HostsGroup.swift */; };
 		E789CBDE4515B9C15E77FE15 /* OpenHostsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 998568A8E48793C2878CDF6A /* OpenHostsWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E90791BEB4CF5038F0329A6B /* AppStoreOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B495B09DC9C8099A97BC799 /* AppStoreOnboarding.swift */; };
 		ED9FE1672087E25BD0CD8F6E /* HelperXPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */; };
 		FFB571912F79FF54AF37B9B2 /* OpenHostsWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D2662598239CFD436C796AFA /* OpenHostsWidget.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -127,6 +129,7 @@
 		377982CD34830C4C53F667DE /* HostsGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsGroup.swift; sourceTree = "<group>"; };
 		3AC0F15D4D97BF1646706BCE /* AddGroupSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddGroupSheet.swift; sourceTree = "<group>"; };
 		3B40F6034BD5DB70B24F2F7E /* HelperXPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperXPCClient.swift; sourceTree = "<group>"; };
+		3B495B09DC9C8099A97BC799 /* AppStoreOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreOnboarding.swift; sourceTree = "<group>"; };
 		4E28BB1045BCD6E0786FAF78 /* OpenHostsWidgetAppStore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenHostsWidgetAppStore.entitlements; sourceTree = "<group>"; };
 		58632940EC1D450105825094 /* HostsEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsEditorView.swift; sourceTree = "<group>"; };
 		5BAFD3CEC77F37508D0FB289 /* HostsComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostsComposer.swift; sourceTree = "<group>"; };
@@ -274,6 +277,7 @@
 		A4B78C8F13D7DFAC6D9BF38B /* App */ = {
 			isa = PBXGroup;
 			children = (
+				3B495B09DC9C8099A97BC799 /* AppStoreOnboarding.swift */,
 				6EBEF3BB0ACA3A05C1A83ED0 /* OpenHostsApp.swift */,
 			);
 			path = App;
@@ -624,6 +628,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EAF927997A7BA32443460E8 /* AddGroupSheet.swift in Sources */,
+				420C2D7285FF5883C81D30D9 /* AppStoreOnboarding.swift in Sources */,
 				A1B0BC5906D8E63DE9469FB3 /* AppViewModel.swift in Sources */,
 				0AB8BBDB9E22FB36A426DDC6 /* ConfigSnapshot.swift in Sources */,
 				0E68908E7006F59B4D9AE445 /* ConfigStore.swift in Sources */,
@@ -678,6 +683,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB753E5043A6727E41FCD8EF /* AddGroupSheet.swift in Sources */,
+				E90791BEB4CF5038F0329A6B /* AppStoreOnboarding.swift in Sources */,
 				315F0F41B0B52FA5CDDD5EED /* AppViewModel.swift in Sources */,
 				78A9DDAF15CCCB356F545CC7 /* ConfigSnapshot.swift in Sources */,
 				BE74F328DFD1998C7D897261 /* ConfigStore.swift in Sources */,

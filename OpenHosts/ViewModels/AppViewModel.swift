@@ -26,7 +26,10 @@ final class AppViewModel: ObservableObject {
     @Published var selectedItem: SidebarItem? = .systemHosts
     @Published var systemHostsContent: String = ""
     @Published var applyState: ApplyState = .idle
-    #if !APPSTORE
+    #if APPSTORE
+    /// False until a bookmark exists and the hosts file can be opened for writing.
+    @Published private(set) var hostsWritePermitted = false
+    #else
     @Published var helperStatus: SMAppService.Status = .notRegistered
     @Published var helperRegistrationError: String?
     #endif
@@ -41,7 +44,12 @@ final class AppViewModel: ObservableObject {
     private var lastSavedContent: [UUID: String] = [:]
 
     init() {
-        #if !APPSTORE
+        #if APPSTORE
+        AppStoreOnboarding.shared.onFinished = { [weak self] in
+            self?.refreshHostsAccess()
+            self?.loadSystemHosts()
+        }
+        #else
         helperStatus = HelperInstaller.status
         log.info("init: helperStatus=\(self.helperStatus.debugDescription)")
         #endif
@@ -84,6 +92,9 @@ final class AppViewModel: ObservableObject {
         configs = store.load()
         groups = store.loadGroups()
         loadSystemHosts()
+        #if APPSTORE
+        refreshHostsAccess()
+        #endif
         for config in configs {
             lastSavedContent[config.id] = config.content
         }
@@ -290,18 +301,13 @@ final class AppViewModel: ObservableObject {
     }
 
     #if APPSTORE
-    /// TODO(UI): Call from the App Store onboarding screen with the `NSOpenPanel` URL
-    /// for `/etc/hosts`. No onboarding UI is included in this change.
-    func grantHostsFileAccess(to userSelectedURL: URL) {
-        do {
-            try HostsFileAccess.storeBookmark(for: userSelectedURL)
-            loadSystemHosts()
-            applyState = .idle
-            log.info("stored hosts file bookmark")
-        } catch {
-            applyState = .failure(error.localizedDescription)
-            log.error("grantHostsFileAccess failed: \(error)")
-        }
+    func refreshHostsAccess() {
+        hostsWritePermitted = (try? HostsFileAccess.probeWriteAccess()) != nil
+    }
+
+    /// Starts the authorize step. Used by the "授权…" toolbar button.
+    func beginAppStoreOnboarding() {
+        AppStoreOnboarding.shared.showAuthorize()
     }
     #endif
 

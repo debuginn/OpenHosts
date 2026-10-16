@@ -6,11 +6,9 @@ import Darwin
 ///
 /// The bookmark must come from an `NSOpenPanel` selection. Creating a URL in
 /// code is not a user-selected file, and bookmark creation will fail.
-///
-/// TODO(UI): Onboarding should present the open panel for `/etc/hosts` and call
-/// `storeBookmark(for:)`. There is no onboarding UI in this change.
+/// `AppStoreOnboarding` calls `grantHostsFileAccess(to:)` with that URL.
 enum HostsFileAccess {
-    /// Canonical path. `/etc/hosts` is a symlink to this file; bookmarks use the real path.
+    /// Canonical path. `/etc/hosts` is a symlink to this file.
     static let hostsPath = "/private/etc/hosts"
 
     private static let bookmarkDefaultsKey = "hostsFileSecurityScopedBookmark"
@@ -19,18 +17,49 @@ enum HostsFileAccess {
         UserDefaults.standard.data(forKey: bookmarkDefaultsKey) != nil
     }
 
-    /// Saves an app-scoped security-scoped bookmark for `/private/etc/hosts`.
+    /// True when a stored bookmark still resolves to `/private/etc/hosts`.
+    /// This does not check whether the file is writable.
+    static func hasValidBookmark() -> Bool {
+        guard hasBookmark else { return false }
+        guard let url = try? resolveBookmark() else { return false }
+        return canonicalHostsURL(url).path == hostsPath
+    }
+
+    /// Saves an app-scoped security-scoped bookmark for the user-selected hosts file.
     ///
-    /// TODO(UI): Call from the App Store onboarding screen with the URL returned
-    /// by `NSOpenPanel`. Do not build the URL yourself.
-    static func storeBookmark(for userSelectedURL: URL) throws {
-        let url = canonicalHostsURL(userSelectedURL)
-        guard url.path == hostsPath else {
-            throw HostsFileAccessError.wrongFile(selectedPath: url.path)
+    /// The bookmark is created from `userSelectedURL` itself so the security scope
+    /// stays attached. The resolved path must still be `/private/etc/hosts`.
+    static func grantHostsFileAccess(to userSelectedURL: URL) throws {
+        guard userSelectedURL.startAccessingSecurityScopedResource() else {
+            throw HostsFileAccessError.accessDenied
+        }
+        defer { userSelectedURL.stopAccessingSecurityScopedResource() }
+        try storeBookmark(for: userSelectedURL)
+    }
+
+    /// Opens `/private/etc/hosts` for writing and closes it without changing bytes.
+    static func probeWriteAccess() throws {
+        try withHostsFile { url in
+            let fd = open(url.path, O_WRONLY)
+            if fd < 0 {
+                let code = errno
+                if code == EACCES || code == EPERM {
+                    throw HostsFileAccessError.notWritable
+                }
+                throw HostsFileAccessError.writeFailed(String(cString: strerror(code)))
+            }
+            close(fd)
+        }
+    }
+
+    private static func storeBookmark(for userSelectedURL: URL) throws {
+        let resolved = canonicalHostsURL(userSelectedURL)
+        guard resolved.path == hostsPath else {
+            throw HostsFileAccessError.wrongFile(selectedPath: resolved.path)
         }
         let data: Data
         do {
-            data = try url.bookmarkData(
+            data = try userSelectedURL.bookmarkData(
                 options: [.withSecurityScope],
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil

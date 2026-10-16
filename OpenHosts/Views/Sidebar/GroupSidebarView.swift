@@ -74,6 +74,16 @@ struct SidebarView: View {
         }
         .navigationTitle("OpenHosts")
         .toolbar {
+            #if APPSTORE
+            if !vm.hostsWritePermitted {
+                ToolbarItem(placement: .status) {
+                    Text("⚠ 未授权")
+                }
+                ToolbarItem(placement: .automatic) {
+                    Button("授权…") { vm.beginAppStoreOnboarding() }
+                }
+            }
+            #endif
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button("New Item") { showingAddItemSheet = true }
@@ -236,10 +246,16 @@ struct SidebarView: View {
     private var applyStatusView: some View {
         switch vm.applyState {
         case .idle:
-            #if !APPSTORE
-            helperStatusView
+            #if APPSTORE
+            if vm.hostsWritePermitted {
+                EmptyView()
+            } else {
+                Text("无写入权限")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             #else
-            EmptyView()
+            helperStatusView
             #endif
         case .applying:
             HStack(spacing: 6) {
