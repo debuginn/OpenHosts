@@ -1,9 +1,31 @@
 name: Release
 
+# Tag pushes (v*) notarize, verify, and publish a GitHub Release.
+# workflow_dispatch is a dry run: it never creates a Release or uploads assets.
+# Set force_notary_fail to submit an unsigned, tampered zip so notarization
+# fails and the job stops before publish steps.
+
 on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: notarize and verify, never create a GitHub Release or upload assets'
+        required: true
+        type: boolean
+        default: true
+      force_notary_fail:
+        description: 'Submit an unsigned, tampered artifact so notarization fails and the job stops'
+        required: false
+        type: boolean
+        default: false
+      version:
+        description: 'Marketing version to stamp on a dry-run build'
+        required: false
+        type: string
+        default: '0.0.0'
 
 permissions:
   contents: write
@@ -21,6 +43,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Check publish policy
+        id: publish
+        shell: bash
+        env:
+          # Boolean inputs are the strings "true"/"false" here. Tag pushes leave them empty.
+          DRY_RUN: ${{ inputs.dry_run }}
+          FORCE_NOTARY_FAIL: ${{ inputs.force_notary_fail }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+        run: |
+          set -euo pipefail
+          DRY_RUN="${DRY_RUN:-false}"
+          FORCE_NOTARY_FAIL="${FORCE_NOTARY_FAIL:-false}"
+          if [ "$EVENT_NAME" = "workflow_dispatch" ] && [ "$DRY_RUN" != "true" ]; then
+            echo "workflow_dispatch requires dry_run=true."
+            echo "Manual runs never create a GitHub Release or upload assets."
+            exit 1
+          fi
+          if [ "$FORCE_NOTARY_FAIL" = "true" ] && [ "$DRY_RUN" != "true" ]; then
+            echo "force_notary_fail=true is only allowed together with dry_run=true."
+            exit 1
+          fi
+          if [ "$EVENT_NAME" = "push" ] && [ "$REF_TYPE" = "tag" ] && [ "$DRY_RUN" != "true" ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "This run will publish a GitHub Release only after notarization and verification succeed."
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "Dry run: this job will not create a GitHub Release, upload assets, or update appcast.xml."
+          fi
+          echo "dry_run=${DRY_RUN} force_notary_fail=${FORCE_NOTARY_FAIL}"
+
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_${{ env.XCODE_VERSION }}.app/Contents/Developer
 
@@ -29,13 +82,28 @@ jobs:
 
       - name: Extract version from tag
         id: version
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DRY_RUN_VERSION: ${{ inputs.version || '0.0.0' }}
         run: |
-          TAG="${GITHUB_REF#refs/tags/}"
-          VERSION="${TAG#v}"
-          BUILD_NUMBER=$(echo "$VERSION" | tr -d '.')
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="$DRY_RUN_VERSION"
+            if [ -z "$VERSION" ]; then
+              VERSION="0.0.0"
+            fi
+            TAG="v${VERSION}"
+            BUILD_NUMBER=1
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+            VERSION="${TAG#v}"
+            BUILD_NUMBER=$(printf '%s' "$VERSION" | tr -d '.')
+          fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "Building version ${VERSION} (build ${BUILD_NUMBER}, tag ${TAG})"
 
       - name: Import signing certificate
         env:
@@ -115,19 +183,69 @@ jobs:
           cp -R "$APP" "$RUNNER_TEMP/export/"
 
       - name: Notarize app
-        continue-on-error: true
-        id: notarize_app
+        shell: bash
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          FORCE_NOTARY_FAIL: ${{ inputs.force_notary_fail }}
         run: |
-          ditto -c -k --keepParent "$RUNNER_TEMP/export/OpenHosts.app" "$RUNNER_TEMP/OpenHosts.zip"
-          xcrun notarytool submit "$RUNNER_TEMP/OpenHosts.zip" \
-            --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+          set -euo pipefail
+          FORCE_NOTARY_FAIL="${FORCE_NOTARY_FAIL:-false}"
+          APP="$RUNNER_TEMP/export/OpenHosts.app"
+          KEY="$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          SUBMIT="$RUNNER_TEMP/OpenHosts.zip"
+
+          if [ "${FORCE_NOTARY_FAIL}" = "true" ]; then
+            echo "force_notary_fail: stripping the signature and tampering the executable, then submitting that unsigned copy."
+            TAMPERED="$RUNNER_TEMP/OpenHosts-tampered.app"
+            rm -rf "$TAMPERED"
+            ditto "$APP" "$TAMPERED"
+            codesign --remove-signature "$TAMPERED"
+            printf 'tampered-for-notary-failure\n' >> "$TAMPERED/Contents/MacOS/OpenHosts"
+            if codesign --verify "$TAMPERED"; then
+              echo "Tamper failed: the artifact submitted to notarytool is still signed."
+              exit 1
+            fi
+            echo "Tampered artifact is unsigned. Submitting it to notarytool."
+            SUBMIT="$RUNNER_TEMP/OpenHosts-tampered.zip"
+            ditto -c -k --keepParent "$TAMPERED" "$SUBMIT"
+          else
+            ditto -c -k --keepParent "$APP" "$SUBMIT"
+          fi
+
+          LOG="$RUNNER_TEMP/notary-app.txt"
+          set +e
+          xcrun notarytool submit "$SUBMIT" \
+            --key "$KEY" \
             --key-id "$ASC_KEY_ID" \
             --issuer "$ASC_ISSUER_ID" \
-            --wait --timeout 5m
-          xcrun stapler staple "$RUNNER_TEMP/export/OpenHosts.app"
+            --wait --timeout 5m 2>&1 | tee "$LOG"
+          rc=${PIPESTATUS[0]}
+          set -e
+          echo "notarytool (app) exit code: ${rc}"
+
+          if [ "${FORCE_NOTARY_FAIL}" = "true" ]; then
+            if [ "$rc" -eq 0 ] && grep -Eq 'status:[[:space:]]+Accepted' "$LOG"; then
+              echo "ERROR: notarization accepted an unsigned, tampered artifact."
+            else
+              echo "Notarization rejected the unsigned, tampered artifact. Failing the job so the release cannot continue."
+            fi
+            exit 1
+          fi
+
+          if [ "$rc" -ne 0 ] || ! grep -Eq 'status:[[:space:]]+Accepted' "$LOG"; then
+            echo "App notarization did not succeed. Refusing to staple or continue."
+            SUB_ID=$(sed -n 's/^[[:space:]]*id:[[:space:]]*//p' "$LOG" | head -1 || true)
+            if [ -n "${SUB_ID}" ]; then
+              xcrun notarytool log "$SUB_ID" \
+                --key "$KEY" \
+                --key-id "$ASC_KEY_ID" \
+                --issuer "$ASC_ISSUER_ID" || true
+            fi
+            exit 1
+          fi
+
+          xcrun stapler staple "$APP"
 
       - name: Create DMG
         env:
@@ -147,26 +265,96 @@ jobs:
           test -f "OpenHosts-${VERSION}.dmg"
 
       - name: Notarize DMG
-        continue-on-error: true
+        shell: bash
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          xcrun notarytool submit "OpenHosts-${VERSION}.dmg" \
-            --key "$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8" \
+          set -euo pipefail
+          DMG="OpenHosts-${VERSION}.dmg"
+          KEY="$RUNNER_TEMP/private_keys/AuthKey_${ASC_KEY_ID}.p8"
+          LOG="$RUNNER_TEMP/notary-dmg.txt"
+
+          set +e
+          xcrun notarytool submit "$DMG" \
+            --key "$KEY" \
             --key-id "$ASC_KEY_ID" \
             --issuer "$ASC_ISSUER_ID" \
-            --wait --timeout 5m
-          xcrun stapler staple "OpenHosts-${VERSION}.dmg"
+            --wait --timeout 5m 2>&1 | tee "$LOG"
+          rc=${PIPESTATUS[0]}
+          set -e
+          echo "notarytool (dmg) exit code: ${rc}"
+
+          if [ "$rc" -ne 0 ] || ! grep -Eq 'status:[[:space:]]+Accepted' "$LOG"; then
+            echo "DMG notarization did not succeed. Refusing to staple or continue."
+            SUB_ID=$(sed -n 's/^[[:space:]]*id:[[:space:]]*//p' "$LOG" | head -1 || true)
+            if [ -n "${SUB_ID}" ]; then
+              xcrun notarytool log "$SUB_ID" \
+                --key "$KEY" \
+                --key-id "$ASC_KEY_ID" \
+                --issuer "$ASC_ISSUER_ID" || true
+            fi
+            exit 1
+          fi
+
+          xcrun stapler staple "$DMG"
+
+      - name: Verify stapled app ticket
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "xcrun stapler validate app"
+          xcrun stapler validate "$RUNNER_TEMP/export/OpenHosts.app"
+
+      - name: Verify stapled DMG ticket
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          echo "xcrun stapler validate DMG"
+          xcrun stapler validate "OpenHosts-${VERSION}.dmg"
+
+      - name: Assess app with Gatekeeper
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "spctl -a -vvv -t exec app"
+          spctl -a -vvv -t exec "$RUNNER_TEMP/export/OpenHosts.app"
+
+      - name: Assess DMG with Gatekeeper
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          echo "spctl -a -vvv -t open --context context:primary-signature DMG"
+          spctl -a -vvv -t open --context context:primary-signature "OpenHosts-${VERSION}.dmg"
+
+      - name: Show code signatures and entitlements
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP="$RUNNER_TEMP/export/OpenHosts.app"
+          HELPER="$APP/Contents/Library/LaunchDaemons/OpenHostsHelper"
+          WIDGET="$APP/Contents/PlugIns/OpenHostsWidget.appex"
+          for target in "$APP" "$HELPER" "$WIDGET"; do
+            echo "===== codesign -dv --verbose=4 ${target} ====="
+            codesign -dv --verbose=4 "$target"
+            echo "===== codesign -d --entitlements :- ${target} ====="
+            codesign -d --entitlements :- "$target"
+          done
 
       - name: Generate checksum
+        if: steps.publish.outputs.publish == 'true'
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: shasum -a 256 "OpenHosts-${VERSION}.dmg" > "OpenHosts-${VERSION}.dmg.sha256"
 
       - name: Sign update with Sparkle EdDSA key
         id: sparkle_sign
+        if: steps.publish.outputs.publish == 'true'
         env:
           SPARKLE_ED_PRIVATE_KEY: ${{ secrets.SPARKLE_ED_PRIVATE_KEY }}
           VERSION: ${{ steps.version.outputs.version }}
@@ -188,11 +376,18 @@ jobs:
           echo "Signature generated (length: ${#SIGNATURE})"
 
       - name: Create GitHub Release
+        if: steps.publish.outputs.publish == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.version.outputs.tag }}
           VERSION: ${{ steps.version.outputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
+          set -euo pipefail
+          if [ "${DRY_RUN:-false}" = "true" ]; then
+            echo "Refusing to create a GitHub Release or upload assets."
+            exit 1
+          fi
           gh release create "$TAG" \
             "OpenHosts-${VERSION}.dmg" \
             "OpenHosts-${VERSION}.dmg.sha256" \
@@ -200,6 +395,7 @@ jobs:
             --generate-notes
 
       - name: Update appcast.xml
+        if: steps.publish.outputs.publish == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.version.outputs.tag }}

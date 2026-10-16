@@ -56,7 +56,7 @@ The widget's `ToggleModuleIntent` mutates the shared container directly, posts t
 
 ### Privileged Helper (XPC)
 
-The helper is registered via `SMAppService` (requires user approval in System Settings → Login Items). `HelperInstaller` manages registration status. `HelperXPCClient` wraps async/await over `NSXPCConnection` using `CheckedThrowingContinuation`. The helper validates the caller's path via `proc_pidpath()` before accepting requests.
+The helper is registered via `SMAppService` (requires user approval in System Settings → Login Items). `HelperInstaller` manages registration status. `HelperXPCClient` wraps async/await over `NSXPCConnection` using `CheckedThrowingContinuation`. The helper accepts an XPC connection only when the client satisfies the code-signing requirement in `OpenHostsHelper/main.swift` (`NSXPCConnection.setCodeSigningRequirement`: team `TXVGDTDY84`, bundle id `com.debuginn.OpenHosts`).
 
 ### SharedKit (Core Logic)
 

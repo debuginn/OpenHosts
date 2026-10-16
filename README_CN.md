@@ -76,7 +76,7 @@ OpenHosts（主应用）
 └── AppViewModel — 集中状态管理
 
 OpenHostsHelper（特权守护进程）
-└── XPC 服务 — 原子写入 /etc/hosts，通过 proc_pidpath() 验证调用方
+└── XPC 服务 — 原子写入 /etc/hosts，仅接受通过代码签名校验的 OpenHosts 客户端
 
 OpenHostsWidget（WidgetKit 扩展）
 └── 桌面小组件快速切换配置

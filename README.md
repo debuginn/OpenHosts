@@ -76,7 +76,7 @@ OpenHosts (Main App)
 └── AppViewModel — central state management
 
 OpenHostsHelper (Privileged Daemon)
-└── XPC Service — writes /etc/hosts atomically, validates caller via proc_pidpath()
+└── XPC Service — writes /etc/hosts atomically, accepts only a code-signed OpenHosts client
 
 OpenHostsWidget (WidgetKit Extension)
 └── Toggle configs from desktop widgets
