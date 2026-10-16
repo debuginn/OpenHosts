@@ -13,8 +13,8 @@ build/
 
 # Swift Package Manager
 .build/
-*.resolved
 .swiftpm/
+# Package.resolved is committed so Xcode Cloud pins Sparkle.
 
 # macOS
 .DS_Store
