@@ -236,7 +236,11 @@ struct SidebarView: View {
     private var applyStatusView: some View {
         switch vm.applyState {
         case .idle:
+            #if !APPSTORE
             helperStatusView
+            #else
+            EmptyView()
+            #endif
         case .applying:
             HStack(spacing: 6) {
                 ProgressView().controlSize(.small)
@@ -252,6 +256,7 @@ struct SidebarView: View {
         }
     }
 
+    #if !APPSTORE
     @ViewBuilder
     private var helperStatusView: some View {
         switch vm.helperStatus {
@@ -269,6 +274,7 @@ struct SidebarView: View {
                 .foregroundStyle(.red)
         }
     }
+    #endif
 }
 
 // MARK: - Config Row

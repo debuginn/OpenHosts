@@ -24,6 +24,8 @@ targets:
       - path: OpenHosts
         excludes:
           - "Resources/LaunchDaemons/**"
+          - "Info-AppStore.plist"
+          - "OpenHostsAppStore.entitlements"
         createIntermediateGroups: true
     settings:
       base:
@@ -52,6 +54,41 @@ targets:
           if [ -f "${BUILT_PRODUCTS_DIR}/OpenHostsHelper" ]; then
             cp -f "${BUILT_PRODUCTS_DIR}/OpenHostsHelper" "$LAUNCHER_DIR/"
           fi
+
+  # Same bundle id as OpenHosts (com.debuginn.OpenHosts): this is the Mac App Store
+  # variant of that app, not a second installable product. The widget and
+  # group.com.debuginn.OpenHosts are tied to that id. A different id would need
+  # another widget. Build the OpenHosts and OpenHostsAppStore schemes separately;
+  # both emit OpenHosts.app.
+  OpenHostsAppStore:
+    type: application
+    platform: macOS
+    deploymentTarget: "26.0"
+    productName: OpenHosts
+    sources:
+      - path: OpenHosts
+        excludes:
+          - "Resources/LaunchDaemons/**"
+          - "Info.plist"
+          - "OpenHosts.entitlements"
+        createIntermediateGroups: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.OpenHosts
+        PRODUCT_NAME: OpenHosts
+        INFOPLIST_FILE: OpenHosts/Info-AppStore.plist
+        CODE_SIGN_ENTITLEMENTS: OpenHosts/OpenHostsAppStore.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: APPSTORE
+      configs:
+        Debug:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG APPSTORE"
+    dependencies:
+      - target: OpenHostsWidget
+        embed: true
+        codeSign: true
+      - package: SharedKit
 
   OpenHostsHelper:
     type: tool
@@ -103,6 +140,15 @@ schemes:
     build:
       targets:
         OpenHosts: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+
+  OpenHostsAppStore:
+    build:
+      targets:
+        OpenHostsAppStore: all
     run:
       config: Debug
     archive:

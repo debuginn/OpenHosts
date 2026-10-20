@@ -1,3 +1,4 @@
+#if !APPSTORE
 import Foundation
 import ServiceManagement
 import OSLog
@@ -76,3 +77,4 @@ private extension SMAppService.Status {
         }
     }
 }
+#endif

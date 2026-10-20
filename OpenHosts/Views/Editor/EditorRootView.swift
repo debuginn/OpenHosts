@@ -68,9 +68,11 @@ private struct SystemHostsDetailView: View {
                 }
                 .help("History")
             }
+            #if !APPSTORE
             ToolbarItem(placement: .automatic) {
                 helperButton
             }
+            #endif
         }
         .inspector(isPresented: $showingHistory) {
             HistoryInspectorView()
@@ -78,6 +80,7 @@ private struct SystemHostsDetailView: View {
         }
     }
 
+    #if !APPSTORE
     @ViewBuilder
     private var helperButton: some View {
         switch vm.helperStatus {
@@ -91,6 +94,7 @@ private struct SystemHostsDetailView: View {
                 .buttonStyle(.bordered).tint(.red)
         }
     }
+    #endif
 }
 
 // MARK: - Config detail (editable)
@@ -123,15 +127,18 @@ private struct ConfigDetailView: View {
             }
             .navigationTitle(config.name)
             .toolbar {
+                #if !APPSTORE
                 ToolbarItem(placement: .automatic) {
                     helperButton
                 }
+                #endif
             }
         } else {
             ContentUnavailableView("Config not found", systemImage: "questionmark")
         }
     }
 
+    #if !APPSTORE
     @ViewBuilder
     private var helperButton: some View {
         switch vm.helperStatus {
@@ -145,4 +152,5 @@ private struct ConfigDetailView: View {
                 .buttonStyle(.bordered).tint(.red)
         }
     }
+    #endif
 }
