@@ -40,10 +40,22 @@ private struct SystemHostsDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HostsEditorView(
-                text: Binding(get: { vm.systemHostsContent }, set: { _ in }),
-                isEditable: false
-            )
+            #if APPSTORE
+            if vm.hasValidHostsBookmark {
+                hostsEditor
+            } else {
+                ContentUnavailableView {
+                    Text("需要授权才能编辑 hosts")
+                } description: {
+                    EmptyView()
+                } actions: {
+                    Button("授权…") { vm.beginAppStoreOnboarding() }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            #else
+            hostsEditor
+            #endif
             Divider()
             HStack(spacing: 12) {
                 Text("Read Only")
@@ -53,20 +65,31 @@ private struct SystemHostsDetailView: View {
                     .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
                     .foregroundStyle(.secondary)
                 Spacer()
-                let lines = vm.systemHostsContent.components(separatedBy: "\n").count
-                Text("\(lines) lines")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                let size = vm.systemHostsContent.utf8.count
-                Text(ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file))
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+                #if APPSTORE
+                if vm.hostsWritePermitted {
+                    hostsFileStats
+                }
+                #else
+                hostsFileStats
+                #endif
             }
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
         }
         .navigationTitle("/etc/hosts")
         .toolbar {
+            #if APPSTORE
+            if !vm.hostsWritePermitted {
+                ToolbarItem(placement: .primaryAction) {
+                    Text("⚠ 未授权")
+                }
+                .customizationBehavior(.disabled)
+                ToolbarItem(placement: .primaryAction) {
+                    Button("授权…") { vm.beginAppStoreOnboarding() }
+                }
+                .customizationBehavior(.disabled)
+            }
+            #endif
             ToolbarItem(placement: .automatic) {
                 Button { withAnimation { showingHistory.toggle() } } label: {
                     Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
@@ -82,6 +105,26 @@ private struct SystemHostsDetailView: View {
         .inspector(isPresented: $showingHistory) {
             HistoryInspectorView()
                 .inspectorColumnWidth(min: 220, ideal: 260, max: 320)
+        }
+    }
+
+    private var hostsEditor: some View {
+        HostsEditorView(
+            text: Binding(get: { vm.systemHostsContent }, set: { _ in }),
+            isEditable: false
+        )
+    }
+
+    private var hostsFileStats: some View {
+        let lines = vm.systemHostsContent.components(separatedBy: "\n").count
+        let size = vm.systemHostsContent.utf8.count
+        return HStack(spacing: 12) {
+            Text("\(lines) lines")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            Text(ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
         }
     }
 

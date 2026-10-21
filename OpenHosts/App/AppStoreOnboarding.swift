@@ -69,6 +69,9 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         alert.addButton(withTitle: "拷贝命令并打开终端")
         alert.addButton(withTitle: "我已运行")
         alert.addButton(withTitle: "稍后")
+        // First button is NSAlert's default. Move Return to「我已运行」without
+        // reordering the buttons or the help button.
+        useReturnKey(for: "我已运行", on: alert)
         alert.showsHelp = true
         alert.delegate = self
         beginSheet(alert, on: window, then: finishAuthorize)
@@ -94,9 +97,25 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
             openTerminal()
             presentAuthorize()
         case NSApplication.ModalResponse.alertSecondButtonReturn.rawValue:
-            presentOpenPanel()
+            continueAfterAuthorize()
         default:
             break
+        }
+    }
+
+    /// Return /「我已运行」. An existing bookmark is probed immediately.
+    /// Otherwise the file panel runs, and a failed write check ends on failure.
+    private func continueAfterAuthorize() {
+        if HostsFileAccess.hasValidBookmark() {
+            recheckWriteAccess()
+        } else {
+            presentOpenPanel()
+        }
+    }
+
+    private func useReturnKey(for buttonTitle: String, on alert: NSAlert) {
+        for button in alert.buttons {
+            button.keyEquivalent = button.title == buttonTitle ? "\r" : ""
         }
     }
 
@@ -163,19 +182,25 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         } else {
             do {
                 try HostsFileAccess.grantHostsFileAccess(to: url)
+                onFinished?()
                 try HostsFileAccess.probeWriteAccess()
                 onFinished?()
+                failure = nil
             } catch {
+                onFinished?()
                 failure = error.localizedDescription
             }
         }
-        let message = failure
+        showPanelResult(failure)
+    }
+
+    private func showPanelResult(_ failure: String?) {
         isPresenting = true
         DispatchQueue.main.async {
             Task { @MainActor in
                 AppStoreOnboarding.shared.isPresenting = false
-                if let message {
-                    AppStoreOnboarding.shared.presentFailure(message: message)
+                if let failure {
+                    AppStoreOnboarding.shared.presentFailure(message: failure)
                 } else {
                     AppStoreOnboarding.shared.presentDone()
                 }
@@ -200,8 +225,23 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         alert.messageText = "授权已完成"
         alert.informativeText = "hosts 文件已可写入。如需刷新系统缓存，在终端运行："
         alert.accessoryView = commandField(Self.flushCommand)
+        // NSAlert dismisses on every button. Copy, then show this sheet again.
+        alert.addButton(withTitle: "拷贝命令")
         alert.addButton(withTitle: "好")
-        beginSheet(alert, on: window, then: { _ in })
+        useReturnKey(for: "好", on: alert)
+        beginSheet(alert, on: window, then: finishDone)
+    }
+
+    private func finishDone(_ raw: Int) {
+        guard raw == NSApplication.ModalResponse.alertFirstButtonReturn.rawValue else { return }
+        copyFlushCommand()
+        presentDone()
+    }
+
+    private func copyFlushCommand() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(Self.flushCommand, forType: .string)
     }
 
     private func presentFailure(message: String) {
@@ -219,11 +259,24 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
     private func finishFailure(_ raw: Int) {
         switch raw {
         case NSApplication.ModalResponse.alertFirstButtonReturn.rawValue:
-            presentAuthorize()
+            recheckWriteAccess()
         case NSApplication.ModalResponse.alertSecondButtonReturn.rawValue:
             presentOpenPanel()
         default:
             break
+        }
+    }
+
+    /// 「重试」: probe the bookmark already stored. Success opens Done.
+    /// Failure shows this alert again and does not return to authorize.
+    private func recheckWriteAccess() {
+        do {
+            try HostsFileAccess.probeWriteAccess()
+            onFinished?()
+            presentDone()
+        } catch {
+            onFinished?()
+            presentFailure(message: error.localizedDescription)
         }
     }
 
@@ -258,8 +311,7 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
     }
 
     private func commandField(_ command: String) -> NSTextField {
-        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 520, height: 52))
-        field.stringValue = command
+        let field = NSTextField(wrappingLabelWithString: command)
         field.isEditable = false
         field.isSelectable = true
         field.isBezeled = true
@@ -267,9 +319,16 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         field.drawsBackground = true
         field.font = NSFont.monospacedSystemFont(ofSize: NSFont.smallSystemFontSize, weight: .regular)
         field.lineBreakMode = .byCharWrapping
-        field.maximumNumberOfLines = 3
+        field.maximumNumberOfLines = 2
         field.cell?.wraps = true
         field.cell?.isScrollable = false
+        let maxWidth: CGFloat = 480
+        field.preferredMaxLayoutWidth = maxWidth
+        let fitted = field.sizeThatFits(NSSize(width: maxWidth, height: .greatestFiniteMagnitude))
+        let lineHeight = (field.font?.boundingRectForFont.height ?? 13) + 4
+        let height = min(max(fitted.height, lineHeight), lineHeight * 2)
+        let width = min(max(fitted.width, 160), maxWidth)
+        field.frame = NSRect(x: 0, y: 0, width: width, height: height)
         return field
     }
 }

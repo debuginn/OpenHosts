@@ -74,16 +74,6 @@ struct SidebarView: View {
         }
         .navigationTitle("OpenHosts")
         .toolbar {
-            #if APPSTORE
-            if !vm.hostsWritePermitted {
-                ToolbarItem(placement: .status) {
-                    Text("⚠ 未授权")
-                }
-                ToolbarItem(placement: .automatic) {
-                    Button("授权…") { vm.beginAppStoreOnboarding() }
-                }
-            }
-            #endif
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button("New Item") { showingAddItemSheet = true }

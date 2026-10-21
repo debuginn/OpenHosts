@@ -27,7 +27,9 @@ final class AppViewModel: ObservableObject {
     @Published var systemHostsContent: String = ""
     @Published var applyState: ApplyState = .idle
     #if APPSTORE
-    /// False until a bookmark exists and the hosts file can be opened for writing.
+    /// False until a bookmark resolves to `/private/etc/hosts`.
+    @Published private(set) var hasValidHostsBookmark = false
+    /// False until that bookmarked file can be opened for writing.
     @Published private(set) var hostsWritePermitted = false
     #else
     @Published var helperStatus: SMAppService.Status = .notRegistered
@@ -302,6 +304,7 @@ final class AppViewModel: ObservableObject {
 
     #if APPSTORE
     func refreshHostsAccess() {
+        hasValidHostsBookmark = HostsFileAccess.hasValidBookmark()
         hostsWritePermitted = (try? HostsFileAccess.probeWriteAccess()) != nil
     }
 
