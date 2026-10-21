@@ -83,11 +83,9 @@ private struct SystemHostsDetailView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Text("⚠ 未授权")
                 }
-                .customizationBehavior(.disabled)
                 ToolbarItem(placement: .primaryAction) {
                     Button("授权…") { vm.beginAppStoreOnboarding() }
                 }
-                .customizationBehavior(.disabled)
             }
             #endif
             ToolbarItem(placement: .automatic) {

@@ -182,14 +182,11 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         } else {
             do {
                 try HostsFileAccess.grantHostsFileAccess(to: url)
-                onFinished?()
                 try HostsFileAccess.probeWriteAccess()
-                onFinished?()
-                failure = nil
             } catch {
-                onFinished?()
                 failure = error.localizedDescription
             }
+            onFinished?()
         }
         showPanelResult(failure)
     }
