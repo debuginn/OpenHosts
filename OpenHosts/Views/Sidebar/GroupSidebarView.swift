@@ -237,13 +237,7 @@ struct SidebarView: View {
         switch vm.applyState {
         case .idle:
             #if APPSTORE
-            if vm.hostsWritePermitted {
-                EmptyView()
-            } else {
-                Text("无写入权限")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+            EmptyView()
             #else
             helperStatusView
             #endif

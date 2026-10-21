@@ -58,18 +58,17 @@ private struct SystemHostsDetailView: View {
             #endif
             Divider()
             HStack(spacing: 12) {
-                Text("Read Only")
-                    .font(.caption2)
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 1)
-                    .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
-                    .foregroundStyle(.secondary)
-                Spacer()
                 #if APPSTORE
                 if vm.hostsWritePermitted {
+                    Spacer()
                     hostsFileStats
+                } else {
+                    readOnlyBadge
+                    Spacer()
                 }
                 #else
+                readOnlyBadge
+                Spacer()
                 hostsFileStats
                 #endif
             }
@@ -86,15 +85,20 @@ private struct SystemHostsDetailView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("授权…") { vm.beginAppStoreOnboarding() }
                 }
-            }
-            #endif
-            ToolbarItem(placement: .automatic) {
-                Button { withAnimation { showingHistory.toggle() } } label: {
-                    Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                ToolbarItem(placement: .automatic) {
+                    historyButton
                 }
-                .help("History")
+            } else {
+                // The History icon is .automatic above. Once the pinned primary
+                // actions are gone, that placement is what macOS puts in the overflow.
+                ToolbarItem(placement: .primaryAction) {
+                    historyButton
+                }
             }
-            #if !APPSTORE
+            #else
+            ToolbarItem(placement: .automatic) {
+                historyButton
+            }
             ToolbarItem(placement: .automatic) {
                 helperButton
             }
@@ -104,6 +108,22 @@ private struct SystemHostsDetailView: View {
             HistoryInspectorView()
                 .inspectorColumnWidth(min: 220, ideal: 260, max: 320)
         }
+    }
+
+    private var historyButton: some View {
+        Button { withAnimation { showingHistory.toggle() } } label: {
+            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+        }
+        .help("History")
+    }
+
+    private var readOnlyBadge: some View {
+        Text("Read Only")
+            .font(.caption2)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 1)
+            .background(.quaternary, in: RoundedRectangle(cornerRadius: 3))
+            .foregroundStyle(.secondary)
     }
 
     private var hostsEditor: some View {
