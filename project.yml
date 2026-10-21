@@ -85,7 +85,11 @@ targets:
         Debug:
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG APPSTORE"
     dependencies:
-      - target: OpenHostsWidget
+      # Not OpenHostsWidget: that target's entitlements are unrestricted on
+      # macOS, so App Store export of an ad-hoc archive never requests a
+      # profile for the appex. This target is the same extension with one
+      # restricted entitlement, which makes export provision it.
+      - target: OpenHostsWidgetAppStore
         embed: true
         codeSign: true
       - package: SharedKit
@@ -119,6 +123,31 @@ targets:
         PRODUCT_NAME: OpenHostsWidget
         INFOPLIST_FILE: OpenHostsWidget/Info.plist
         CODE_SIGN_ENTITLEMENTS: OpenHostsWidget/OpenHostsWidget.entitlements
+    dependencies:
+      - package: SharedKit
+
+  # Same appex as OpenHostsWidget (bundle id, Info.plist, product name), embedded
+  # only in OpenHostsAppStore. App Sandbox and App Groups are unrestricted on
+  # macOS, so export marks a profile optional and skips POST /profiles for
+  # com.debuginn.OpenHosts.Widget. keychain-access-groups is restricted, so
+  # export requests a Mac App Store profile; the App ID already has App Groups,
+  # and that profile allowlists group.com.debuginn.OpenHosts. Developer ID
+  # keeps OpenHostsWidget and does not sign this entitlements file.
+  OpenHostsWidgetAppStore:
+    type: app-extension
+    platform: macOS
+    deploymentTarget: "26.0"
+    productName: OpenHostsWidget
+    sources:
+      - path: OpenHostsWidget
+        createIntermediateGroups: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.debuginn.OpenHosts.Widget
+        PRODUCT_NAME: OpenHostsWidget
+        INFOPLIST_FILE: OpenHostsWidget/Info.plist
+        CODE_SIGN_ENTITLEMENTS: OpenHostsWidget/OpenHostsWidgetAppStore.entitlements
+        CODE_SIGN_INJECT_BASE_ENTITLEMENTS: YES
     dependencies:
       - package: SharedKit
 
