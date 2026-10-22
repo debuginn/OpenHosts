@@ -138,6 +138,29 @@ final class AppStoreOnboarding: NSObject {
         return icon
     }
 
+    /// Critical NSAlert icon: a 64pt caution triangle with a 32pt app-icon badge.
+    /// Drawn at 128pt so the 64pt image view stays sharp.
+    private func criticalAlertIcon() -> NSImage {
+        let side: CGFloat = 128
+        let badgeSide: CGFloat = 64
+        let image = NSImage(size: NSSize(width: side, height: side))
+        image.lockFocus()
+        NSImage(named: NSImage.cautionName)?.draw(
+            in: NSRect(x: 0, y: 0, width: side, height: side),
+            from: .zero,
+            operation: .sourceOver,
+            fraction: 1
+        )
+        appIconImage().draw(
+            in: NSRect(x: side - badgeSide, y: 0, width: badgeSide, height: badgeSide),
+            from: .zero,
+            operation: .sourceOver,
+            fraction: 1
+        )
+        image.unlockFocus()
+        return image
+    }
+
     /// ? on sheet 1. Nested on that sheet so the editor stays blocked and sheet 1 stays up.
     @objc private func showRevokeHelp(_ sender: NSButton) {
         presentRevokeHelp(preferredParent: sender.window)
@@ -297,7 +320,7 @@ final class AppStoreOnboarding: NSObject {
 
     private func makeFailureSheet(message: String) -> NSWindow {
         makeSheet(
-            icon: appIconImage(),
+            icon: criticalAlertIcon(),
             message: "授权失败",
             informative: message,
             command: nil,
