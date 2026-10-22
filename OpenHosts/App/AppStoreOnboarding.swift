@@ -330,7 +330,8 @@ final class AppStoreOnboarding: NSObject {
                 SheetButton(title: "重试", response: .alertFirstButtonReturn, isDefault: true),
                 SheetButton(title: "重新选择文件…", response: .alertSecondButtonReturn, isDefault: false),
                 SheetButton(title: "取消", response: .alertThirdButtonReturn, isDefault: false),
-            ]
+            ],
+            windowWidth: AlertMetrics.failureWindowWidth
         )
     }
 
@@ -372,33 +373,34 @@ final class AppStoreOnboarding: NSObject {
         case horizontal
     }
 
-    /// Measured from the 563788e captures (points, over the 900×600 editor).
-    /// Authorize 459×325, revoke-help 459×240, done 459×240.
-    /// Icon sits above the title. The command field is the full content width.
-    /// Buttons are a 228pt column, centered: a vertical stack, or one equal-width row.
-    /// Computed with title 16, info 17 per line, field 23, button 28:
-    /// authorize 325, revoke-help 240, done 240.
+    /// These constants mirror the measured NSAlert metrics.
+    /// Wide sheets are 459×325 / 459×240. The critical failure sheet is 260×303.
+    /// Icon and labels sit at x 20. The command field is 427×22 at x 16.
+    /// Buttons are a 228pt column: a vertical stack, or one equal-width row.
     private enum AlertMetrics {
         static let windowWidth: CGFloat = 459
+        static let failureWindowWidth: CGFloat = 260
         static let marginH: CGFloat = 16
         static let marginTop: CGFloat = 20
-        static let marginBottom: CGFloat = 18
+        static let marginBottom: CGFloat = 16
         static let iconSide: CGFloat = 64
-        /// Field bezel starts 7pt left of the label glyphs.
-        static let textInset: CGFloat = 7
-        /// Sheet 1 wraps beside the top-right help button.
-        static let textWidthWithHelp: CGFloat = 400
+        /// 16pt column margin plus this inset puts the icon and labels at x 20.
+        static let textInset: CGFloat = 4
         static let iconTitleSpacing: CGFloat = 16
-        static let titleInfoSpacing: CGFloat = 8
-        static let fieldSpacing: CGFloat = 14
+        static let titleInfoSpacing: CGFloat = 10
+        static let fieldSpacing: CGFloat = 16
         static let buttonTopSpacing: CGFloat = 16
         static let buttonSpacing: CGFloat = 6
-        static let horizontalButtonSpacing: CGFloat = 10
+        static let horizontalButtonSpacing: CGFloat = 8
         static let buttonColumnWidth: CGFloat = 228
-        static let helpTop: CGFloat = 14
-        static let helpTrailing: CGFloat = 14
+        static let buttonHeight: CGFloat = 28
+        static let fieldHeight: CGFloat = 22
+        static let infoLineHeight: CGFloat = 16
+        static let helpTop: CGFloat = 12
+        static let helpTrailing: CGFloat = 12
+        static let helpSide: CGFloat = 28
         static var contentWidth: CGFloat { windowWidth - marginH * 2 }
-        static var textWidth: CGFloat { contentWidth - textInset }
+        static var textWidth: CGFloat { contentWidth - textInset * 2 }
     }
 
     /// Document-modal on the editor. App-modal only when that window does not exist.
@@ -519,6 +521,17 @@ final class AppStoreOnboarding: NSObject {
         }
     }
 
+    /// NSAlert multi-line informative text is 16pt per line plus 0.5 (2 lines = 32.5, 3 = 48.5).
+    private func alertInformativeHeight(fitting field: NSTextField, width: CGFloat) -> CGFloat {
+        let line = AlertMetrics.infoLineHeight
+        let fitted = field.sizeThatFits(NSSize(width: width, height: .greatestFiniteMagnitude))
+        let lines = max(1, Int((fitted.height / line).rounded()))
+        if lines > 1 {
+            return CGFloat(lines) * line + 0.5
+        }
+        return line
+    }
+
     private func makeSheet(
         icon: NSImage,
         message: String,
@@ -526,9 +539,11 @@ final class AppStoreOnboarding: NSObject {
         command: String?,
         showsHelp: Bool,
         layout: SheetButtonLayout,
-        buttons: [SheetButton]
+        buttons: [SheetButton],
+        windowWidth: CGFloat = AlertMetrics.windowWidth
     ) -> NSWindow {
-        let textWidth = showsHelp ? AlertMetrics.textWidthWithHelp : AlertMetrics.textWidth
+        let contentWidth = windowWidth - AlertMetrics.marginH * 2
+        let textWidth = contentWidth - AlertMetrics.textInset * 2
 
         let messageField = NSTextField(wrappingLabelWithString: message)
         messageField.font = .boldSystemFont(ofSize: 13)
@@ -543,7 +558,11 @@ final class AppStoreOnboarding: NSObject {
         infoField.textColor = .labelColor
         infoField.preferredMaxLayoutWidth = textWidth
         infoField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        infoField.setContentHuggingPriority(.required, for: .vertical)
         infoField.widthAnchor.constraint(equalToConstant: textWidth).isActive = true
+        infoField.heightAnchor.constraint(
+            equalToConstant: alertInformativeHeight(fitting: infoField, width: textWidth)
+        ).isActive = true
 
         let iconView = NSImageView()
         iconView.image = icon
@@ -584,12 +603,12 @@ final class AppStoreOnboarding: NSObject {
         column.addArrangedSubview(messageHost)
 
         if let command {
-            let field = commandField(command, maxWidth: AlertMetrics.contentWidth)
+            let field = commandField(command, maxWidth: contentWidth)
             field.translatesAutoresizingMaskIntoConstraints = false
             field.setContentHuggingPriority(.init(1), for: .horizontal)
             field.setContentCompressionResistancePriority(.init(1), for: .horizontal)
-            field.widthAnchor.constraint(equalToConstant: AlertMetrics.contentWidth).isActive = true
-            field.heightAnchor.constraint(equalToConstant: field.frame.height).isActive = true
+            field.widthAnchor.constraint(equalToConstant: contentWidth).isActive = true
+            field.heightAnchor.constraint(equalToConstant: AlertMetrics.fieldHeight).isActive = true
             column.setCustomSpacing(AlertMetrics.fieldSpacing, after: messageHost)
             column.addArrangedSubview(field)
         }
@@ -605,6 +624,8 @@ final class AppStoreOnboarding: NSObject {
         for spec in buttons {
             let button = NSButton(title: spec.title, target: self, action: #selector(sheetButtonClicked(_:)))
             button.bezelStyle = .rounded
+            button.controlSize = .large
+            button.heightAnchor.constraint(equalToConstant: AlertMetrics.buttonHeight).isActive = true
             button.tag = spec.response.rawValue
             button.keyEquivalent = spec.isDefault ? "\r" : ""
             button.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -634,30 +655,47 @@ final class AppStoreOnboarding: NSObject {
         root.translatesAutoresizingMaskIntoConstraints = false
         column.translatesAutoresizingMaskIntoConstraints = false
         root.addSubview(column)
+        let topConstraint = column.topAnchor.constraint(equalTo: root.topAnchor, constant: AlertMetrics.marginTop)
         NSLayoutConstraint.activate([
-            root.widthAnchor.constraint(equalToConstant: AlertMetrics.windowWidth),
+            root.widthAnchor.constraint(equalToConstant: windowWidth),
             column.leadingAnchor.constraint(equalTo: root.leadingAnchor, constant: AlertMetrics.marginH),
             column.trailingAnchor.constraint(equalTo: root.trailingAnchor, constant: -AlertMetrics.marginH),
-            column.topAnchor.constraint(equalTo: root.topAnchor, constant: AlertMetrics.marginTop),
+            topConstraint,
             column.bottomAnchor.constraint(equalTo: root.bottomAnchor, constant: -AlertMetrics.marginBottom),
-            messageHost.widthAnchor.constraint(equalToConstant: AlertMetrics.contentWidth),
-            buttonHost.widthAnchor.constraint(equalToConstant: AlertMetrics.contentWidth),
+            messageHost.widthAnchor.constraint(equalToConstant: contentWidth),
+            buttonHost.widthAnchor.constraint(equalToConstant: contentWidth),
         ])
+        var helpTopConstraint: NSLayoutConstraint?
         if showsHelp {
             let help = NSButton()
             help.bezelStyle = .helpButton
+            help.controlSize = .large
             help.title = ""
             help.target = self
             help.action = #selector(showRevokeHelp(_:))
             help.translatesAutoresizingMaskIntoConstraints = false
             root.addSubview(help)
+            let helpTop = help.topAnchor.constraint(equalTo: root.topAnchor, constant: AlertMetrics.helpTop)
+            helpTopConstraint = helpTop
             NSLayoutConstraint.activate([
-                help.topAnchor.constraint(equalTo: root.topAnchor, constant: AlertMetrics.helpTop),
+                helpTop,
                 help.trailingAnchor.constraint(equalTo: root.trailingAnchor, constant: -AlertMetrics.helpTrailing),
+                help.widthAnchor.constraint(equalToConstant: AlertMetrics.helpSide),
+                help.heightAnchor.constraint(equalToConstant: AlertMetrics.helpSide),
             ])
         }
 
-        let window = makeOpaqueWindow(fitting: root)
+        // A wrapped info field ends on a half point. Round the window up and keep that half point in the top margin.
+        root.layoutSubtreeIfNeeded()
+        let fittedHeight = root.fittingSize.height
+        let fractional = fittedHeight - floor(fittedHeight)
+        if fractional > 0.25 && fractional < 0.75 {
+            let extra = 1 - fractional
+            topConstraint.constant += extra
+            helpTopConstraint?.constant += extra
+        }
+
+        let window = makeOpaqueWindow(fitting: root, width: windowWidth)
         if let defaultButton, let cell = defaultButton.cell as? NSButtonCell {
             window.defaultButtonCell = cell
             window.initialFirstResponder = defaultButton
@@ -666,7 +704,7 @@ final class AppStoreOnboarding: NSObject {
     }
 
     /// Public opacity only: an opaque window background, no visual-effect view.
-    private func makeOpaqueWindow(fitting content: NSView) -> NSWindow {
+    private func makeOpaqueWindow(fitting content: NSView, width: CGFloat) -> NSWindow {
         let window = OpaqueSheetWindow(
             contentRect: NSRect(x: 0, y: 0, width: 480, height: 240),
             styleMask: [.borderless],
@@ -692,8 +730,8 @@ final class AppStoreOnboarding: NSObject {
         background.layoutSubtreeIfNeeded()
         let fitted = background.fittingSize
         let size = NSSize(
-            width: AlertMetrics.windowWidth,
-            height: max(fitted.height, 120)
+            width: width,
+            height: max(fitted.height.rounded(), 120)
         )
         window.setContentSize(size)
         return window
