@@ -399,6 +399,8 @@ final class AppStoreOnboarding: NSObject {
         static let helpTop: CGFloat = 12
         static let helpTrailing: CGFloat = 12
         static let helpSide: CGFloat = 28
+        /// Sheet 1's frame stays 419pt wide, but lines stop left of the help button.
+        static let helpTextWrapWidth: CGFloat = 400
         static var contentWidth: CGFloat { windowWidth - marginH * 2 }
         static var textWidth: CGFloat { contentWidth - textInset * 2 }
     }
@@ -556,11 +558,26 @@ final class AppStoreOnboarding: NSObject {
         let infoField = AlertLabelField(wrappingLabelWithString: informative)
         infoField.font = .systemFont(ofSize: 13)
         infoField.textColor = .labelColor
-        infoField.preferredMaxLayoutWidth = textWidth
+        let infoWrapWidth = showsHelp ? AlertMetrics.helpTextWrapWidth : textWidth
+        infoField.preferredMaxLayoutWidth = infoWrapWidth
         infoField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         infoField.setContentHuggingPriority(.required, for: .vertical)
         infoField.widthAnchor.constraint(equalToConstant: textWidth).isActive = true
-        let infoHeight = alertInformativeHeight(fitting: infoField, width: textWidth)
+        if showsHelp {
+            // Frame stays 419. tailIndent -19 ends each line at 400, left of the help button.
+            let paragraph = NSMutableParagraphStyle()
+            paragraph.lineBreakMode = infoField.lineBreakMode
+            paragraph.tailIndent = -(textWidth - AlertMetrics.helpTextWrapWidth)
+            infoField.attributedStringValue = NSAttributedString(
+                string: informative,
+                attributes: [
+                    .font: infoField.font ?? .systemFont(ofSize: 13),
+                    .foregroundColor: NSColor.labelColor,
+                    .paragraphStyle: paragraph,
+                ]
+            )
+        }
+        let infoHeight = alertInformativeHeight(fitting: infoField, width: infoWrapWidth)
         infoField.heightAnchor.constraint(equalToConstant: infoHeight).isActive = true
         // The wrapped field is already 16n+0.5. That half point belongs in the top margin, not under the text.
         let topMargin = AlertMetrics.marginTop + (infoHeight > AlertMetrics.infoLineHeight ? 0.5 : 0)
