@@ -6,6 +6,7 @@ struct EditorRootView: View {
     var body: some View {
         NavigationSplitView {
             SidebarView()
+                .navigationSplitViewColumnWidth(min: 220, ideal: 260)
         } detail: {
             detailContent
         }
@@ -39,6 +40,19 @@ private struct SystemHostsDetailView: View {
     @State private var showingHistory = false
 
     var body: some View {
+        hostsColumn
+            .navigationTitle("/etc/hosts")
+            // Separate toolbars so the authorize items are not in the bar once
+            // write access exists. An `if` inside one toolbar hides them and
+            // macOS still keeps the >> overflow at 900pt.
+            .modifier(SystemHostsToolbar(showingHistory: $showingHistory))
+            .inspector(isPresented: $showingHistory) {
+                HistoryInspectorView()
+                    .inspectorColumnWidth(min: 220, ideal: 260, max: 320)
+            }
+    }
+
+    private var hostsColumn: some View {
         VStack(spacing: 0) {
             #if APPSTORE
             if vm.hasValidHostsBookmark {
@@ -75,46 +89,6 @@ private struct SystemHostsDetailView: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
         }
-        .navigationTitle("/etc/hosts")
-        .toolbar {
-            #if APPSTORE
-            if !vm.hostsWritePermitted {
-                ToolbarItem(placement: .primaryAction) {
-                    Text("⚠ 未授权")
-                }
-                ToolbarItem(placement: .primaryAction) {
-                    Button("授权…") { vm.beginAppStoreOnboarding() }
-                }
-                ToolbarItem(placement: .automatic) {
-                    historyButton
-                }
-            } else {
-                // The History icon is .automatic above. Once the pinned primary
-                // actions are gone, that placement is what macOS puts in the overflow.
-                ToolbarItem(placement: .primaryAction) {
-                    historyButton
-                }
-            }
-            #else
-            ToolbarItem(placement: .automatic) {
-                historyButton
-            }
-            ToolbarItem(placement: .automatic) {
-                helperButton
-            }
-            #endif
-        }
-        .inspector(isPresented: $showingHistory) {
-            HistoryInspectorView()
-                .inspectorColumnWidth(min: 220, ideal: 260, max: 320)
-        }
-    }
-
-    private var historyButton: some View {
-        Button { withAnimation { showingHistory.toggle() } } label: {
-            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
-        }
-        .help("History")
     }
 
     private var readOnlyBadge: some View {
@@ -144,6 +118,55 @@ private struct SystemHostsDetailView: View {
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
+    }
+
+}
+
+/// Authorized App Store windows keep only History. The unauthorized items live
+/// on a different toolbar so they are removed, not hidden.
+private struct SystemHostsToolbar: ViewModifier {
+    @EnvironmentObject private var vm: AppViewModel
+    @Binding var showingHistory: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        #if APPSTORE
+        if vm.hostsWritePermitted {
+            content.toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    historyButton
+                }
+            }
+        } else {
+            content.toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Text("⚠ 未授权")
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("授权…") { vm.beginAppStoreOnboarding() }
+                }
+                ToolbarItem(placement: .automatic) {
+                    historyButton
+                }
+            }
+        }
+        #else
+        content.toolbar {
+            ToolbarItem(placement: .automatic) {
+                historyButton
+            }
+            ToolbarItem(placement: .automatic) {
+                helperButton
+            }
+        }
+        #endif
+    }
+
+    private var historyButton: some View {
+        Button { withAnimation { showingHistory.toggle() } } label: {
+            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+        }
+        .help("History")
     }
 
     #if !APPSTORE

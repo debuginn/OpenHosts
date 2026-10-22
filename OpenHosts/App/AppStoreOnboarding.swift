@@ -63,6 +63,7 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         authorizeRetries = 0
         let alert = NSAlert()
         alert.alertStyle = .informational
+        applyAppIcon(to: alert)
         alert.messageText = "一次性写入授权"
         alert.informativeText = "需要一次性允许当前用户写入 /private/etc/hosts。在终端运行下面的命令，然后点「我已运行」。"
         alert.accessoryView = commandField(Self.grantCommand)
@@ -111,6 +112,20 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         } else {
             presentOpenPanel()
         }
+    }
+
+    /// Menu-bar apps (`LSUIElement`) leave `NSAlert`'s default icon as an empty
+    /// 128pt well. The asset catalog image is what screen 1b already draws.
+    private func applyAppIcon(to alert: NSAlert) {
+        let source = NSImage(named: NSImage.applicationIconName)
+            ?? NSImage(named: "AppIcon")
+            ?? NSApp.applicationIconImage
+        guard let icon = source.copy() as? NSImage else {
+            alert.icon = NSApp.applicationIconImage
+            return
+        }
+        icon.size = NSSize(width: 128, height: 128)
+        alert.icon = icon
     }
 
     private func useReturnKey(for buttonTitle: String, on alert: NSAlert) {
@@ -219,6 +234,7 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         guard let window = editorWindow() else { return }
         let alert = NSAlert()
         alert.alertStyle = .informational
+        applyAppIcon(to: alert)
         alert.messageText = "授权已完成"
         alert.informativeText = "hosts 文件已可写入。如需刷新系统缓存，在终端运行："
         alert.accessoryView = commandField(Self.flushCommand)

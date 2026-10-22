@@ -293,6 +293,9 @@ struct ConfigRowView: View {
                 .foregroundStyle(config.isEnabled ? .blue : .gray)
             VStack(alignment: .leading, spacing: 2) {
                 Text(config.name)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .help(config.name)
                 if validationFailed {
                     Text("Invalid hosts format")
                         .font(.caption2)
