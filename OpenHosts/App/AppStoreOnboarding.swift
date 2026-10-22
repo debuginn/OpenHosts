@@ -138,6 +138,7 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         guard alert.showsHelp else { return false }
         let help = NSAlert()
         help.alertStyle = .informational
+        applyAppIcon(to: help)
         help.messageText = "撤销写入权限"
         help.informativeText = "在终端运行下面的命令："
         help.accessoryView = commandField(Self.revokeCommand)
