@@ -1,0 +1,21 @@
+bootstrap appearance=light out=/tmp/oh-pr3-ea12/am
+appmodal: editorWindow=nil
+appmodal 1.0s: calling showAuthorize
+appmodal 1.0s: showAuthorize returned (runModal finished)
+appmodal 8.0s: 1 modal win=7838 class=OpaqueSheetWindow frame=(730.0, 562.0, 459.0, 325.0) level=8 isOpaque=true sheetParent=-1 key=true defaultButtonCell=我已运行 iconViews=[true] buttons=["我已运行|ret=true|frame=(115.5, 84.0, 228.0, 28.0)", "拷贝命令并打开终端|ret=false|frame=(115.5, 50.0, 228.0, 28.0)", "稍后|ret=false|frame=(115.5, 16.0, 228.0, 28.0)", "?|ret=false|frame=(419.0, 284.5, 28.0, 28.0)"]
+appmodal-1: LINES "一次性写入授权" frameW=419.0 lineFragmentPadding=2.0 alignInsets=(0.0,0.0) lines=[一次性写入授权]
+appmodal-1: LINES "一次性写入授权" frameW=419.0 lineFragmentPadding=0.0 alignInsets=(0.0,0.0) lines=[一次性写入授权]
+appmodal-1: LINES "需要一次性允许当" frameW=419.0 lineFragmentPadding=2.0 alignInsets=(0.0,0.0) lines=[需要一次性允许当前用户写入 /private/etc/hosts。在终端运行下面的] / [命令，然后点「我已运行」。]
+appmodal-1: LINES "需要一次性允许当" frameW=419.0 lineFragmentPadding=0.0 alignInsets=(0.0,0.0) lines=[需要一次性允许当前用户写入 /private/etc/hosts。在终端运行下面的] / [命令，然后点「我已运行」。]
+appmodal-1: TEXT "一次性写入授权" frame=(20.0, 208.5, 419.0, 16.0)
+appmodal-1: TEXT "需要一次性允许当前用户写入 /p" frame=(20.0, 166.0, 419.0, 32.5)
+appmodal-1: TEXT "sudo chmod +a "u" frame=(16.0, 128.0, 427.0, 22.0)
+extra-appmodal-1-authorize-light.png: screencapture -l 7838 exit=0
+appmodal 8.1s: clicking ?
+appmodal 10.4s: 1b present=true nestedOnModal=true modalWindow is 1=true helpFrame=(730.0, 605.0, 459.0, 240.0) helpButtons=["好|ret=true"]
+extra-appmodal-1b-revoke-help-light.png: screencapture -l 7841 exit=0
+appmodal 12.3s: after 1b closed: 1 visible=true attachedSheet=nil modalWindow is 1=true key=true defaultButtonCell=我已运行 firstResponder=OpaqueSheetWindow
+appmodal 12.3s: pressing Return
+finishAuthorize raw=1001 (1001 = 我已运行)
+appmodal 14.3s: after Return: modalWindow=-1 1 visible=false
+done
