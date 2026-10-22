@@ -120,7 +120,7 @@ final class AppStoreOnboarding: NSObject, NSAlertDelegate {
         let source = NSImage(named: NSImage.applicationIconName)
             ?? NSImage(named: "AppIcon")
             ?? NSApp.applicationIconImage
-        guard let icon = source.copy() as? NSImage else {
+        guard let icon = source?.copy() as? NSImage else {
             alert.icon = NSApp.applicationIconImage
             return
         }
