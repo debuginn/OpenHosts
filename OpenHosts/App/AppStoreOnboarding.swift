@@ -579,7 +579,7 @@ final class AppStoreOnboarding: NSObject {
 
         let column = NSStackView()
         column.orientation = .vertical
-        column.alignment = .fill
+        column.alignment = .leading
         column.spacing = 0
         column.addArrangedSubview(messageHost)
 
@@ -597,7 +597,9 @@ final class AppStoreOnboarding: NSObject {
         var defaultButton: NSButton?
         let buttonRow = NSStackView()
         buttonRow.orientation = layout == .vertical ? .vertical : .horizontal
-        buttonRow.alignment = layout == .vertical ? .fill : .centerY
+        // AppKit alignment is an NSLayoutConstraint.Attribute. `.width` stretches
+        // each vertical button to the 228pt row; `.centerY` is the horizontal row.
+        buttonRow.alignment = layout == .vertical ? .width : .centerY
         buttonRow.distribution = layout == .horizontal ? .fillEqually : .fill
         buttonRow.spacing = layout == .vertical ? AlertMetrics.buttonSpacing : AlertMetrics.horizontalButtonSpacing
         for spec in buttons {
@@ -606,6 +608,9 @@ final class AppStoreOnboarding: NSObject {
             button.tag = spec.response.rawValue
             button.keyEquivalent = spec.isDefault ? "\r" : ""
             button.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            if layout == .vertical {
+                button.widthAnchor.constraint(equalToConstant: AlertMetrics.buttonColumnWidth).isActive = true
+            }
             buttonRow.addArrangedSubview(button)
             if spec.isDefault {
                 defaultButton = button
