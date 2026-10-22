@@ -545,7 +545,7 @@ final class AppStoreOnboarding: NSObject {
         let contentWidth = windowWidth - AlertMetrics.marginH * 2
         let textWidth = contentWidth - AlertMetrics.textInset * 2
 
-        let messageField = NSTextField(wrappingLabelWithString: message)
+        let messageField = AlertLabelField(wrappingLabelWithString: message)
         messageField.font = .boldSystemFont(ofSize: 13)
         messageField.textColor = .labelColor
         messageField.preferredMaxLayoutWidth = textWidth
@@ -553,16 +553,17 @@ final class AppStoreOnboarding: NSObject {
         messageField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         messageField.widthAnchor.constraint(equalToConstant: textWidth).isActive = true
 
-        let infoField = NSTextField(wrappingLabelWithString: informative)
+        let infoField = AlertLabelField(wrappingLabelWithString: informative)
         infoField.font = .systemFont(ofSize: 13)
         infoField.textColor = .labelColor
         infoField.preferredMaxLayoutWidth = textWidth
         infoField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         infoField.setContentHuggingPriority(.required, for: .vertical)
         infoField.widthAnchor.constraint(equalToConstant: textWidth).isActive = true
-        infoField.heightAnchor.constraint(
-            equalToConstant: alertInformativeHeight(fitting: infoField, width: textWidth)
-        ).isActive = true
+        let infoHeight = alertInformativeHeight(fitting: infoField, width: textWidth)
+        infoField.heightAnchor.constraint(equalToConstant: infoHeight).isActive = true
+        // The wrapped field is already 16n+0.5. That half point belongs in the top margin, not under the text.
+        let topMargin = AlertMetrics.marginTop + (infoHeight > AlertMetrics.infoLineHeight ? 0.5 : 0)
 
         let iconView = NSImageView()
         iconView.image = icon
@@ -655,17 +656,15 @@ final class AppStoreOnboarding: NSObject {
         root.translatesAutoresizingMaskIntoConstraints = false
         column.translatesAutoresizingMaskIntoConstraints = false
         root.addSubview(column)
-        let topConstraint = column.topAnchor.constraint(equalTo: root.topAnchor, constant: AlertMetrics.marginTop)
         NSLayoutConstraint.activate([
             root.widthAnchor.constraint(equalToConstant: windowWidth),
             column.leadingAnchor.constraint(equalTo: root.leadingAnchor, constant: AlertMetrics.marginH),
             column.trailingAnchor.constraint(equalTo: root.trailingAnchor, constant: -AlertMetrics.marginH),
-            topConstraint,
+            column.topAnchor.constraint(equalTo: root.topAnchor, constant: topMargin),
             column.bottomAnchor.constraint(equalTo: root.bottomAnchor, constant: -AlertMetrics.marginBottom),
             messageHost.widthAnchor.constraint(equalToConstant: contentWidth),
             buttonHost.widthAnchor.constraint(equalToConstant: contentWidth),
         ])
-        var helpTopConstraint: NSLayoutConstraint?
         if showsHelp {
             let help = NSButton()
             help.bezelStyle = .helpButton
@@ -675,24 +674,13 @@ final class AppStoreOnboarding: NSObject {
             help.action = #selector(showRevokeHelp(_:))
             help.translatesAutoresizingMaskIntoConstraints = false
             root.addSubview(help)
-            let helpTop = help.topAnchor.constraint(equalTo: root.topAnchor, constant: AlertMetrics.helpTop)
-            helpTopConstraint = helpTop
+            let helpTop = AlertMetrics.helpTop + (topMargin - AlertMetrics.marginTop)
             NSLayoutConstraint.activate([
-                helpTop,
+                help.topAnchor.constraint(equalTo: root.topAnchor, constant: helpTop),
                 help.trailingAnchor.constraint(equalTo: root.trailingAnchor, constant: -AlertMetrics.helpTrailing),
                 help.widthAnchor.constraint(equalToConstant: AlertMetrics.helpSide),
                 help.heightAnchor.constraint(equalToConstant: AlertMetrics.helpSide),
             ])
-        }
-
-        // A wrapped info field ends on a half point. Round the window up and keep that half point in the top margin.
-        root.layoutSubtreeIfNeeded()
-        let fittedHeight = root.fittingSize.height
-        let fractional = fittedHeight - floor(fittedHeight)
-        if fractional > 0.25 && fractional < 0.75 {
-            let extra = 1 - fractional
-            topConstraint.constant += extra
-            helpTopConstraint?.constant += extra
         }
 
         let window = makeOpaqueWindow(fitting: root, width: windowWidth)
@@ -731,7 +719,7 @@ final class AppStoreOnboarding: NSObject {
         let fitted = background.fittingSize
         let size = NSSize(
             width: width,
-            height: max(fitted.height.rounded(), 120)
+            height: max(fitted.height, 120)
         )
         window.setContentSize(size)
         return window
@@ -766,6 +754,13 @@ final class AppStoreOnboarding: NSObject {
         let width = min(max(fitted.width, 160), maxWidth)
         field.frame = NSRect(x: 0, y: 0, width: width, height: height)
         return field
+    }
+}
+
+/// Borderless label whose frame is the text rect. A stock NSTextField outsets that rect by 2pt, so the line would start at x 18 and wrap at 423 instead of x 20 / 419.
+private final class AlertLabelField: NSTextField {
+    override var alignmentRectInsets: NSEdgeInsets {
+        NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 }
 
