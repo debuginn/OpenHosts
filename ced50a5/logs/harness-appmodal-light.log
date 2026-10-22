@@ -1,0 +1,14 @@
+bootstrap appearance=light out=/tmp/oh-pr3-x-shots/am
+appmodal: editorWindow=nil
+appmodal 1.0s: calling showAuthorize
+appmodal 1.0s: showAuthorize returned (runModal finished)
+appmodal 8.0s: 1 modal win=7582 class=OpaqueSheetWindow frame=(730.0, 574.0, 459.0, 310.0) level=8 isOpaque=true sheetParent=-1 key=true defaultButtonCell=我已运行 iconViews=[true] buttons=["我已运行|ret=true|frame=(115.5, 78.0, 228.0, 24.0)", "拷贝命令并打开终端|ret=false|frame=(115.5, 48.0, 228.0, 24.0)", "稍后|ret=false|frame=(115.5, 18.0, 228.0, 24.0)", "?|ret=false|frame=(421.0, 272.0, 24.0, 24.0)"]
+extra-appmodal-1-authorize-light.png: screencapture -l 7582 exit=0
+appmodal 8.1s: clicking ?
+appmodal 10.4s: 1b present=true nestedOnModal=true modalWindow is 1=true helpFrame=(730.0, 612.0, 459.0, 234.0) helpButtons=["好|ret=true"]
+extra-appmodal-1b-revoke-help-light.png: screencapture -l 7583 exit=0
+appmodal 12.3s: after 1b closed: 1 visible=true attachedSheet=nil modalWindow is 1=true key=true defaultButtonCell=我已运行 firstResponder=OpaqueSheetWindow
+appmodal 12.3s: pressing Return
+finishAuthorize raw=1001 (1001 = 我已运行)
+appmodal 14.3s: after Return: modalWindow=-1 1 visible=false
+done

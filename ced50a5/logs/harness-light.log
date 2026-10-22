@@ -1,0 +1,34 @@
+bootstrap appearance=light out=/tmp/oh-pr3-x-shots
+opening editor via openWindow
+editor frame=(510.0, 356.0, 900.0, 600.0) contentLayoutRect=(0.0, 0.0, 900.0, 548.0) backing=2.0 win=7551
+native: sheet frame=(830.0, 571.0, 260.0, 171.0) isOpaque=false alpha=1.0 attached=true
+extra-native-nsalert-sheet-light.png: screencapture -l 7551 exit=0
+extra-native-nsalert-sheet-region-light.png: screencapture -R 510,124,900,600 exit=0
+1: sheet win=7563 frame=(731.0, 501.0, 459.0, 310.0) class=OpaqueSheetWindow isOpaque=false alpha=1.0 bg=Catalog color: System windowBackgroundColor sheetParent=7551 editorTop=956.0 titlebarBottom=904.0 sheetTop=811.0 key=true defaultButtonCell=我已运行 iconViews=[true] buttons=["我已运行|ret=true|frameInSheet=(115.5, 78.0, 228.0, 24.0)", "拷贝命令并打开终端|ret=false|frameInSheet=(115.5, 48.0, 228.0, 24.0)", "稍后|ret=false|frameInSheet=(115.5, 18.0, 228.0, 24.0)", "?|ret=false|frameInSheet=(421.0, 272.0, 24.0, 24.0)"] iconFrames=[(23.0, 226.0, 64.0, 64.0)] contentSize=(459.0, 310.0) editorIgnoresMouse=false
+1-authorize-light.png: screencapture -l 7551 exit=0
+extra-1-authorize-region-light.png: screencapture -R 510,124,900,600 exit=0
+1b: nested on sheet 1=true editor.attachedSheet is sheet1=true
+1b: sheet win=7564 frame=(731.0, 539.0, 459.0, 234.0) class=OpaqueSheetWindow isOpaque=false alpha=1.0 bg=Catalog color: System windowBackgroundColor sheetParent=7563 editorTop=956.0 titlebarBottom=904.0 sheetTop=773.0 key=true defaultButtonCell=好 iconViews=[true] buttons=["好|ret=true|frameInSheet=(115.5, 18.0, 228.0, 24.0)"] iconFrames=[(23.0, 150.0, 64.0, 64.0)] contentSize=(459.0, 234.0) editorIgnoresMouse=false
+1b-revoke-help-light.png: screencapture -l 7551 exit=0
+extra-1b-revoke-help-region-light.png: screencapture -R 510,124,900,600 exit=0
+after 1b dismissed: editor.attachedSheet is sheet1=true sheet1.attachedSheet=nil keyWindow is sheet1=true defaultButtonCell=我已运行 firstResponder=NSButton
+extra-1-after-1b-dismissed-light.png: screencapture -l 7551 exit=0
+extra-1-after-1b-dismissed-region-light.png: screencapture -R 510,124,900,600 exit=0
+click on sidebar row while sheet 1 up: selection changed=false editor.attachedSheet present=true
+before Return: keyWindow is sheet1=true
+finishAuthorize raw=1001 (1001 = 我已运行)
+after Return: editor.attachedSheet=nil
+control click with no sheet: selection changed=true
+3: sheet win=7566 frame=(731.0, 539.0, 459.0, 234.0) class=OpaqueSheetWindow isOpaque=false alpha=1.0 bg=Catalog color: System windowBackgroundColor sheetParent=7551 editorTop=956.0 titlebarBottom=904.0 sheetTop=773.0 key=true defaultButtonCell=好 iconViews=[true] buttons=["拷贝命令|ret=false|frameInSheet=(115.5, 18.0, 109.0, 24.0)", "好|ret=true|frameInSheet=(234.5, 18.0, 109.0, 24.0)"] iconFrames=[(23.0, 150.0, 64.0, 64.0)] contentSize=(459.0, 234.0) editorIgnoresMouse=false
+3-done-light.png: screencapture -l 7551 exit=0
+extra-3-done-region-light.png: screencapture -R 510,124,900,600 exit=0
+finishDone raw=1001
+after 3 dismissed: editor.attachedSheet=nil hostsWritePermitted=true
+extra-3-after-dismiss-light.png: screencapture -l 7551 exit=0
+extra-3-after-dismiss-region-light.png: screencapture -R 510,124,900,600 exit=0
+4: sheet win=7567 frame=(731.0, 519.0, 459.0, 274.0) class=OpaqueSheetWindow isOpaque=false alpha=1.0 bg=Catalog color: System windowBackgroundColor sheetParent=7551 editorTop=956.0 titlebarBottom=904.0 sheetTop=793.0 key=true defaultButtonCell=重试 iconViews=[true] buttons=["重试|ret=true|frameInSheet=(115.5, 78.0, 228.0, 24.0)", "重新选择文件…|ret=false|frameInSheet=(115.5, 48.0, 228.0, 24.0)", "取消|ret=false|frameInSheet=(115.5, 18.0, 228.0, 24.0)"] iconFrames=[(23.0, 190.0, 64.0, 64.0)] contentSize=(459.0, 274.0) editorIgnoresMouse=false
+4-failure-light.png: screencapture -l 7551 exit=0
+extra-4-failure-region-light.png: screencapture -R 510,124,900,600 exit=0
+finishFailure raw=1002
+after 4 dismissed: editor.attachedSheet=nil
+done
