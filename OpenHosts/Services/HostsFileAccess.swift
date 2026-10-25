@@ -17,6 +17,17 @@ enum HostsFileAccess {
 
     private static let bookmarkDefaultsKey = "hostsFileSecurityScopedBookmark"
 
+    /// App-scoped bookmark that only needs read access to create.
+    ///
+    /// `.withSecurityScope` alone opens the file for a read-write scope. That
+    /// fails with "The file couldn't be opened" while the user has no write ACL.
+    /// The read-only scope lets the sandbox touch the selected file; whether
+    /// the file can be written is checked later by `probeWriteAccess`.
+    private static let bookmarkOptions: URL.BookmarkCreationOptions = [
+        .withSecurityScope,
+        .securityScopeAllowOnlyReadAccess,
+    ]
+
     static var hasBookmark: Bool {
         UserDefaults.standard.data(forKey: bookmarkDefaultsKey) != nil
     }
@@ -74,7 +85,7 @@ enum HostsFileAccess {
         let data: Data
         do {
             data = try userSelectedURL.bookmarkData(
-                options: [.withSecurityScope],
+                options: bookmarkOptions,
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
@@ -159,7 +170,7 @@ enum HostsFileAccess {
             defer { url.stopAccessingSecurityScopedResource() }
             do {
                 let refreshed = try url.bookmarkData(
-                    options: [.withSecurityScope],
+                    options: bookmarkOptions,
                     includingResourceValuesForKeys: nil,
                     relativeTo: nil
                 )
