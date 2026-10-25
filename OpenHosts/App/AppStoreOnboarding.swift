@@ -274,11 +274,7 @@ final class AppStoreOnboarding: NSObject {
     }
 
     private func isHostsFile(_ url: URL) -> Bool {
-        let selected = url.standardizedFileURL.path
-        if selected == "/etc/hosts" || selected == HostsFileAccess.hostsPath {
-            return true
-        }
-        return url.resolvingSymlinksInPath().standardizedFileURL.path == HostsFileAccess.hostsPath
+        HostsFileAccess.isHostsFile(url)
     }
 
     // MARK: - Done and failure

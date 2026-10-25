@@ -11,24 +11,39 @@ enum HostsFileAccess {
     /// Canonical path. `/etc/hosts` is a symlink to this file.
     static let hostsPath = "/private/etc/hosts"
 
+    /// `/etc` is a symlink to `/private/etc`. A sandboxed app may be unable to
+    /// resolve that link, so either path is the hosts file.
+    private static let hostsPaths: Set<String> = ["/etc/hosts", hostsPath]
+
     private static let bookmarkDefaultsKey = "hostsFileSecurityScopedBookmark"
 
     static var hasBookmark: Bool {
         UserDefaults.standard.data(forKey: bookmarkDefaultsKey) != nil
     }
 
-    /// True when a stored bookmark still resolves to `/private/etc/hosts`.
-    /// This does not check whether the file is writable.
+    /// True when a stored bookmark still resolves to `/etc/hosts` or
+    /// `/private/etc/hosts`. This does not check whether the file is writable.
     static func hasValidBookmark() -> Bool {
         guard hasBookmark else { return false }
         guard let url = try? resolveBookmark() else { return false }
-        return canonicalHostsURL(url).path == hostsPath
+        return isHostsFile(url)
+    }
+
+    /// True when `url` is the hosts file, before or after symlink resolution.
+    ///
+    /// `standardizedFileURL` and `resolvingSymlinksInPath` can both leave
+    /// `/etc/hosts` unchanged inside the sandbox. That path is still the file.
+    static func isHostsFile(_ url: URL) -> Bool {
+        if hostsPaths.contains(url.standardizedFileURL.path) {
+            return true
+        }
+        return hostsPaths.contains(canonicalHostsURL(url).path)
     }
 
     /// Saves an app-scoped security-scoped bookmark for the user-selected hosts file.
     ///
     /// The bookmark is created from `userSelectedURL` itself so the security scope
-    /// stays attached. The resolved path must still be `/private/etc/hosts`.
+    /// stays attached. `/etc/hosts` and `/private/etc/hosts` are both accepted.
     static func grantHostsFileAccess(to userSelectedURL: URL) throws {
         guard userSelectedURL.startAccessingSecurityScopedResource() else {
             throw HostsFileAccessError.accessDenied
@@ -53,9 +68,8 @@ enum HostsFileAccess {
     }
 
     private static func storeBookmark(for userSelectedURL: URL) throws {
-        let resolved = canonicalHostsURL(userSelectedURL)
-        guard resolved.path == hostsPath else {
-            throw HostsFileAccessError.wrongFile(selectedPath: resolved.path)
+        guard isHostsFile(userSelectedURL) else {
+            throw HostsFileAccessError.wrongFile(selectedPath: canonicalHostsURL(userSelectedURL).path)
         }
         let data: Data
         do {
@@ -114,11 +128,12 @@ enum HostsFileAccess {
             throw HostsFileAccessError.accessDenied
         }
         defer { resolved.stopAccessingSecurityScopedResource() }
-        let url = canonicalHostsURL(resolved)
-        guard url.path == hostsPath else {
-            throw HostsFileAccessError.wrongFile(selectedPath: url.path)
+        guard isHostsFile(resolved) else {
+            throw HostsFileAccessError.wrongFile(selectedPath: canonicalHostsURL(resolved).path)
         }
-        return try body(url)
+        // Open the bookmarked URL. Rewriting it to the symlink target drops the
+        // security scope, and the sandbox may not resolve `/etc/hosts` anyway.
+        return try body(resolved)
     }
 
     private static func resolveBookmark() throws -> URL {
