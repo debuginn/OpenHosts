@@ -68,8 +68,16 @@ enum HostsFileAccess {
 
     /// Opens `/private/etc/hosts` for writing and closes it without changing bytes.
     static func probeWriteAccess() throws {
-        try withHostsFile(forWriting: true) { url in
-            try requireWrite(url)
+        try performWrite { url in
+            let fd = open(url.path, O_WRONLY)
+            if fd < 0 {
+                let code = errno
+                if code == EACCES || code == EPERM {
+                    throw HostsFileAccessError.notWritable
+                }
+                throw HostsFileAccessError.writeFailed(String(cString: strerror(code)))
+            }
+            close(fd)
         }
     }
 
@@ -88,9 +96,8 @@ enum HostsFileAccess {
 
     /// Read-write scope when the sandbox allows it, otherwise read-only.
     ///
-    /// The read-only fallback is what lets selection succeed before the write
-    /// ACL exists. A read-write bookmark is what makes `probeWriteAccess` succeed
-    /// after that ACL is granted.
+    /// The read-only fallback lets selection succeed before the write ACL exists.
+    /// A later write that fails rebuilds a read-write bookmark once and retries.
     private static func persistedBookmarkData(for url: URL) throws -> Data {
         do {
             return try url.bookmarkData(
@@ -120,7 +127,7 @@ enum HostsFileAccess {
     /// Overwrites the existing file's bytes. This is not an atomic replace:
     /// renaming a new inode would drop the ACLs on `/private/etc/hosts`.
     static func write(_ content: String) throws {
-        try withHostsFile(forWriting: true) { url in
+        try performWrite { url in
             guard FileManager.default.fileExists(atPath: url.path) else {
                 throw HostsFileAccessError.notWritable
             }
@@ -142,88 +149,54 @@ enum HostsFileAccess {
         }
     }
 
-    private static func withHostsFile<T>(forWriting: Bool = false, _ body: (URL) throws -> T) throws -> T {
+    /// Runs `body` against the bookmarked hosts file. A not-writable failure
+    /// rebuilds one read-write security-scoped bookmark and tries `body` once more.
+    private static func performWrite<T>(_ body: (URL) throws -> T) throws -> T {
+        do {
+            return try withHostsFile(body)
+        } catch HostsFileAccessError.notWritable {
+            guard rebuildWritableBookmark() else {
+                throw HostsFileAccessError.notWritable
+            }
+            return try withHostsFile(body)
+        }
+    }
+
+    /// Replaces the stored bookmark with one read-write security scope.
+    /// The read-only option is not used. Returns false without changing the
+    /// stored bookmark when that scope cannot be created.
+    private static func rebuildWritableBookmark() -> Bool {
+        guard let current = try? resolveBookmark(),
+              current.startAccessingSecurityScopedResource() else { return false }
+        defer { current.stopAccessingSecurityScopedResource() }
+        guard let data = try? current.bookmarkData(
+            options: readWriteBookmarkOptions,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        ) else { return false }
+        var isStale = false
+        guard let rebuilt = try? URL(
+            resolvingBookmarkData: data,
+            options: [.withSecurityScope],
+            relativeTo: nil,
+            bookmarkDataIsStale: &isStale
+        ), isHostsFile(rebuilt) else { return false }
+        UserDefaults.standard.set(data, forKey: bookmarkDefaultsKey)
+        return true
+    }
+
+    private static func withHostsFile<T>(_ body: (URL) throws -> T) throws -> T {
         let resolved = try resolveBookmark()
         guard resolved.startAccessingSecurityScopedResource() else {
             throw HostsFileAccessError.accessDenied
         }
-        var promoted: URL?
-        defer {
-            promoted?.stopAccessingSecurityScopedResource()
-            resolved.stopAccessingSecurityScopedResource()
-        }
+        defer { resolved.stopAccessingSecurityScopedResource() }
         guard isHostsFile(resolved) else {
             throw HostsFileAccessError.wrongFile(selectedPath: canonicalHostsURL(resolved).path)
         }
-        // A bookmark saved before the write ACL exists is read-only. Once the
-        // ACL is present, replace it and write through that read-write scope.
-        let url: URL
-        if forWriting, let upgraded = upgradedReadWriteURL(from: resolved) {
-            promoted = upgraded
-            url = upgraded
-        } else {
-            url = resolved
-        }
-        return try body(url)
-    }
-
-    /// Bookmark source, then the symlink-resolved URL when it is a different hosts path.
-    /// The resolved URL is only a candidate; it is kept only if a write open succeeds.
-    private static func readWriteCandidates(for url: URL) -> [URL] {
-        var urls = [url]
-        let resolved = canonicalHostsURL(url)
-        if resolved.path != url.standardizedFileURL.path {
-            urls.append(resolved)
-        }
-        return urls
-    }
-
-    /// A read-write replacement when `url` itself cannot be opened for write.
-    /// Nil leaves the caller on `url`. The stored bookmark changes only after a
-    /// write open on the replacement succeeds.
-    private static func upgradedReadWriteURL(from url: URL) -> URL? {
-        if canOpenForWrite(url) {
-            return nil
-        }
-        for candidate in readWriteCandidates(for: url) {
-            guard let data = try? candidate.bookmarkData(
-                options: readWriteBookmarkOptions,
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil
-            ) else { continue }
-            var isStale = false
-            guard let promoted = try? URL(
-                resolvingBookmarkData: data,
-                options: [.withSecurityScope],
-                relativeTo: nil,
-                bookmarkDataIsStale: &isStale
-            ), isHostsFile(promoted),
-               promoted.startAccessingSecurityScopedResource() else { continue }
-            guard canOpenForWrite(promoted) else {
-                promoted.stopAccessingSecurityScopedResource()
-                continue
-            }
-            UserDefaults.standard.set(data, forKey: bookmarkDefaultsKey)
-            return promoted
-        }
-        return nil
-    }
-
-    private static func requireWrite(_ url: URL) throws {
-        if canOpenForWrite(url) { return }
-        let code = errno
-        if code == EACCES || code == EPERM {
-            throw HostsFileAccessError.notWritable
-        }
-        throw HostsFileAccessError.writeFailed(String(cString: strerror(code)))
-    }
-
-    /// Opens for write and closes immediately. On failure `errno` is left set by `open`.
-    private static func canOpenForWrite(_ url: URL) -> Bool {
-        let fd = open(url.path, O_WRONLY)
-        guard fd >= 0 else { return false }
-        close(fd)
-        return true
+        // Open the bookmarked URL. Rewriting it to the symlink target drops the
+        // security scope, and the sandbox may not resolve `/etc/hosts` anyway.
+        return try body(resolved)
     }
 
     private static func resolveBookmark() throws -> URL {
