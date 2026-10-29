@@ -1,11 +1,10 @@
 #if APPSTORE
 import Foundation
-import Darwin
 
-/// Sandboxed access to `/private/etc/hosts` for the Mac App Store build.
+/// Read-only sandboxed access to `/private/etc/hosts` for the Mac App Store build.
 ///
-/// The bookmark must come from an `NSOpenPanel` selection. Creating a URL in
-/// code is not a user-selected file, and bookmark creation will fail.
+/// This version can save a security-scoped bookmark and read the file. It does
+/// not write hosts. The bookmark must come from an `NSOpenPanel` selection.
 /// `AppStoreOnboarding` calls `grantHostsFileAccess(to:)` with that URL.
 enum HostsFileAccess {
     /// Canonical path. `/etc/hosts` is a symlink to this file.
@@ -17,16 +16,8 @@ enum HostsFileAccess {
 
     private static let bookmarkDefaultsKey = "hostsFileSecurityScopedBookmark"
 
-    /// Read-write security scope. This is what later `open(O_WRONLY)` needs.
-    /// Creating it asks the sandbox for write access, which fails until the
-    /// user-selected file is writable.
-    private static let readWriteBookmarkOptions: URL.BookmarkCreationOptions = [
-        .withSecurityScope,
-    ]
-
-    /// Used only when a read-write scope cannot be created yet. Enough to
-    /// remember the selected hosts file; not enough to write it later.
-    private static let readOnlyBookmarkOptions: URL.BookmarkCreationOptions = [
+    /// Read scope only. A read-write scope is not created in this version.
+    private static let readBookmarkOptions: URL.BookmarkCreationOptions = [
         .withSecurityScope,
         .securityScopeAllowOnlyReadAccess,
     ]
@@ -36,7 +27,7 @@ enum HostsFileAccess {
     }
 
     /// True when a stored bookmark still resolves to `/etc/hosts` or
-    /// `/private/etc/hosts`. This does not check whether the file is writable.
+    /// `/private/etc/hosts`. This does not check write access.
     static func hasValidBookmark() -> Bool {
         guard hasBookmark else { return false }
         guard let url = try? resolveBookmark() else { return false }
@@ -54,7 +45,7 @@ enum HostsFileAccess {
         return hostsPaths.contains(canonicalHostsURL(url).path)
     }
 
-    /// Saves an app-scoped security-scoped bookmark for the user-selected hosts file.
+    /// Saves a read-only security-scoped bookmark for the user-selected hosts file.
     ///
     /// The bookmark is created from `userSelectedURL` itself so the security scope
     /// stays attached. `/etc/hosts` and `/private/etc/hosts` are both accepted.
@@ -66,52 +57,21 @@ enum HostsFileAccess {
         try storeBookmark(for: userSelectedURL)
     }
 
-    /// Opens `/private/etc/hosts` for writing and closes it without changing bytes.
-    static func probeWriteAccess() throws {
-        try performWrite { url in
-            let fd = open(url.path, O_WRONLY)
-            if fd < 0 {
-                let code = errno
-                if code == EACCES || code == EPERM {
-                    throw HostsFileAccessError.notWritable
-                }
-                throw HostsFileAccessError.writeFailed(String(cString: strerror(code)))
-            }
-            close(fd)
-        }
-    }
-
     private static func storeBookmark(for userSelectedURL: URL) throws {
         guard isHostsFile(userSelectedURL) else {
             throw HostsFileAccessError.wrongFile(selectedPath: canonicalHostsURL(userSelectedURL).path)
         }
         let data: Data
         do {
-            data = try persistedBookmarkData(for: userSelectedURL)
+            data = try userSelectedURL.bookmarkData(
+                options: readBookmarkOptions,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )
         } catch {
             throw HostsFileAccessError.bookmarkFailed(error.localizedDescription)
         }
         UserDefaults.standard.set(data, forKey: bookmarkDefaultsKey)
-    }
-
-    /// Read-write scope when the sandbox allows it, otherwise read-only.
-    ///
-    /// The read-only fallback lets selection succeed before the write ACL exists.
-    /// A later write that fails rebuilds a read-write bookmark once and retries.
-    private static func persistedBookmarkData(for url: URL) throws -> Data {
-        do {
-            return try url.bookmarkData(
-                options: readWriteBookmarkOptions,
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil
-            )
-        } catch {
-            return try url.bookmarkData(
-                options: readOnlyBookmarkOptions,
-                includingResourceValuesForKeys: nil,
-                relativeTo: nil
-            )
-        }
     }
 
     static func read() throws -> String {
@@ -124,65 +84,10 @@ enum HostsFileAccess {
         }
     }
 
-    /// Overwrites the existing file's bytes. This is not an atomic replace:
-    /// renaming a new inode would drop the ACLs on `/private/etc/hosts`.
+    /// This App Store version does not write the hosts file.
     static func write(_ content: String) throws {
-        try performWrite { url in
-            guard FileManager.default.fileExists(atPath: url.path) else {
-                throw HostsFileAccessError.notWritable
-            }
-            let data = Data(content.utf8)
-            let handle: FileHandle
-            do {
-                handle = try FileHandle(forWritingTo: url)
-            } catch {
-                throw mappedWriteError(error)
-            }
-            defer { try? handle.close() }
-            do {
-                try handle.seek(toOffset: 0)
-                try handle.write(contentsOf: data)
-                try handle.truncate(atOffset: UInt64(data.count))
-            } catch {
-                throw mappedWriteError(error)
-            }
-        }
-    }
-
-    /// Runs `body` against the bookmarked hosts file. A not-writable failure
-    /// rebuilds one read-write security-scoped bookmark and tries `body` once more.
-    private static func performWrite<T>(_ body: (URL) throws -> T) throws -> T {
-        do {
-            return try withHostsFile(body)
-        } catch HostsFileAccessError.notWritable {
-            guard rebuildWritableBookmark() else {
-                throw HostsFileAccessError.notWritable
-            }
-            return try withHostsFile(body)
-        }
-    }
-
-    /// Replaces the stored bookmark with one read-write security scope.
-    /// The read-only option is not used. Returns false without changing the
-    /// stored bookmark when that scope cannot be created.
-    private static func rebuildWritableBookmark() -> Bool {
-        guard let current = try? resolveBookmark(),
-              current.startAccessingSecurityScopedResource() else { return false }
-        defer { current.stopAccessingSecurityScopedResource() }
-        guard let data = try? current.bookmarkData(
-            options: readWriteBookmarkOptions,
-            includingResourceValuesForKeys: nil,
-            relativeTo: nil
-        ) else { return false }
-        var isStale = false
-        guard let rebuilt = try? URL(
-            resolvingBookmarkData: data,
-            options: [.withSecurityScope],
-            relativeTo: nil,
-            bookmarkDataIsStale: &isStale
-        ), isHostsFile(rebuilt) else { return false }
-        UserDefaults.standard.set(data, forKey: bookmarkDefaultsKey)
-        return true
+        _ = content
+        throw HostsFileAccessError.notWritable
     }
 
     private static func withHostsFile<T>(_ body: (URL) throws -> T) throws -> T {
@@ -221,7 +126,11 @@ enum HostsFileAccess {
             }
             defer { url.stopAccessingSecurityScopedResource() }
             do {
-                let refreshed = try persistedBookmarkData(for: url)
+                let refreshed = try url.bookmarkData(
+                    options: readBookmarkOptions,
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil
+                )
                 UserDefaults.standard.set(refreshed, forKey: bookmarkDefaultsKey)
             } catch {
                 throw HostsFileAccessError.bookmarkStale
@@ -233,18 +142,6 @@ enum HostsFileAccess {
     private static func canonicalHostsURL(_ url: URL) -> URL {
         url.resolvingSymlinksInPath().standardizedFileURL
     }
-
-    private static func mappedWriteError(_ error: Error) -> HostsFileAccessError {
-        let ns = error as NSError
-        if ns.domain == NSPOSIXErrorDomain && (ns.code == Int(EACCES) || ns.code == Int(EPERM)) {
-            return .notWritable
-        }
-        // NSFileWriteNoPermissionError
-        if ns.domain == NSCocoaErrorDomain && ns.code == 513 {
-            return .notWritable
-        }
-        return .writeFailed(error.localizedDescription)
-    }
 }
 
 enum HostsFileAccessError: LocalizedError {
@@ -255,7 +152,6 @@ enum HostsFileAccessError: LocalizedError {
     case accessDenied
     case notWritable
     case readFailed(String)
-    case writeFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -270,11 +166,9 @@ enum HostsFileAccessError: LocalizedError {
         case .accessDenied:
             return "macOS denied security-scoped access to /private/etc/hosts."
         case .notWritable:
-            return "/private/etc/hosts is not writable. Access was granted, but the file permissions still block writes."
+            return "This App Store version cannot write /private/etc/hosts. Read access can be saved; writing the hosts file is not part of this version."
         case .readFailed(let detail):
             return "Could not read /private/etc/hosts: \(detail)"
-        case .writeFailed(let detail):
-            return "Could not write /private/etc/hosts: \(detail)"
         }
     }
 }

@@ -59,7 +59,7 @@ private struct SystemHostsDetailView: View {
                 hostsEditor
             } else {
                 ContentUnavailableView {
-                    Text("需要授权才能编辑 hosts")
+                    Text("需要授权才能查看 hosts")
                 } description: {
                     EmptyView()
                 } actions: {
@@ -73,12 +73,10 @@ private struct SystemHostsDetailView: View {
             Divider()
             HStack(spacing: 12) {
                 #if APPSTORE
-                if vm.hostsWritePermitted {
-                    Spacer()
+                readOnlyBadge
+                Spacer()
+                if vm.hasValidHostsBookmark {
                     hostsFileStats
-                } else {
-                    readOnlyBadge
-                    Spacer()
                 }
                 #else
                 readOnlyBadge
@@ -122,8 +120,9 @@ private struct SystemHostsDetailView: View {
 
 }
 
-/// Authorized App Store windows keep only History. The unauthorized items live
-/// on a different toolbar so they are removed, not hidden.
+/// Once a read bookmark exists, the App Store window keeps only History.
+/// Until then the unauthorized items live on a different toolbar so they are
+/// removed, not hidden. The hosts view stays read-only either way.
 private struct SystemHostsToolbar: ViewModifier {
     @EnvironmentObject private var vm: AppViewModel
     @Binding var showingHistory: Bool
@@ -131,7 +130,7 @@ private struct SystemHostsToolbar: ViewModifier {
     @ViewBuilder
     func body(content: Content) -> some View {
         #if APPSTORE
-        if vm.hostsWritePermitted {
+        if vm.hasValidHostsBookmark {
             content.toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     historyButton

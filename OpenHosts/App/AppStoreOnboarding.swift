@@ -1,16 +1,16 @@
 #if APPSTORE
 import AppKit
 
-/// First-launch write permission for the Mac App Store build.
+/// First-launch read-only guide for the Mac App Store build.
 ///
-/// Opaque document-modal sheets only. The Developer ID target does not compile this.
+/// Opaque document-modal sheets only. This version can save a read bookmark.
+/// It does not write hosts. The Developer ID target does not compile this.
 @MainActor
 final class AppStoreOnboarding: NSObject {
     static let shared = AppStoreOnboarding()
 
     /// Literal shell text. `$(whoami)` is expanded by Terminal, not by the app.
     static let grantCommand = "sudo chmod +a \"user:$(whoami) allow write\" /private/etc/hosts"
-    static let revokeCommand = "sudo chmod -a \"user:$(whoami) allow write\" /private/etc/hosts"
     static let flushCommand = "sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 
     var onFinished: (@MainActor () -> Void)?
@@ -21,10 +21,6 @@ final class AppStoreOnboarding: NSObject {
     private var waitingForWindow = false
     private var authorizeRetries = 0
     private var retainedSheet: NSWindow?
-    private var retainedHelpSheet: NSWindow?
-    private var helpParent: NSWindow?
-    /// True when the help sheet itself is the document sheet, not a nested sheet.
-    private var helpOwnsPresenting = false
     private var retainedPanel: NSOpenPanel?
     private var sheetHandler: (@MainActor (Int) -> Void)?
 
@@ -69,13 +65,13 @@ final class AppStoreOnboarding: NSObject {
     }
 
     private func makeAuthorizeSheet() -> NSWindow {
-        // NSAlert's narrow vertical stack: Return button on top, help in the corner.
+        // NSAlert's narrow vertical stack: Return button on top.
         makeSheet(
             icon: appIconImage(),
             message: "一次性写入授权",
             informative: "需要一次性允许当前用户写入 /private/etc/hosts。在终端运行下面的命令，然后点「我已运行」。",
             command: Self.grantCommand,
-            showsHelp: true,
+            showsHelp: false,
             layout: .vertical,
             buttons: [
                 SheetButton(title: "我已运行", response: .alertSecondButtonReturn, isDefault: true),
@@ -116,11 +112,11 @@ final class AppStoreOnboarding: NSObject {
         }
     }
 
-    /// Return /「我已运行」. An existing bookmark is probed immediately.
-    /// Otherwise the file panel runs, and a failed write check ends on failure.
+    /// Return /「我已运行」. A saved read bookmark ends on the cannot-write sheet.
+    /// Otherwise the file panel runs.
     private func continueAfterAuthorize() {
         if HostsFileAccess.hasValidBookmark() {
-            recheckWriteAccess()
+            presentCannotWrite()
         } else {
             presentOpenPanel()
         }
@@ -159,44 +155,6 @@ final class AppStoreOnboarding: NSObject {
         )
         image.unlockFocus()
         return image
-    }
-
-    /// ? on sheet 1. Nested on that sheet so the editor stays blocked and sheet 1 stays up.
-    @objc private func showRevokeHelp(_ sender: NSButton) {
-        presentRevokeHelp(preferredParent: sender.window)
-    }
-
-    /// Help with no sheet up attaches to the editor. Never attaches to the editor while sheet 1 is up.
-    private func presentRevokeHelp(preferredParent: NSWindow?) {
-        guard retainedHelpSheet == nil else { return }
-        let sheet = makeHelpSheet()
-        if let parent = preferredParent {
-            beginHelpSheet(sheet, on: parent)
-            return
-        }
-        if let authorize = retainedSheet {
-            beginHelpSheet(sheet, on: authorize)
-            return
-        }
-        if let editor = editorWindow() {
-            beginHelpSheet(sheet, on: editor)
-            return
-        }
-        beginHelpAppModal(sheet)
-    }
-
-    private func makeHelpSheet() -> NSWindow {
-        makeSheet(
-            icon: appIconImage(),
-            message: "撤销写入权限",
-            informative: "在终端运行下面的命令：",
-            command: Self.revokeCommand,
-            showsHelp: false,
-            layout: .vertical,
-            buttons: [
-                SheetButton(title: "好", response: .alertFirstButtonReturn, isDefault: true),
-            ]
-        )
     }
 
     private func copyGrantCommand() {
@@ -250,13 +208,19 @@ final class AppStoreOnboarding: NSObject {
         } else {
             do {
                 try HostsFileAccess.grantHostsFileAccess(to: url)
-                try HostsFileAccess.probeWriteAccess()
+                onFinished?()
+                presentReadGuideThenCannotWrite()
+                return
             } catch {
                 failure = error.localizedDescription
             }
-            onFinished?()
         }
         showPanelResult(failure)
+    }
+
+    /// Step 3, then sheet 4. Read access is saved; this version still cannot write.
+    private func presentReadGuideThenCannotWrite() {
+        presentDone()
     }
 
     private func showPanelResult(_ failure: String?) {
@@ -266,8 +230,6 @@ final class AppStoreOnboarding: NSObject {
                 AppStoreOnboarding.shared.isPresenting = false
                 if let failure {
                     AppStoreOnboarding.shared.presentFailure(message: failure)
-                } else {
-                    AppStoreOnboarding.shared.presentDone()
                 }
             }
         }
@@ -286,8 +248,8 @@ final class AppStoreOnboarding: NSObject {
     private func makeDoneSheet() -> NSWindow {
         makeSheet(
             icon: appIconImage(),
-            message: "授权已完成",
-            informative: "hosts 文件已可写入。如需刷新系统缓存，在终端运行：",
+            message: "读取授权已保存",
+            informative: "已保存对 hosts 文件的读取授权。此 Mac App Store 版本不能写入 hosts。如需刷新系统缓存，在终端运行：",
             command: Self.flushCommand,
             showsHelp: false,
             layout: .horizontal,
@@ -299,9 +261,15 @@ final class AppStoreOnboarding: NSObject {
     }
 
     private func finishDone(_ raw: Int) {
-        guard raw == NSApplication.ModalResponse.alertFirstButtonReturn.rawValue else { return }
-        copyFlushCommand()
-        presentDone()
+        switch raw {
+        case NSApplication.ModalResponse.alertFirstButtonReturn.rawValue:
+            copyFlushCommand()
+            presentDone()
+        case NSApplication.ModalResponse.alertSecondButtonReturn.rawValue:
+            presentCannotWrite()
+        default:
+            break
+        }
     }
 
     private func copyFlushCommand() {
@@ -317,7 +285,7 @@ final class AppStoreOnboarding: NSObject {
     private func makeFailureSheet(message: String) -> NSWindow {
         makeSheet(
             icon: criticalAlertIcon(),
-            message: "授权失败",
+            message: "无法写入",
             informative: message,
             command: nil,
             showsHelp: false,
@@ -334,7 +302,7 @@ final class AppStoreOnboarding: NSObject {
     private func finishFailure(_ raw: Int) {
         switch raw {
         case NSApplication.ModalResponse.alertFirstButtonReturn.rawValue:
-            recheckWriteAccess()
+            presentCannotWrite()
         case NSApplication.ModalResponse.alertSecondButtonReturn.rawValue:
             presentOpenPanel()
         default:
@@ -342,17 +310,9 @@ final class AppStoreOnboarding: NSObject {
         }
     }
 
-    /// 「重试」: probe the bookmark already stored. Success opens Done.
-    /// Failure shows this alert again and does not return to authorize.
-    private func recheckWriteAccess() {
-        do {
-            try HostsFileAccess.probeWriteAccess()
-            onFinished?()
-            presentDone()
-        } catch {
-            onFinished?()
-            presentFailure(message: error.localizedDescription)
-        }
+    /// Sheet 4. This version cannot write hosts; there is no write probe.
+    private func presentCannotWrite() {
+        presentFailure(message: HostsFileAccessError.notWritable.localizedDescription)
     }
 
     // MARK: - Opaque sheet
@@ -392,10 +352,7 @@ final class AppStoreOnboarding: NSObject {
         static let buttonHeight: CGFloat = 28
         static let fieldHeight: CGFloat = 22
         static let infoLineHeight: CGFloat = 16
-        static let helpTop: CGFloat = 12
-        static let helpTrailing: CGFloat = 12
-        static let helpSide: CGFloat = 28
-        /// Sheet 1's frame stays 419pt wide, but lines stop left of the help button.
+        /// Kept so a help button can still narrow the wrap. Sheet 1 does not show one.
         static let helpTextWrapWidth: CGFloat = 400
         static var contentWidth: CGFloat { windowWidth - marginH * 2 }
         static var textWidth: CGFloat { contentWidth - textInset * 2 }
@@ -443,69 +400,6 @@ final class AppStoreOnboarding: NSObject {
         retainedSheet = nil
         isPresenting = false
         handle(response.rawValue)
-    }
-
-    /// Nested when `parent` is sheet 1. Does not end that sheet or clear its presenting flag.
-    private func beginHelpSheet(_ sheet: NSWindow, on parent: NSWindow) {
-        let ownsPresenting = !isPresenting
-        if ownsPresenting {
-            isPresenting = true
-        }
-        retainedHelpSheet = sheet
-        helpParent = parent
-        helpOwnsPresenting = ownsPresenting
-        parent.beginSheet(sheet) { _ in
-            Task { @MainActor in
-                let onboarding = AppStoreOnboarding.shared
-                let parent = onboarding.helpParent
-                let owns = onboarding.helpOwnsPresenting
-                onboarding.retainedHelpSheet = nil
-                onboarding.helpParent = nil
-                onboarding.helpOwnsPresenting = false
-                if owns {
-                    onboarding.isPresenting = false
-                }
-                if let parent {
-                    onboarding.restoreDefaultButton(on: parent)
-                }
-            }
-        }
-    }
-
-    private func beginHelpAppModal(_ sheet: NSWindow) {
-        guard !isPresenting else { return }
-        isPresenting = true
-        retainedHelpSheet = sheet
-        sheet.level = .modalPanel
-        sheet.center()
-        NSApp.activate(ignoringOtherApps: true)
-        sheet.makeKeyAndOrderFront(nil)
-        NSApp.runModal(for: sheet)
-        sheet.orderOut(nil)
-        retainedHelpSheet = nil
-        isPresenting = false
-    }
-
-    /// Puts Return back on the parent's default button after a nested sheet closes.
-    private func restoreDefaultButton(on window: NSWindow) {
-        guard let button = returnButton(in: window.contentView) else { return }
-        if let cell = button.cell as? NSButtonCell {
-            window.defaultButtonCell = cell
-        }
-        window.makeFirstResponder(button)
-    }
-
-    private func returnButton(in view: NSView?) -> NSButton? {
-        guard let view else { return nil }
-        if let button = view as? NSButton, button.keyEquivalent == "\r" {
-            return button
-        }
-        for subview in view.subviews {
-            if let found = returnButton(in: subview) {
-                return found
-            }
-        }
-        return nil
     }
 
     @objc private func sheetButtonClicked(_ sender: NSButton) {
@@ -678,24 +572,6 @@ final class AppStoreOnboarding: NSObject {
             messageHost.widthAnchor.constraint(equalToConstant: contentWidth),
             buttonHost.widthAnchor.constraint(equalToConstant: contentWidth),
         ])
-        if showsHelp {
-            let help = NSButton()
-            help.bezelStyle = .helpButton
-            help.controlSize = .large
-            help.title = ""
-            help.target = self
-            help.action = #selector(showRevokeHelp(_:))
-            help.translatesAutoresizingMaskIntoConstraints = false
-            root.addSubview(help)
-            let helpTop = AlertMetrics.helpTop + (topMargin - AlertMetrics.marginTop)
-            NSLayoutConstraint.activate([
-                help.topAnchor.constraint(equalTo: root.topAnchor, constant: helpTop),
-                help.trailingAnchor.constraint(equalTo: root.trailingAnchor, constant: -AlertMetrics.helpTrailing),
-                help.widthAnchor.constraint(equalToConstant: AlertMetrics.helpSide),
-                help.heightAnchor.constraint(equalToConstant: AlertMetrics.helpSide),
-            ])
-        }
-
         let window = makeOpaqueWindow(fitting: root, width: windowWidth)
         if let defaultButton, let cell = defaultButton.cell as? NSButtonCell {
             window.defaultButtonCell = cell

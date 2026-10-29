@@ -27,10 +27,8 @@ final class AppViewModel: ObservableObject {
     @Published var systemHostsContent: String = ""
     @Published var applyState: ApplyState = .idle
     #if APPSTORE
-    /// False until a bookmark resolves to `/private/etc/hosts`.
+    /// False until a bookmark resolves to the hosts file for reading.
     @Published private(set) var hasValidHostsBookmark = false
-    /// False until that bookmarked file can be opened for writing.
-    @Published private(set) var hostsWritePermitted = false
     #else
     @Published var helperStatus: SMAppService.Status = .notRegistered
     @Published var helperRegistrationError: String?
@@ -263,16 +261,9 @@ final class AppViewModel: ObservableObject {
 
     private func reapply() async {
         #if APPSTORE
-        applyState = .applying
+        // This version can read a bookmarked hosts file. It does not write one.
         do {
-            let current = try HostsFileAccess.read()
-            let composed = composedHosts(from: current)
-            try HostsFileAccess.write(composed)
-            applyState = .success
-            loadSystemHosts()
-            log.info("reapply succeeded")
-            try? await Task.sleep(for: .seconds(2))
-            if applyState == .success { applyState = .idle }
+            try HostsFileAccess.write("")
         } catch {
             applyState = .failure(error.localizedDescription)
             log.error("reapply failed: \(error)")
@@ -305,7 +296,6 @@ final class AppViewModel: ObservableObject {
     #if APPSTORE
     func refreshHostsAccess() {
         hasValidHostsBookmark = HostsFileAccess.hasValidBookmark()
-        hostsWritePermitted = (try? HostsFileAccess.probeWriteAccess()) != nil
     }
 
     /// Starts the authorize step. Used by the "授权…" toolbar button.
