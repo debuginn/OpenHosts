@@ -26,7 +26,10 @@ final class AppViewModel: ObservableObject {
     @Published var selectedItem: SidebarItem? = .systemHosts
     @Published var systemHostsContent: String = ""
     @Published var applyState: ApplyState = .idle
-    #if !APPSTORE
+    #if APPSTORE
+    /// False until a bookmark resolves to the hosts file for reading.
+    @Published private(set) var hasValidHostsBookmark = false
+    #else
     @Published var helperStatus: SMAppService.Status = .notRegistered
     @Published var helperRegistrationError: String?
     #endif
@@ -41,7 +44,12 @@ final class AppViewModel: ObservableObject {
     private var lastSavedContent: [UUID: String] = [:]
 
     init() {
-        #if !APPSTORE
+        #if APPSTORE
+        AppStoreOnboarding.shared.onFinished = { [weak self] in
+            self?.refreshHostsAccess()
+            self?.loadSystemHosts()
+        }
+        #else
         helperStatus = HelperInstaller.status
         log.info("init: helperStatus=\(self.helperStatus.debugDescription)")
         #endif
@@ -84,6 +92,9 @@ final class AppViewModel: ObservableObject {
         configs = store.load()
         groups = store.loadGroups()
         loadSystemHosts()
+        #if APPSTORE
+        refreshHostsAccess()
+        #endif
         for config in configs {
             lastSavedContent[config.id] = config.content
         }
@@ -250,16 +261,9 @@ final class AppViewModel: ObservableObject {
 
     private func reapply() async {
         #if APPSTORE
-        applyState = .applying
+        // This version can read a bookmarked hosts file. It does not write one.
         do {
-            let current = try HostsFileAccess.read()
-            let composed = composedHosts(from: current)
-            try HostsFileAccess.write(composed)
-            applyState = .success
-            loadSystemHosts()
-            log.info("reapply succeeded")
-            try? await Task.sleep(for: .seconds(2))
-            if applyState == .success { applyState = .idle }
+            try HostsFileAccess.write("")
         } catch {
             applyState = .failure(error.localizedDescription)
             log.error("reapply failed: \(error)")
@@ -290,18 +294,13 @@ final class AppViewModel: ObservableObject {
     }
 
     #if APPSTORE
-    /// TODO(UI): Call from the App Store onboarding screen with the `NSOpenPanel` URL
-    /// for `/etc/hosts`. No onboarding UI is included in this change.
-    func grantHostsFileAccess(to userSelectedURL: URL) {
-        do {
-            try HostsFileAccess.storeBookmark(for: userSelectedURL)
-            loadSystemHosts()
-            applyState = .idle
-            log.info("stored hosts file bookmark")
-        } catch {
-            applyState = .failure(error.localizedDescription)
-            log.error("grantHostsFileAccess failed: \(error)")
-        }
+    func refreshHostsAccess() {
+        hasValidHostsBookmark = HostsFileAccess.hasValidBookmark()
+    }
+
+    /// Starts the authorize step. Used by the "授权…" toolbar button.
+    func beginAppStoreOnboarding() {
+        AppStoreOnboarding.shared.showAuthorize()
     }
     #endif
 

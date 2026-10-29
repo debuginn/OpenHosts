@@ -1,37 +1,70 @@
 #if APPSTORE
 import Foundation
-import Darwin
 
-/// Sandboxed access to `/private/etc/hosts` for the Mac App Store build.
+/// Read-only sandboxed access to `/private/etc/hosts` for the Mac App Store build.
 ///
-/// The bookmark must come from an `NSOpenPanel` selection. Creating a URL in
-/// code is not a user-selected file, and bookmark creation will fail.
-///
-/// TODO(UI): Onboarding should present the open panel for `/etc/hosts` and call
-/// `storeBookmark(for:)`. There is no onboarding UI in this change.
+/// This version can save a security-scoped bookmark and read the file. It does
+/// not write hosts. The bookmark must come from an `NSOpenPanel` selection.
+/// `AppStoreOnboarding` calls `grantHostsFileAccess(to:)` with that URL.
 enum HostsFileAccess {
-    /// Canonical path. `/etc/hosts` is a symlink to this file; bookmarks use the real path.
+    /// Canonical path. `/etc/hosts` is a symlink to this file.
     static let hostsPath = "/private/etc/hosts"
 
+    /// `/etc` is a symlink to `/private/etc`. A sandboxed app may be unable to
+    /// resolve that link, so either path is the hosts file.
+    private static let hostsPaths: Set<String> = ["/etc/hosts", hostsPath]
+
     private static let bookmarkDefaultsKey = "hostsFileSecurityScopedBookmark"
+
+    /// Read scope only. A read-write scope is not created in this version.
+    private static let readBookmarkOptions: URL.BookmarkCreationOptions = [
+        .withSecurityScope,
+        .securityScopeAllowOnlyReadAccess,
+    ]
 
     static var hasBookmark: Bool {
         UserDefaults.standard.data(forKey: bookmarkDefaultsKey) != nil
     }
 
-    /// Saves an app-scoped security-scoped bookmark for `/private/etc/hosts`.
+    /// True when a stored bookmark still resolves to `/etc/hosts` or
+    /// `/private/etc/hosts`. This does not check write access.
+    static func hasValidBookmark() -> Bool {
+        guard hasBookmark else { return false }
+        guard let url = try? resolveBookmark() else { return false }
+        return isHostsFile(url)
+    }
+
+    /// True when `url` is the hosts file, before or after symlink resolution.
     ///
-    /// TODO(UI): Call from the App Store onboarding screen with the URL returned
-    /// by `NSOpenPanel`. Do not build the URL yourself.
-    static func storeBookmark(for userSelectedURL: URL) throws {
-        let url = canonicalHostsURL(userSelectedURL)
-        guard url.path == hostsPath else {
-            throw HostsFileAccessError.wrongFile(selectedPath: url.path)
+    /// `standardizedFileURL` and `resolvingSymlinksInPath` can both leave
+    /// `/etc/hosts` unchanged inside the sandbox. That path is still the file.
+    static func isHostsFile(_ url: URL) -> Bool {
+        if hostsPaths.contains(url.standardizedFileURL.path) {
+            return true
+        }
+        return hostsPaths.contains(canonicalHostsURL(url).path)
+    }
+
+    /// Saves a read-only security-scoped bookmark for the user-selected hosts file.
+    ///
+    /// The bookmark is created from `userSelectedURL` itself so the security scope
+    /// stays attached. `/etc/hosts` and `/private/etc/hosts` are both accepted.
+    static func grantHostsFileAccess(to userSelectedURL: URL) throws {
+        guard userSelectedURL.startAccessingSecurityScopedResource() else {
+            throw HostsFileAccessError.accessDenied
+        }
+        defer { userSelectedURL.stopAccessingSecurityScopedResource() }
+        try storeBookmark(for: userSelectedURL)
+    }
+
+    private static func storeBookmark(for userSelectedURL: URL) throws {
+        guard isHostsFile(userSelectedURL) else {
+            throw HostsFileAccessError.wrongFile(selectedPath: canonicalHostsURL(userSelectedURL).path)
         }
         let data: Data
         do {
-            data = try url.bookmarkData(
-                options: [.withSecurityScope],
+            data = try userSelectedURL.bookmarkData(
+                options: readBookmarkOptions,
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
@@ -51,32 +84,10 @@ enum HostsFileAccess {
         }
     }
 
-    /// Overwrites the existing file's bytes. This is not an atomic replace:
-    /// renaming a new inode would drop the ACLs on `/private/etc/hosts`.
+    /// This App Store version does not write the hosts file.
     static func write(_ content: String) throws {
-        try withHostsFile { url in
-            guard FileManager.default.fileExists(atPath: url.path) else {
-                throw HostsFileAccessError.notWritable
-            }
-            guard FileManager.default.isWritableFile(atPath: url.path) else {
-                throw HostsFileAccessError.notWritable
-            }
-            let data = Data(content.utf8)
-            let handle: FileHandle
-            do {
-                handle = try FileHandle(forWritingTo: url)
-            } catch {
-                throw mappedWriteError(error)
-            }
-            defer { try? handle.close() }
-            do {
-                try handle.seek(toOffset: 0)
-                try handle.write(contentsOf: data)
-                try handle.truncate(atOffset: UInt64(data.count))
-            } catch {
-                throw mappedWriteError(error)
-            }
-        }
+        _ = content
+        throw HostsFileAccessError.notWritable
     }
 
     private static func withHostsFile<T>(_ body: (URL) throws -> T) throws -> T {
@@ -85,11 +96,12 @@ enum HostsFileAccess {
             throw HostsFileAccessError.accessDenied
         }
         defer { resolved.stopAccessingSecurityScopedResource() }
-        let url = canonicalHostsURL(resolved)
-        guard url.path == hostsPath else {
-            throw HostsFileAccessError.wrongFile(selectedPath: url.path)
+        guard isHostsFile(resolved) else {
+            throw HostsFileAccessError.wrongFile(selectedPath: canonicalHostsURL(resolved).path)
         }
-        return try body(url)
+        // Open the bookmarked URL. Rewriting it to the symlink target drops the
+        // security scope, and the sandbox may not resolve `/etc/hosts` anyway.
+        return try body(resolved)
     }
 
     private static func resolveBookmark() throws -> URL {
@@ -115,7 +127,7 @@ enum HostsFileAccess {
             defer { url.stopAccessingSecurityScopedResource() }
             do {
                 let refreshed = try url.bookmarkData(
-                    options: [.withSecurityScope],
+                    options: readBookmarkOptions,
                     includingResourceValuesForKeys: nil,
                     relativeTo: nil
                 )
@@ -130,18 +142,6 @@ enum HostsFileAccess {
     private static func canonicalHostsURL(_ url: URL) -> URL {
         url.resolvingSymlinksInPath().standardizedFileURL
     }
-
-    private static func mappedWriteError(_ error: Error) -> HostsFileAccessError {
-        let ns = error as NSError
-        if ns.domain == NSPOSIXErrorDomain && (ns.code == Int(EACCES) || ns.code == Int(EPERM)) {
-            return .notWritable
-        }
-        // NSFileWriteNoPermissionError
-        if ns.domain == NSCocoaErrorDomain && ns.code == 513 {
-            return .notWritable
-        }
-        return .writeFailed(error.localizedDescription)
-    }
 }
 
 enum HostsFileAccessError: LocalizedError {
@@ -152,7 +152,6 @@ enum HostsFileAccessError: LocalizedError {
     case accessDenied
     case notWritable
     case readFailed(String)
-    case writeFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -167,11 +166,9 @@ enum HostsFileAccessError: LocalizedError {
         case .accessDenied:
             return "macOS denied security-scoped access to /private/etc/hosts."
         case .notWritable:
-            return "/private/etc/hosts is not writable. Access was granted, but the file permissions still block writes."
+            return "This App Store version cannot write /private/etc/hosts. Read access can be saved; writing the hosts file is not part of this version."
         case .readFailed(let detail):
             return "Could not read /private/etc/hosts: \(detail)"
-        case .writeFailed(let detail):
-            return "Could not write /private/etc/hosts: \(detail)"
         }
     }
 }

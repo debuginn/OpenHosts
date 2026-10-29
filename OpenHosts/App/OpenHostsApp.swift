@@ -11,6 +11,13 @@ struct OpenHostsApp: App {
                 .environmentObject(vm)
                 .onAppear {
                     DockManager.shared.setUpOnce()
+                    #if APPSTORE
+                    AppStoreOnboarding.shared.requestEditorIfNeeded {
+                        DockManager.showDock()
+                        openWindow(id: "editor")
+                        NSApp.activate(ignoringOtherApps: true)
+                    }
+                    #endif
                 }
         } label: {
             Label("OpenHosts", systemImage: "apple.terminal")
